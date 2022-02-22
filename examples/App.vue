@@ -2,14 +2,16 @@
   #app
     sy-v-tabs(:tabs='tabs')
       template(slot='basic-table')
-        sy-table-example
+        table-example
       
       template(slot='pagin-data')
-        sy-pagin-data-example
+        pagin-data-example
 </template>
 
 <script>
-
+import axios from 'axios'
+import TableExample from './table-example.vue'
+import PaginDataExample from './pagin-data-example.vue'
 
 const tabsData = () => {
   return [
@@ -25,12 +27,19 @@ const tabsData = () => {
 }
 
 
+const myMixin = {
+  created() {
+    this.$axios = axios
+  }
+}
 
 export default {
   name: 'App',
   components: {
-
+    TableExample,
+    PaginDataExample
   },
+  mixins: [myMixin],
   created() {
     this.tabs = tabsData()
 

@@ -4,6 +4,9 @@ const random = (start=10, end=100) => {
 const bool = () => {
   return random() > 50
 }
+
+
+
 export default {
   random,
   randomStr(maxLen=200) {
