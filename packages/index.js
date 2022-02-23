@@ -24,5 +24,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 export default {
   install,
   Table,
-  PaginData
+  PaginData,
+  PaginTable,
+  VTabs
 }
