@@ -1,11 +1,13 @@
 import VTabs from './vertical-tab'
 import Table from './table'
 import PaginData from './pagin-data'
+import PaginTable from './pagin-table'
 
 
 const components = [
   Table,
   PaginData,
+  PaginTable,
   VTabs
 ]
 

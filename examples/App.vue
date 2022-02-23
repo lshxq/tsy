@@ -6,12 +6,16 @@
       
       template(slot='pagin-data')
         pagin-data-example
+
+      template(slot='pagin-table')
+        pagin-table-example
 </template>
 
 <script>
-import axios from 'axios'
-import TableExample from './table-example.vue'
-import PaginDataExample from './pagin-data-example.vue'
+
+import TableExample from './components/table-example.vue'
+import PaginDataExample from './components/pagin-data-example.vue'
+import PaginTableExample from './components/pagin-table-example.vue'
 
 const tabsData = () => {
   return [
@@ -22,32 +26,30 @@ const tabsData = () => {
     {
       label: '分页数据',
       slot: 'pagin-data'
+    },
+    {
+      label: '分页Table',
+      slot: 'pagin-table'
     }
   ]
 }
 
 
-const myMixin = {
-  created() {
-    this.$axios = axios
-  }
-}
+
 
 export default {
   name: 'App',
   components: {
     TableExample,
-    PaginDataExample
+    PaginDataExample,
+    PaginTableExample
   },
-  mixins: [myMixin],
   created() {
     this.tabs = tabsData()
 
   },
   methods: {
-    sorterChanged(sorter) {
-      console.log(sorter)
-    }
+    
   }
 }
 </script>

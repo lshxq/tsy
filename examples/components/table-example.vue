@@ -1,11 +1,11 @@
 <template lang="pug">
   .tsy-table-example-main
-    sy-table(:columns='tableColumn' :data='tableData' @sort='sorterChanged')
+    sy-table(:columns='tableColumn' :data='tableData' @sort='sorterChanged' style='width: 1000px')
       template(v-slot:third='scope') {{scope.row.third}}
 </template>
 
 <script>
-import Utils from '../packages/utils'
+import Utils from '../../packages/utils'
 
 export default {
   name: 'SyTableExample',
@@ -72,6 +72,11 @@ export default {
           slot: 'third'
         }
       ]
+    }
+  },
+  methods: {
+    sorterChanged(sorter) {
+      console.log(sorter)
     }
   }
 }

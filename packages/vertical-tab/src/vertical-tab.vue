@@ -7,7 +7,7 @@
         
     .right
       transition(name="fade" :key='idx' v-for='(tab, idx) of tabs')
-        .tab-panel(v-show='currentTabIdx === idx' )
+        .tab-panel(v-if='currentTabIdx === idx' )
           slot(:name='tab.slot')
 </template>
 
@@ -54,7 +54,6 @@ export default {
     },
     mouseup() {
       this.move = false
-      console.log('aaaaa')
     },
     mousemove(event) {
       const {

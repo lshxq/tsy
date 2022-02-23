@@ -1,5 +1,6 @@
 <template lang="pug">
-  .tsy-pagin-data-main pagin data
+  .tsy-pagin-data-main(v-loading='loading')
+    slot(:data='data')
     .paginator-bar
       el-pagination(
         @size-change="handleSizeChange"
@@ -23,11 +24,13 @@ export default {
         return 'get'
       }
     },
-    respDataMapper: Function,
-    paginDataMapper: Function
+    respDataMapper: Function, // 返回数据的mapper, 服务器返回的数据接口 需要映射成 {data:Array, total:Number}的形式
+    paginDataMapper: Function, // 发起请求前，按照服务器要求映射分页信息, 默认提交 pageNo 和 pageSize
+    mock: null
   },
   data() {
     return {
+      loading: false,
       data: [],
       total: 0,
       pageNo: 1,
@@ -56,6 +59,7 @@ export default {
     },
     reload() {
       const that = this
+      that.loading = true
       const {
         $axios
       } = that
@@ -69,12 +73,14 @@ export default {
           respDataMapper,
           url,
           pageNo,
-          pageSize
+          pageSize,
+          mock
         } = that
         requestMethod = requestMethod.toLowerCase()
         const reqCfg = {
           url,
-          method: requestMethod
+          method: requestMethod,
+          mock
         }
         let paginInfo = {
           pageNo,
@@ -100,7 +106,12 @@ export default {
           }
           this.data = respData.data
           this.total = respData.total
-        }).catch().finally()
+        }).catch(() => {
+          console.log('加载分页数据失败，请稍后再试' + url)
+          console.log(reqCfg)
+        }).finally(() => {
+          that.loading = false
+        })
       } else {
         console.error('请在this中绑定axios实例， $axios')
       }
