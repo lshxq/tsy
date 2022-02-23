@@ -1,5 +1,6 @@
 <template lang="pug">
   .pagin-data-example-main
+    .h1  分页数据组件 sy-pagin-data
     .criteria-bar
       el-input.w200(v-model='query.keyword')
       | &nbsp;
@@ -16,6 +17,8 @@
     )
       template(slot-scope='scope') 
         .data-row(v-for='(row, idx) of scope.data' :key='idx') {{row}}
+
+    p  
 </template>
 
 <script>
@@ -23,40 +26,35 @@ export default {
   data() {
     return {
       query: {
-        keyword: 'keyword',
-        status: ''
-      }
-    }
+        keyword: "keyword",
+        status: "",
+      },
+    };
   },
   created() {
-    this.mockDataFunc = cfg => {
-      console.log(cfg)
-      const {
-        params
-      } = cfg
-      const {
-        pageNo,
-        pageSize
-      } = params
-      const data =  []
-      for (let idx=0; idx<pageSize; idx++) {
+    (this.mockDataFunc = (cfg) => {
+      console.log(cfg);
+      const { params } = cfg;
+      const { pageNo, pageSize } = params;
+      const data = [];
+      for (let idx = 0; idx < pageSize; idx++) {
         data.push({
           name: `${pageNo} name`,
           gender: `${pageNo} gender`,
           age: `${pageNo} age`,
-        })
+        });
       }
       return {
         data,
-        total: 993
-      }
-    },
-    this.paginDataMapper = data => {
-      console.log(data)
-      return data
-    }
-  }
-}
+        total: 993,
+      };
+    }),
+      (this.paginDataMapper = (data) => {
+        console.log(data);
+        return data;
+      });
+  },
+};
 </script>
 
 <style lang="sass" scoped>

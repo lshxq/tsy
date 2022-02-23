@@ -1,7 +1,17 @@
 <template lang="pug">
   .tsy-table-example-main
+    .h1 基础Table sy-table
+    
+    p  
+      sy-table(
+        :columns='tableColumn' 
+        :data='tableData' 
+        @sort='sorterChanged' 
+        style='width: 1000px')
+        template(v-slot:third='scope') {{scope.row.third}}
+
     p
-      .h1 基础Table
+      
       p element-ui中的table非常强大，但是大部分的功能可能都用不上，而且他的开发思路是要用户 通过el-table-column 定义每 一列的具体 渲染，代码量比较大，也不利于数据化，如果想通过后端保存每个用户的table的 columns的信息，使每个人能看到不一样的table，还需要手动编写相关逻辑。
       p sy-table 是把column信息也数据化了一下。通过一个数组传递给组件
       .block
@@ -34,95 +44,98 @@
           .p }
         .p ]
       p data，用来展示的数据，Array类型，每个元素代表一行。
-    p  
-      sy-table(
-        :columns='tableColumn' 
-        :data='tableData' 
-        @sort='sorterChanged' 
-        style='width: 1000px')
-        template(v-slot:third='scope') {{scope.row.third}}
+    
 </template>
 
 <script>
-import Utils from '../../packages/utils'
+import Utils from "../../packages/utils";
 
 export default {
-  name: 'SyTableExample',
-  created() {
-  },
+  name: "SyTableExample",
+  created() {},
   computed: {
     tableData() {
-      return [{
-        first: Utils.randomStr(20),
-        second: Utils.randomStr(30),
-        third: Utils.randomStr()
-      },{
-        first: Utils.randomStr(30),
-        second: Utils.randomStr(50),
-        third: Utils.randomStr()
-      },{
-        first: Utils.randomStr(30),
-        second: Utils.randomStr(40),
-        third: Utils.randomStr()
-      },{
-        first: Utils.randomStr(20),
-        second: Utils.randomStr(30),
-        third: Utils.randomStr()
-      },{
-        first: Utils.randomStr(30),
-        second: Utils.randomStr(20),
-        third: Utils.randomStr()
-      },{
-        first: Utils.randomStr(50),
-        second: Utils.randomStr(40),
-        third: Utils.randomStr()
-      },{
-        first: Utils.randomStr(35),
-        second: Utils.randomStr(25),
-        third: Utils.randomStr()
-      },{
-        first: Utils.randomStr(30),
-        second: Utils.randomStr(30),
-        third: Utils.randomStr()
-      },{
-        first: Utils.randomStr(20),
-        second: Utils.randomStr(40),
-        third: Utils.randomStr()
-      }]
+      return [
+        {
+          first: Utils.randomStr(20),
+          second: Utils.randomStr(30),
+          third: Utils.randomStr(),
+        },
+        {
+          first: Utils.randomStr(30),
+          second: Utils.randomStr(50),
+          third: Utils.randomStr(),
+        },
+        {
+          first: Utils.randomStr(30),
+          second: Utils.randomStr(40),
+          third: Utils.randomStr(),
+        },
+        {
+          first: Utils.randomStr(20),
+          second: Utils.randomStr(30),
+          third: Utils.randomStr(),
+        },
+        {
+          first: Utils.randomStr(30),
+          second: Utils.randomStr(20),
+          third: Utils.randomStr(),
+        },
+        {
+          first: Utils.randomStr(50),
+          second: Utils.randomStr(40),
+          third: Utils.randomStr(),
+        },
+        {
+          first: Utils.randomStr(35),
+          second: Utils.randomStr(25),
+          third: Utils.randomStr(),
+        },
+        {
+          first: Utils.randomStr(30),
+          second: Utils.randomStr(30),
+          third: Utils.randomStr(),
+        },
+        {
+          first: Utils.randomStr(20),
+          second: Utils.randomStr(40),
+          third: Utils.randomStr(),
+        },
+      ];
     },
     tableColumn() {
       return [
         {
-          label: '第一列',
-          prop: 'first',
-          sorter: 'diyilie',
-          width: 220
+          label: "第一列",
+          prop: "first",
+          sorter: "diyilie",
+          width: 220,
         },
         {
-          label: '第2列',
+          label: "第2列",
           getContent(data) {
-            return data.row.second
+            return data.row.second;
           },
-          width: '20%',
-          sorter: 'dierlie'
+          width: "20%",
+          sorter: "dierlie",
         },
         {
-          label: '第三列',
-          slot: 'third'
-        }
-      ]
-    }
+          label: "第三列",
+          slot: "third",
+        },
+      ];
+    },
   },
   methods: {
     sorterChanged(sorter) {
-      console.log(sorter)
-    }
-  }
-}
+      console.log(sorter);
+    },
+  },
+};
 </script>
 
 <style lang="sass" scoped>
 .tsy-table-example-main
-  .p 
+  .p
     padding: 10px
 </style>
