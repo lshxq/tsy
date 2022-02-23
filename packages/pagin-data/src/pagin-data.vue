@@ -8,7 +8,7 @@
         :current-page='pageNo'
         :page-size='pageSize'
         :total='total'
-        layout="total, prev, pager, next"
+        layout="total, sizes, prev, pager, next, jumper"
       )
 </template>
 
@@ -120,3 +120,13 @@ export default {
   }
 }
 </script>
+
+<style lang="sass" scoped>
+.tsy-pagin-data-main
+  width: 100%
+  .paginator-bar
+    width: 100%
+    display: flex
+    justify-content: flex-end
+    margin-top: 20px
+</style>

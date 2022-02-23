@@ -1,9 +1,9 @@
 <template lang="pug">
-  .tsy-vertical-tab-main(ref='mainPanelRef' @mousemove='mousemove' @mousedown='mousedown' @mouseup='mouseup')
+  .tsy-vertical-tab-main(ref='mainPanelRef' @mousemove='mousemove'  @mouseup='mouseup')
     .left(:style='leftStyle')
       .tabs
         .tab(:key='idx' v-for='(tab, idx) of tabs' @click='currentTabIdx = idx') {{tab.label}}
-      .bar(:class='barClass')
+      .bar(:class='barClass' @mousedown='mousedown')
         
     .right
       transition(name="fade" :key='idx' v-for='(tab, idx) of tabs')
@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      leftWdith: 200,
+      leftWdith: 400,
       currentTabIdx: 0,
       move: false,
     }
@@ -84,6 +84,7 @@ export default {
         width: 100%
         padding: 5px 10px
         .tab
+          margin-bottom: 5px
           font-weight: bold
           cursor: pointer
         .tab:hover 
@@ -101,6 +102,7 @@ export default {
       .tab-panel
         display: block
         width: 100%
+        padding: 10px
 
   .fade-enter-active, .fade-leave-active 
     transition: opacity .5s

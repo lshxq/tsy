@@ -1,11 +1,18 @@
 <template lang="pug">
   .pagin-table-example-main
+    .criteria-bar
+      el-input.w200(v-model='query.keyword')
+      | &nbsp;
+      el-select.w200(v-model='query.status')
+        el-option(label='启动' value='up')
+        el-option(label='停止' value='down')
+
     sy-pagin-table(
       url='/pagin/table/example'
       :query='query'
       :mock='mockDataFunc'
       :columns='columns'
-      style='width:600px'
+      style='width:1000px'
     )
       template(v-slot:age='scope') {{scope.data.row.age}}
 </template>
@@ -65,3 +72,8 @@ export default {
   }
 }
 </script>
+
+<style lang="sass" scoped>
+.w200
+  width: 200px
+</style>

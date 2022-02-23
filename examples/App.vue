@@ -1,6 +1,9 @@
 <template lang='pug'>
   #app
     sy-v-tabs(:tabs='tabs')
+      template(slot='home')
+        home
+
       template(slot='basic-table')
         table-example
       
@@ -9,10 +12,11 @@
 
       template(slot='pagin-table')
         pagin-table-example
+
 </template>
 
 <script>
-
+import Home from './components/home.vue'
 import TableExample from './components/table-example.vue'
 import PaginDataExample from './components/pagin-data-example.vue'
 import PaginTableExample from './components/pagin-table-example.vue'
@@ -20,15 +24,19 @@ import PaginTableExample from './components/pagin-table-example.vue'
 const tabsData = () => {
   return [
     {
-      label: '基础Table',
+      label: 'Home',
+      slot: 'home'
+    },
+    {
+      label: '基础Table   sy-table',
       slot: 'basic-table'
     },
     {
-      label: '分页数据',
+      label: '分页数据   sy-pagin-data',
       slot: 'pagin-data'
     },
     {
-      label: '分页Table',
+      label: '分页Table   sy-pagin-table',
       slot: 'pagin-table'
     }
   ]
@@ -42,7 +50,8 @@ export default {
   components: {
     TableExample,
     PaginDataExample,
-    PaginTableExample
+    PaginTableExample,
+    Home
   },
   created() {
     this.tabs = tabsData()
@@ -62,7 +71,6 @@ body,html
   font-family: Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
-  text-align: center
   color: #2c3e50
   height: 100%
 </style>

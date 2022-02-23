@@ -81,3 +81,8 @@ export default {
   }
 }
 </script>
+
+<style lang="sass" scoped>
+.tsy-table-example-main
+  padding: 50px
+</style>

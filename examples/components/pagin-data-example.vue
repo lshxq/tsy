@@ -1,10 +1,18 @@
 <template lang="pug">
   .pagin-data-example-main
+    .criteria-bar
+      el-input.w200(v-model='query.keyword')
+      | &nbsp;
+      el-select.w200(v-model='query.status')
+        el-option(label='启动' value='up')
+        el-option(label='停止' value='down')
+
     sy-pagin-data(
-      url='/test/pagin',
+      url='/pagin/data'
       :query='query'
       :mock='mockDataFunc'
       :pagin-data-mapper='paginDataMapper'
+      style='width: 800px'
     )
       template(slot-scope='scope') 
         .data-row(v-for='(row, idx) of scope.data' :key='idx') {{row}}
@@ -15,8 +23,8 @@ export default {
   data() {
     return {
       query: {
-        p1: 'p one',
-        p2: 'p two'
+        keyword: 'keyword',
+        status: ''
       }
     }
   },
@@ -50,3 +58,15 @@ export default {
   }
 }
 </script>
+
+<style lang="sass" scoped>
+.w200
+  width: 200px
+.criteria-bar
+  margin-bottom: 20px
+.data-row
+  margin-bottom: 10px
+  user-select: none
+.data-row:hover
+  background-color: #e0e0e0
+</style>
