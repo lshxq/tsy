@@ -4,6 +4,7 @@ import App from './App.vue'
 import tsy from '../packages'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import './assets/main.sass'
 
 Vue.config.productionTip = false
 
