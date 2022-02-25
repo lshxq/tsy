@@ -1,6 +1,9 @@
 <template lang="pug">
   .pagin-table-example-main
     .h1 分页Table  sy-pagin-table
+
+    axios-required
+
     .criteria-bar
       el-input.w200(v-model='query.keyword')
       | &nbsp;
@@ -41,14 +44,16 @@
 <script>
 import ColumnDefineComment from './column-define-object-comment.vue'
 import commentMixin from '../mixins/comment-mixins.js'
-import respDataMapperComment from './resp-data-mapper-comment.vue'
+import respDataMapperComment from './pagin-table-resp-data-mapper-comment.vue'
 import paginDataMapperComment from './pagin-data-mapper-comment.vue'
+import axiosRequired from './axios-required.vue'
 
 export default {
   components: {
     ColumnDefineComment,
     respDataMapperComment,
-    paginDataMapperComment
+    paginDataMapperComment,
+    axiosRequired
   },
   mixins: [commentMixin],
   data() {
@@ -85,7 +90,7 @@ export default {
       },
       {
         name: "columns",
-        type: "Array[ColumnDef]",
+        type: "Array<Column>",
       },
       {
         name: "pagin-data-mapper",

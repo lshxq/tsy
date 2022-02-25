@@ -87,7 +87,7 @@ export default {
     this.propTableData = [
       {
         name: 'columns',
-        type: 'Array[ColumnDef]',
+        type: 'Array<Column>',
       },
       {
         name: 'data',

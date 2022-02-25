@@ -24,7 +24,8 @@
                       slot(:name='col.slot' :row='row' :col='{...col, index: colIdx}' :index='rowIdx')
           template(v-else)
             tr
-              td(colspan='9999') 无数据
+              td(colspan='9999') 
+                .no-data-info 无数据
     template(v-else) 没有指定columns参数，无法展示table  
 </template>
 
@@ -137,6 +138,7 @@ export default {
 <style lang='sass' scoped>
   .tsy-table-main 
     width: 100%
+    background-color: #fefefe
     .tsy-table-stripe
       tr:nth-child(even)
         background: #fafafa
@@ -174,5 +176,11 @@ export default {
         text-overflow: ellipsis
         white-space: normal
         word-break: break-all
-    
+  .no-data-info
+    display: flex
+    justify-content: center
+    align-items: center
+    background-color: #f9f9f9
+    height: 50px
+    color: gray
 </style>

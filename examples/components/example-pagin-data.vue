@@ -1,6 +1,8 @@
 <template lang="pug">
   .pagin-data-example-main
+    
     .h1  分页数据组件 sy-pagin-data
+    axios-required
     .criteria-bar
       el-input.w200(v-model='query.keyword')
       | &nbsp;
@@ -46,8 +48,6 @@
 
               template(v-if='scope.row.name == "pagin-data-mapper"')
                 pagin-data-mapper-comment
-              template(v-if='scope.row.name == "resp-data-mapper"')
-                resp-data-mapper-comment  
 
     p.mt100
       .h2 Events
@@ -55,15 +55,15 @@
 </template>
 
 <script>
+import axiosRequired from './axios-required.vue'
 import paginDataExampleCodeJpg from "../assets/pagin-data-example-code.jpg";
 import commentMixin from '../mixins/comment-mixins.js'
-import respDataMapperComment from './resp-data-mapper-comment.vue'
 import paginDataMapperComment from './pagin-data-mapper-comment.vue'
 
 export default {
   components: {
-    respDataMapperComment,
-    paginDataMapperComment
+    paginDataMapperComment,
+    axiosRequired
   },
   mixins: [commentMixin],
   data() {
@@ -106,6 +106,7 @@ export default {
       {
         name: "resp-data-mapper",
         type: "Function",
+        comment: '服务器返回的应答，在传入命名slot之前，会通过这个钩子函数处理，参数是原始应答数据，返回值是处理后的结果。'
       }
     ];
 

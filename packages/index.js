@@ -2,13 +2,15 @@ import VTabs from './vertical-tab'
 import Table from './table'
 import PaginData from './pagin-data'
 import PaginTable from './pagin-table'
+import Options from './options'
 
 
 const components = [
   Table,
   PaginData,
   PaginTable,
-  VTabs
+  VTabs,
+  Options
 ]
 
 const install = (Vue) => {
@@ -26,5 +28,6 @@ export default {
   Table,
   PaginData,
   PaginTable,
-  VTabs
+  VTabs,
+  Options
 }

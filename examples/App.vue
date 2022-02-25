@@ -13,13 +13,17 @@
       template(slot='pagin-table')
         pagin-table-example
 
+      template(slot='options')
+        options-example
+
 </template>
 
 <script>
 import Home from './components/home.vue'
-import TableExample from './components/table-example.vue'
-import PaginDataExample from './components/pagin-data-example.vue'
-import PaginTableExample from './components/pagin-table-example.vue'
+import TableExample from './components/example-table.vue'
+import PaginDataExample from './components/example-pagin-data.vue'
+import PaginTableExample from './components/example-pagin-table.vue'
+import OptionsExample from './components/example-options.vue'
 
 const tabsData = () => {
   return [
@@ -38,6 +42,10 @@ const tabsData = () => {
     {
       label: '分页Table   sy-pagin-table',
       slot: 'pagin-table'
+    },
+    {
+      label: '备选项   sy-options',
+      slot: 'options'
     }
   ]
 }
@@ -48,6 +56,7 @@ const tabsData = () => {
 export default {
   name: 'App',
   components: {
+    OptionsExample,
     TableExample,
     PaginDataExample,
     PaginTableExample,
@@ -75,4 +84,5 @@ body,html
   height: 100%
   padding: 0
   margin: 0
+  background-color: rgba(200, 250, 240, .2)
 </style>

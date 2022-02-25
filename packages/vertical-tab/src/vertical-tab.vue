@@ -5,7 +5,7 @@
         .tab(:key='idx' v-for='(tab, idx) of tabs' @click='currentTabIdx = idx') {{tab.label}}
       .bar(:class='barClass' @mousedown='mousedown')
         
-    .right
+    .right(:style='rightStyle')
       transition(name="fade" :key='idx' v-for='(tab, idx) of tabs')
         .tab-panel(v-if='currentTabIdx === idx' )
           slot(:name='tab.slot')
@@ -41,7 +41,17 @@ export default {
         leftWdith
       } = this
       return {
-        width: `${leftWdith}px`
+        width: `${leftWdith}px`,
+        flex: `1 1 ${leftWdith}px`
+      }
+    },
+    rightStyle() {
+      const {
+        leftWdith
+      } = this
+      return {
+        left: `${leftWdith}px`,
+        width: `calc(100% - ${leftWdith}px)`,
       }
     }
   },
@@ -63,6 +73,9 @@ export default {
 
       if (move) {
         this.leftWdith += event.clientX - lastEvent.clientX
+        if( this.leftWdith < 50) {
+          this.leftWdith = 50
+        }
         this.lastEvent = event
       }
   }
@@ -73,19 +86,22 @@ export default {
 <style lang='sass' scoped>
   .tsy-vertical-tab-main
     height: 100%
-    display: flex
-    flex-flow: row nowrap
+    position: relative
     .left
       user-select: none
-      display: flex
-      flew-flow: row-nowrap
       border-right: 1px solid lightgray
       height: 100%
-      overflow: auto
+      position: absolute
       .tabs
+        position: absolute
         width: 100%
-        padding: 5px 10px
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        overflow: auto
         .tab
+          padding: 5px
           margin-bottom: 5px
           font-weight: bold
           cursor: pointer
@@ -93,16 +109,21 @@ export default {
           opacity: .8
           background-color: #f0f0f0
       .bar
+        position: absolute
+        top: 0
+        right: 0
+        bottom: 0
         width: 10px
         cursor: w-resize
       .bar:hover, .bar.show
         background-color: rgba(10, 10, 10, .5)
     .right
-      position: relative
+      position: absolute
       height: 100%
       overflow: auto
       .tab-panel
-        padding: 10px
+        padding: 10px 10px 50px 10px
+
 
   .fade-enter-active, .fade-leave-active 
     transition: opacity .5s
