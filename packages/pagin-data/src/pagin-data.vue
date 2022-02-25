@@ -106,6 +106,7 @@ export default {
           }
           this.data = respData.data
           this.total = respData.total
+          this.$emit('data-loaded', respData)
         }).catch(() => {
           console.log('加载分页数据失败，请稍后再试' + url)
           console.log(reqCfg)

@@ -164,9 +164,8 @@ export default {
 
       .tsy-table-cell
         min-height: 45px
-        display: flex
+        display: block
         align-items: center
-        
         padding-left: 5px;
         width: 100%
         overflow: hidden

@@ -7,6 +7,7 @@
       :request-method='requestMethod'
       :resp-data-mapper='respDataMapper'
       :pagin-data-mapper='paginDataMapper'
+      @data-loaded='dataLoaded'
     )
       template(slot-scope='scope') 
         sy-table(:data='scope.data' :columns='columns')
@@ -51,6 +52,11 @@ export default {
         }
       }
       return slots
+    }
+  },
+  methods: {
+    dataLoaded(respData) {
+      this.$emit('data-loaded', respData)
     }
   }
 }
