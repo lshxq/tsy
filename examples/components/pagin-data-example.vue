@@ -34,14 +34,38 @@
         .p }
       p 如果服务器返回数据接口不满足上面的要求，可以通过传入respDataMapper:Function 对返回的数据做处理,并返回处理结果
       p 组件会在url的请求参数中自动添加pageNo:Number(当前页码) 和 pageSize:Number(请求数据数)，如果后端接口使用的不是这两个名称，可以通过传入paginDataMapper:Function 来替换成相应的名称。
+      
+      p.mt100
+        .h2 Props
+        sy-table(:columns='propTableColumns' :data='propTableData')
+          template(v-slot:comment='scope') 
+            template(v-if='scope.row.comment') {{scope.row.comment}}
+            template(v-else)
+              template(v-if='scope.row.name == "columns"')
+                column-define-comment
 
-  
+              template(v-if='scope.row.name == "pagin-data-mapper"')
+                pagin-data-mapper-comment
+              template(v-if='scope.row.name == "resp-data-mapper"')
+                resp-data-mapper-comment  
+
+    p.mt100
+      .h2 Events
+      sy-table(:columns='eventTableColumns' :data='eventTableData')
 </template>
 
 <script>
 import paginDataExampleCodeJpg from "../assets/pagin-data-example-code.jpg";
+import commentMixin from '../mixins/comment-mixins.js'
+import respDataMapperComment from './resp-data-mapper-comment.vue'
+import paginDataMapperComment from './pagin-data-mapper-comment.vue'
 
 export default {
+  components: {
+    respDataMapperComment,
+    paginDataMapperComment
+  },
+  mixins: [commentMixin],
   data() {
     return {
       query: {
@@ -51,6 +75,40 @@ export default {
     };
   },
   created() {
+    this.eventTableData = [
+      {
+        name: 'data-loaded',
+        comment: '分页数据加载完成后触发，并把服务器返回结果作为参数返回。'
+      }
+    ];
+
+    this.propTableData = [
+      {
+        name: "url",
+        type: "String",
+        comment: "检索接口的地址",
+      },
+      {
+        name: "request-method",
+        type: "String('GET')",
+        comment: "调用接口的请求方法,默认为GET",
+      },
+      {
+        name: "query",
+        type: "Plain Object",
+        comment: "检索条件对象，发起ajax请求时作为参数传给后端",
+      },
+
+      {
+        name: "pagin-data-mapper",
+        type: "Function",
+      },
+      {
+        name: "resp-data-mapper",
+        type: "Function",
+      }
+    ];
+
     this.paginDataExampleCodeJpg = paginDataExampleCodeJpg;
 
     this.mockDataFunc = (cfg) => {

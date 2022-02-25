@@ -65,14 +65,14 @@ export default {
         this.leftWdith += event.clientX - lastEvent.clientX
         this.lastEvent = event
       }
-    }
+  }
   }
 }
 </script>
 
 <style lang='sass' scoped>
   .tsy-vertical-tab-main
-    min-height: 100%
+    height: 100%
     display: flex
     flex-flow: row nowrap
     .left
@@ -80,6 +80,8 @@ export default {
       display: flex
       flew-flow: row-nowrap
       border-right: 1px solid lightgray
+      height: 100%
+      overflow: auto
       .tabs
         width: 100%
         padding: 5px 10px
@@ -96,12 +98,10 @@ export default {
       .bar:hover, .bar.show
         background-color: rgba(10, 10, 10, .5)
     .right
-      width: 100%
       position: relative
-      overflow: hidden
+      height: 100%
+      overflow: auto
       .tab-panel
-        display: block
-        width: 100%
         padding: 10px
 
   .fade-enter-active, .fade-leave-active 

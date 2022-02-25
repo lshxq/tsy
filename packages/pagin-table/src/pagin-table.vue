@@ -6,11 +6,17 @@
       :mock='mock'
       :request-method='requestMethod'
       :resp-data-mapper='respDataMapper'
-      :pagin-data-mapper='paginDataMapper'
+      :pagin-data-mapper='paginDataMapperPriv'
       @data-loaded='dataLoaded'
     )
       template(slot-scope='scope') 
-        sy-table(:data='scope.data' :columns='columns')
+        sy-table(
+          :data='scope.data' 
+          :columns='columns' 
+          :index-base='indexBaseComputed'
+          :show-index='showIndex'
+          :stripe='stripe'
+          )
           template(:slot='slotName'  v-for='slotName of slotNameArray' slot-scope='scope')
             slot(:name='slotName' :data='scope')
             
@@ -33,9 +39,34 @@ export default {
     },
     respDataMapper: Function,
     paginDataMapper: Function,
-    mock: null
+    mock: null,
+    stripe: { // 隔行变色
+      type: Boolean,
+      default() {
+        return true
+      }
+    },
+    showIndex: { // 显示序号
+      type: Boolean,
+      default() {
+        return true
+      }
+    },
+  },
+  data() {
+    return {
+      pageNo: 1,
+      pageSize: 10
+    }
   },
   computed: {
+    indexBaseComputed() {
+      const {
+        pageNo=1,
+        pageSize=10
+      } = this
+      return (pageNo - 1) * pageSize + 1
+    },
     queryComp() {
       return {
         ...this.query,
@@ -57,6 +88,20 @@ export default {
   methods: {
     dataLoaded(respData) {
       this.$emit('data-loaded', respData)
+    },
+    paginDataMapperPriv(paginInfo) {
+      const {
+        pageNo,
+        pageSize
+      } = paginInfo
+
+      this.pageNo = pageNo
+      this.pageSize = pageSize
+
+      if (this.paginDataMapper) {
+        return this.paginDataMapper(paginInfo)
+      } 
+      return paginInfo
     }
   }
 }

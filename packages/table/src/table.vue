@@ -13,13 +13,15 @@
           template(v-if='dataComp.length > 0')
             tr.tsy-table-row(:key='rowIdx' v-for='(row, rowIdx) of dataComp')
               td.tsy-table-td-cell(v-if='showIndex')
-                .tsy-table-cell.tsy-table-body-cell {{indexBase + rowIdx}}
-              td.tsy-table-td-cell(:key='colIdx' v-for='(col, colIdx) of columnsComp' :style='cellStyle(col)')
                 .tsy-table-cell.tsy-table-body-cell 
-                  template(v-if='col.prop') {{row[col.prop]}}
-                  template(v-if='col.getContent') {{col.getContent({row, col, rowIdx, colIdx})}}
-                  template(v-if='col.slot')
-                    slot(:name='col.slot' :row='row' :col='{...col, index: colIdx}' :index='rowIdx')
+                  .tsy-table-cell-inner {{indexBase + rowIdx}}
+              td.tsy-table-td-cell(:key='colIdx' v-for='(col, colIdx) of columnsComp' :style='cellStyle(col)')
+                .tsy-table-cell.tsy-table-body-cell
+                  .tsy-table-cell-inner 
+                    template(v-if='col.prop') {{row[col.prop]}}
+                    template(v-if='col.getContent') {{col.getContent({row, col, rowIdx, colIdx})}}
+                    template(v-if='col.slot')
+                      slot(:name='col.slot' :row='row' :col='{...col, index: colIdx}' :index='rowIdx')
           template(v-else)
             tr
               td(colspan='9999') 无数据
@@ -164,7 +166,7 @@ export default {
 
       .tsy-table-cell
         min-height: 45px
-        display: block
+        display: flex
         align-items: center
         padding-left: 5px;
         width: 100%
