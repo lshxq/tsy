@@ -1,25 +1,35 @@
 <template lang="pug">
   .tsy-options-main(v-loading='loading')
-    template
+    .tsy-options-type-1(v-if='type == 1')
+      .label(v-if='label') {{label}}:
+      el-select(v-model='value' :placeholder='placeholderComp')
+        el-option(v-if='firstOption' :value='firstOption.value' :label='firstOption.label')
+        el-option(v-for='(opt, idx) of options' :value='opt.value' :label='opt.label')
+
+    .tsy-options-type-2(v-if='type == 2')
+      el-select(v-model='value'  :placeholder='placeholderComp')
+        el-option(v-if='firstOption' :value='firstOption.value' :label='firstOption.label')
+        el-option(v-for='(opt, idx) of options' :value='opt.value' :label='opt.label')
+
+    .tsy-options-type-3(v-if='type == 3')
       .block-options
         .label {{labelComp}}：
         .options
+          .option(:class='blockOptionsOptionClass(firstOption)'  v-if='firstOption' @click='value = firstOption.value') {{firstOption.label}}
           .option(
             :class='blockOptionsOptionClass(opt)' 
             v-for='(opt, idx) of options'
             :key='idx'
-            @click='value = opt.value') {{opt.label}} 1
+            @click='value = opt.value') {{opt.label}}
 
-    template
-      el-select(v-model='value')
-        el-option(v-for='(opt, idx) of options' :value='opt.value' :label='opt.label')
+    .tsy-options-type-4(v-if='type == 4') type 4
 </template>
 
 <script>
-const cachedRequest = {}
+const cachedRequest = {};
 
 export default {
-  name: 'SyOptions',
+  name: "SyOptions",
   props: {
     label: String,
     url: String,
@@ -28,80 +38,79 @@ export default {
     cachable: {
       type: Boolean,
       default() {
-        return true
-      }
+        return true;
+      },
     },
     type: {
       type: null,
       default() {
-        return 1
-      }
-    }
+        return 1;
+      },
+    },
+    firstOption: Object,
   },
-  created() {
-
-  },
+  created() {},
   data() {
     return {
       loading: false,
       options: [],
-      value: '',
-    }
+      value: "",
+    };
   },
   computed: {
-    
+    placeholderComp() {
+      const { label } = this;
+      if (label) {
+        return `请选择${label}`;
+      }
+      return "";
+    },
     labelComp() {
-      const {
-        label = '选项集合'
-      } = this
-      return label
-    }
+      const { label = "选项集合" } = this;
+      return label;
+    },
   },
   mounted() {
-    this.loadData()
+    this.loadData();
   },
   methods: {
     blockOptionsOptionClass(opt) {
-      const {
-        value
-      } = this
+      const { value } = this;
       return {
-        selected: value === opt.value
-      }
+        selected: value === opt.value,
+      };
     },
     loadData() {
-      const that = this
-      const {
-        url,
-        respDataMapper,
-        mock,
-        cachable
-      } = that
+      const that = this;
+      const { url, respDataMapper, mock, cachable } = that;
       if (url) {
-        let prom = cachedRequest[url]
+        let prom = cachedRequest[url];
         if (!prom || !cachable) {
-          that.loading = true
+          that.loading = true;
           prom = that.$axios({
             url,
-            mock
+            mock,
+          });
+          cachedRequest[url] = prom;
+        }
+        prom
+          .then((resp) => {
+            let respData = resp.data;
+            if (respDataMapper) {
+              respData = respDataMapper(respData);
+            }
+            this.options = respData;
           })
-          cachedRequest[url] = prom
-        } 
-        prom.then(resp => {
-          let respData = resp.data
-          if (respDataMapper) {
-            respData = respDataMapper(respData)
-          }
-          this.options = respData
-        }).catch(ex => {
-          console.log(`加载Options失败 ${url}`, ex)
-        }).finally(() => {
-          that.loading = false
-        })
+          .catch((ex) => {
+            console.log(`加载Options失败 ${url}`, ex);
+          })
+          .finally(() => {
+            that.loading = false;
+          });
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="sass" scoped>
@@ -110,7 +119,7 @@ export default {
   align-items: center
   user-select: none
   .label
-    min-width: 100px
+    min-width: 80px
     margin-bottom: 10px
   .options
     display: flex
@@ -123,5 +132,11 @@ export default {
       margin-bottom: 10px
     .option:hover, .option.selected
       background-color: #D9B300
-      color: white	
+      color: white
+
+.tsy-options-type-1
+  display: flex
+  align-items: center
+  .label
+    margin-right: 10px
 </style>

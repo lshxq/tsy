@@ -4,17 +4,40 @@
 
     axios-required
 
-    sy-options.mt30(
-      label='颜色'
-      url='/example/options'
-      :mock='mockData'
-    )
+    p 组件定义了多重常用的外观，可以通过传入type:Number 来指定外观
 
-    sy-options.mt30(
-      url='/example/options'
-      :mock='mockData'
-      type='2'
-    )
+    p.mt30 type 1, 一般表单样式，左侧label，右侧选择框
+      sy-options(
+        label='颜色'
+        :first-option='{label: "All", value: ""}'
+        url='/example/options'
+        :mock='mockData'
+      )
+
+    p.mt30 type 2， 检索条件样式，不显示label，只根据label提供 placeholder的值
+      sy-options(
+        label='颜色'
+        url='/example/options'
+        :mock='mockData'
+        type='2'
+      )
+
+    p.mt30 type 3， 通常 card 类型的 检索结果 会 使用这这种 选择 器， 购物网站
+      sy-options(
+        :first-option='{label: "全部", value: ""}'
+        label='颜色'
+        url='/example/options'
+        :mock='mockData'
+        type='3'
+      )
+
+    p.mt30 type 4， radio 或者 checkbox样式
+      sy-options(
+        label='颜色'
+        url='/example/options'
+        :mock='mockData'
+        type='4'
+      )
 
     .mt100 项目中很多备选项，是以数据字典的形式，配置在后端数据库中的，需要前端通过 ajax调用接口 拉回来数据集合，并展示，如果每个人单独开发，开发成本高，维护成本也高。
     p sy-options集成了数拉取的动作，使用该组件，仅需要提供数据源的url地址即可。
@@ -40,49 +63,51 @@
 </template>
 
 <script>
-import axiosRequired from './axios-required.vue'
-import commentMixin from '../mixins/comment-mixins.js'
+import axiosRequired from "./axios-required.vue";
+import commentMixin from "../mixins/comment-mixins.js";
 
 export default {
   components: {
-    axiosRequired
+    axiosRequired,
   },
   mixins: [commentMixin],
   created() {
     this.mockData = [
       {
-        label: '备选项1',
-        value: '1'
+        label: "备选项1",
+        value: "1",
       },
       {
-        label: '2222',
-        value: 'B'
+        label: "2222",
+        value: "B",
       },
       {
-        label: 'CCCC',
-        value: 'C'
-      }
+        label: "CCCC",
+        value: "C",
+      },
     ];
     this.propTableData = [
       {
-        name: 'url',
-        type: 'String',
+        name: "url",
+        type: "String",
       },
       {
-        name: 'options',
-        type: 'Array<Option>'
+        name: "options",
+        type: "Array<Option>",
       },
       {
-        name: 'resp-data-mapper',
-        type: 'Function',
-        comment: '如果接口返回的数据不是 Array<Option> 的形式，可以利用这个钩子函数进行转换，参数是原始应答数据，返回结果是处理后的数据。'
+        name: "resp-data-mapper",
+        type: "Function",
+        comment:
+          "如果接口返回的数据不是 Array<Option> 的形式，可以利用这个钩子函数进行转换，参数是原始应答数据，返回结果是处理后的数据。",
       },
       {
-        name: 'cachable',
-        type: 'Boolean(true)',
-        comment: '因为数据字典极少发生变化，意味着相同的url每次返回的应答应该是一样的，因此组件会对相同的url默认做缓存，在刷新页面之前不会尝试从新拉取数据。'
-      }
-    ]
-  }
-}
+        name: "cachable",
+        type: "Boolean(true)",
+        comment:
+          "因为数据字典极少发生变化，意味着相同的url每次返回的应答应该是一样的，因此组件会对相同的url默认做缓存，在刷新页面之前不会尝试从新拉取数据。",
+      },
+    ];
+  },
+};
 </script>
