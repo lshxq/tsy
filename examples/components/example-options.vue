@@ -4,40 +4,68 @@
 
     axios-required
 
-    p 组件定义了多重常用的外观，可以通过传入type:Number 来指定外观
+    p 组件定义了多种常用的外观，可以通过传入type:Number 来指定外观
 
-    p.mt30 type 1, 一般表单样式，左侧label，右侧选择框
-      sy-options(
-        label='颜色'
-        :first-option='{label: "All", value: ""}'
-        url='/example/options'
-        :mock='mockData'
-      )
+    p.mt100 单选模式  multiple=false
+      p.mt30 type 1, 一般表单样式
+        sy-options(
+          label='颜色'
+          v-model='value'
+          :first-option='{label: "All", value: ""}'
+          url='/example/options'
+          :mock='mockData'
+        )
 
-    p.mt30 type 2， 检索条件样式，不显示label，只根据label提供 placeholder的值
-      sy-options(
-        label='颜色'
-        url='/example/options'
-        :mock='mockData'
-        type='2'
-      )
+      p.mt30 type 2， radio or checkbox
+        sy-options(
+          label='颜色'
+          v-model='value'
+          url='/example/options'
+          :mock='mockData'
+          type='2'
+        )
 
-    p.mt30 type 3， 通常 card 类型的 检索结果 会 使用这这种 选择 器， 购物网站
-      sy-options(
-        :first-option='{label: "全部", value: ""}'
-        label='颜色'
-        url='/example/options'
-        :mock='mockData'
-        type='3'
-      )
+      p.mt30 type 3， 通常 card 类型的 检索结果 会 使用这这种 选择 器， 购物网站
+        sy-options(
+          :first-option='{label: "全部", value: ""}'
+          label='颜色'
+          v-model='value'
+          url='/example/options'
+          :mock='mockData'
+          type='3'
+        )
 
-    p.mt30 type 4， radio 或者 checkbox样式
-      sy-options(
-        label='颜色'
-        url='/example/options'
-        :mock='mockData'
-        type='4'
-      )
+    p.mt100 多选模式  multiple=true
+      p.mt30 type 1, 一般表单样式
+        sy-options(
+          label='颜色'
+          v-model='value'
+          :first-option='{label: "All", value: ""}'
+          url='/example/options'
+          :mock='mockData'
+          multiple
+        )
+
+      p.mt30 type 2， radio or checkbox
+        sy-options(
+          label='颜色'
+          v-model='value'
+          url='/example/options'
+          :mock='mockData'
+          type='2'
+          multiple
+        )
+
+      p.mt30 type 3， 通常 card 类型的 检索结果 会 使用这这种 选择 器， 购物网站
+        sy-options(
+          :first-option='{label: "全部", value: ""}'
+          label='颜色'
+          v-model='value'
+          url='/example/options'
+          :mock='mockData'
+          type='3'
+          multiple
+        )
 
     .mt100 项目中很多备选项，是以数据字典的形式，配置在后端数据库中的，需要前端通过 ajax调用接口 拉回来数据集合，并展示，如果每个人单独开发，开发成本高，维护成本也高。
     p sy-options集成了数拉取的动作，使用该组件，仅需要提供数据源的url地址即可。
@@ -58,8 +86,6 @@
                   .intend ...
                 .intend ]
 
-            template(v-if='scope.row.name == "options"')
-              p 如果是前端定义的备选项数据，不需要ajax拉取，可以直接传入 options 代替url 地址。options的结构和接口返回的数据一致
 </template>
 
 <script>
@@ -71,6 +97,11 @@ export default {
     axiosRequired,
   },
   mixins: [commentMixin],
+  data() {
+    return {
+      value: "",
+    };
+  },
   created() {
     this.mockData = [
       {
@@ -88,12 +119,23 @@ export default {
     ];
     this.propTableData = [
       {
+        name: "label",
+        type: "String",
+        comment: "标签内容",
+      },
+      {
+        name: "v-model",
+        comnent: "支持绑定值",
+      },
+      {
         name: "url",
         type: "String",
       },
       {
         name: "options",
         type: "Array<Option>",
+        comment:
+          "如果是前端定义的备选项数据，不需要ajax拉取，可以直接传入 options 代替url 地址。options的结构和接口返回的数据一致",
       },
       {
         name: "resp-data-mapper",

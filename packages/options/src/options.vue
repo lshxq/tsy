@@ -1,28 +1,32 @@
 <template lang="pug">
   .tsy-options-main(v-loading='loading')
     .tsy-options-type-1(v-if='type == 1')
-      .label(v-if='label') {{label}}:
-      el-select(v-model='value' :placeholder='placeholderComp')
+      el-select(:value='value'  :placeholder='placeholderComp' @input='valueChanged' :multiple='multiple')
         el-option(v-if='firstOption' :value='firstOption.value' :label='firstOption.label')
-        el-option(v-for='(opt, idx) of options' :value='opt.value' :label='opt.label')
+        el-option(v-for='(opt, idx) of optionsComputed' :value='opt.value' :label='opt.label')
 
     .tsy-options-type-2(v-if='type == 2')
-      el-select(v-model='value'  :placeholder='placeholderComp')
-        el-option(v-if='firstOption' :value='firstOption.value' :label='firstOption.label')
-        el-option(v-for='(opt, idx) of options' :value='opt.value' :label='opt.label')
+      template(v-if='multiple')
+        el-checkbox-group(:value='value' @input='valueChanged')
+          el-checkbox(
+            :key='idx' v-for='(opt, idx) of optionsComputed' 
+            :label='opt.label'
+            :value='opt.value')
 
+      el-radio-group(v-else :value='value' @input='valueChanged')
+        el-radio(v-if='firstOption' :label='firstOption.value') {{firstOption.label}}
+        el-radio(:key='idx' v-for='(opt, idx) of optionsComputed' :label='opt.value') {{opt.label}}
+    
     .tsy-options-type-3(v-if='type == 3')
       .block-options
         .label {{labelComp}}：
         .options
-          .option(:class='blockOptionsOptionClass(firstOption)'  v-if='firstOption' @click='value = firstOption.value') {{firstOption.label}}
+          .option(:class='blockOptionsOptionClass(firstOption)'  v-if='firstOption' @click='valueChanged(firstOption.value)') {{firstOption.label}}
           .option(
             :class='blockOptionsOptionClass(opt)' 
-            v-for='(opt, idx) of options'
+            v-for='(opt, idx) of optionsComputed'
             :key='idx'
-            @click='value = opt.value') {{opt.label}}
-
-    .tsy-options-type-4(v-if='type == 4') type 4
+            @click='valueChanged(opt.value)') {{opt.label}}
 </template>
 
 <script>
@@ -32,6 +36,13 @@ export default {
   name: "SyOptions",
   props: {
     label: String,
+    value: null,
+    multiple: {
+      type: Boolean,
+      default() {
+        return false;
+      },
+    },
     url: String,
     respDataMapper: Function,
     mock: null,
@@ -54,10 +65,12 @@ export default {
     return {
       loading: false,
       options: [],
-      value: "",
     };
   },
   computed: {
+    optionsComputed() {
+      return this.options;
+    },
     placeholderComp() {
       const { label } = this;
       if (label) {
@@ -74,6 +87,12 @@ export default {
     this.loadData();
   },
   methods: {
+    checkboxClicked(value) {
+      console.log(value);
+    },
+    valueChanged(value) {
+      this.$emit("input", value);
+    },
     blockOptionsOptionClass(opt) {
       const { value } = this;
       return {
@@ -139,4 +158,5 @@ export default {
   align-items: center
   .label
     margin-right: 10px
+    min-width: 120px
 </style>
