@@ -1,4 +1,4 @@
-<template lang='pug'>
+<template lang="pug">
   #app
     sy-v-tabs(:tabs='tabs')
       template(slot='home')
@@ -16,67 +16,70 @@
       template(slot='options')
         options-example
 
+      template(slot='search-input')
+        search-input-example
+
 </template>
 
 <script>
-import Home from './components/home.vue'
-import TableExample from './components/example-table.vue'
-import PaginDataExample from './components/example-pagin-data.vue'
-import PaginTableExample from './components/example-pagin-table.vue'
-import OptionsExample from './components/example-options.vue'
+import Home from "./components/home.vue";
+import TableExample from "./components/example-table.vue";
+import PaginDataExample from "./components/example-pagin-data.vue";
+import PaginTableExample from "./components/example-pagin-table.vue";
+import OptionsExample from "./components/example-options.vue";
+import SearchInputExample from "./components/example-search-input.vue";
 
 const tabsData = () => {
   return [
     {
-      label: 'Home',
-      slot: 'home'
+      label: "Home",
+      slot: "home",
     },
     {
-      label: '基础Table   sy-table',
-      slot: 'basic-table'
+      label: "基础Table   sy-table",
+      slot: "basic-table",
     },
     {
-      label: '分页数据   sy-pagin-data',
-      slot: 'pagin-data'
+      label: "分页数据   sy-pagin-data",
+      slot: "pagin-data",
     },
     {
-      label: '分页Table   sy-pagin-table',
-      slot: 'pagin-table'
+      label: "分页Table   sy-pagin-table",
+      slot: "pagin-table",
     },
     {
-      label: '备选项   sy-options',
-      slot: 'options'
-    }
-  ]
-}
-
-
-
+      label: "备选项   sy-options",
+      slot: "options",
+    },
+    {
+      label: "检索输入框 sy-search-input",
+      slot: "search-input",
+    },
+  ];
+};
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     OptionsExample,
     TableExample,
     PaginDataExample,
     PaginTableExample,
-    Home
+    Home,
+    SearchInputExample,
   },
   created() {
-    this.tabs = tabsData()
-
+    this.tabs = tabsData();
   },
-  methods: {
-    
-  }
-}
+  methods: {},
+};
 </script>
 <style lang="sass">
 body,html
   height: 100%
 </style>
-<style lang='sass' scoped>
-#app 
+<style lang="sass" scoped>
+#app
   font-family: Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
