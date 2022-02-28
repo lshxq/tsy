@@ -19,6 +19,11 @@
       template(slot='search-input')
         search-input-example
 
+      template(slot='split-screen-vertical')
+        split-screen-example
+
+      template(slot='preview')
+        preview-example
 </template>
 
 <script>
@@ -28,6 +33,8 @@ import PaginDataExample from "./components/example-pagin-data.vue";
 import PaginTableExample from "./components/example-pagin-table.vue";
 import OptionsExample from "./components/example-options.vue";
 import SearchInputExample from "./components/example-search-input.vue";
+import SplitScreenExample from './components/example-split-screen-vertical.vue'
+import PreviewExample from './components/example-preview.vue'
 
 const tabsData = () => {
   return [
@@ -55,6 +62,14 @@ const tabsData = () => {
       label: "检索输入框 sy-search-input",
       slot: "search-input",
     },
+    {
+      label: "纵向分屏 sy-split-screen-vertical",
+      slot: "split-screen-vertical",
+    },
+    {
+      label: "图片预览 sy-preview",
+      slot: "preview",
+    },
   ];
 };
 
@@ -67,6 +82,8 @@ export default {
     PaginTableExample,
     Home,
     SearchInputExample,
+    SplitScreenExample,
+    PreviewExample,
   },
   created() {
     this.tabs = tabsData();

@@ -5,8 +5,10 @@ import PaginTable from "./pagin-table";
 import Options from "./options";
 import SearchInput from "./search-input";
 import Checkbox from './checkbox'
+import SplitScreenVertical from './split-screen-vertical'
+import ImagePreview from './preview'
 
-const components = [Table, PaginData, PaginTable, VTabs, Options, SearchInput, Checkbox];
+const components = [SplitScreenVertical, Table, PaginData, PaginTable, VTabs, Options, SearchInput, Checkbox, ImagePreview];
 
 const install = (Vue) => {
   if (install.installed) return;
@@ -24,5 +26,7 @@ export default {
   PaginTable,
   VTabs,
   Options,
-  Checkbox
+  Checkbox,
+  SplitScreenVertical,
+  ImagePreview
 };
