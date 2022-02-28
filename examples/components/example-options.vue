@@ -16,7 +16,7 @@
           :mock='mockData'
         )
 
-      p.mt30 type 2， radio or checkbox
+      p.mt30 type 2， radio 
         sy-options(
           label='颜色'
           v-model='value'
@@ -46,7 +46,7 @@
           multiple
         )
 
-      p.mt30 type 2， radio or checkbox
+      p.mt30 type 2， checkbox
         sy-options(
           label='颜色'
           v-model='value'

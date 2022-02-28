@@ -4,8 +4,9 @@ import PaginData from "./pagin-data";
 import PaginTable from "./pagin-table";
 import Options from "./options";
 import SearchInput from "./search-input";
+import Checkbox from './checkbox'
 
-const components = [Table, PaginData, PaginTable, VTabs, Options, SearchInput];
+const components = [Table, PaginData, PaginTable, VTabs, Options, SearchInput, Checkbox];
 
 const install = (Vue) => {
   if (install.installed) return;
@@ -23,4 +24,5 @@ export default {
   PaginTable,
   VTabs,
   Options,
+  Checkbox
 };

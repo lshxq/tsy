@@ -7,26 +7,29 @@
 
     .tsy-options-type-2(v-if='type == 2')
       template(v-if='multiple')
-        el-checkbox-group(:value='value' @input='valueChanged')
-          el-checkbox(
-            :key='idx' v-for='(opt, idx) of optionsComputed' 
-            :label='opt.label'
-            :value='opt.value')
+        sy-checkbox(
+          :key='idx' v-for='(opt, idx) of optionsComputed' 
+          :label='opt.value'
+          :checked='checkboxState(opt)'
+          @click='checkboxClicked(opt)') {{opt.label}}
 
       el-radio-group(v-else :value='value' @input='valueChanged')
         el-radio(v-if='firstOption' :label='firstOption.value') {{firstOption.label}}
-        el-radio(:key='idx' v-for='(opt, idx) of optionsComputed' :label='opt.value') {{opt.label}}
+        el-radio(:key='idx' v-for='(opt, idx) of optionsComputed' :label='opt.label' :value='opt.value')
     
     .tsy-options-type-3(v-if='type == 3')
       .block-options
         .label {{labelComp}}：
         .options
-          .option(:class='blockOptionsOptionClass(firstOption)'  v-if='firstOption' @click='valueChanged(firstOption.value)') {{firstOption.label}}
+          .option(
+            :class='blockOptionsOptionClass(firstOption)'  
+            v-if='firstOption' 
+            @click='optionClicked(firstOption.value)') {{firstOption.label}}
           .option(
             :class='blockOptionsOptionClass(opt)' 
             v-for='(opt, idx) of optionsComputed'
             :key='idx'
-            @click='valueChanged(opt.value)') {{opt.label}}
+            @click='optionClicked(opt.value)') {{opt.label}}
 </template>
 
 <script>
@@ -68,6 +71,24 @@ export default {
     };
   },
   computed: {
+    reasonableValue() {
+      const {
+        value,
+        multiple
+      } = this
+      if (multiple) {
+        if (value instanceof Array) {
+          return value
+        } else {
+          if (value !== undefined) {
+            return [value]
+          } else {
+            return []
+          }
+        }
+      }
+      return value
+    },
     optionsComputed() {
       return this.options;
     },
@@ -87,17 +108,64 @@ export default {
     this.loadData();
   },
   methods: {
-    checkboxClicked(value) {
-      console.log(value);
+    checkboxState(opt) {
+      const {
+        value
+      } = this
+      if (value instanceof Array) {
+        const idx = value.findIndex(ele => ele === opt.value)
+        return idx >= 0
+      } else {
+        return opt.value === value
+      }
+    },
+    checkboxClicked(opt) {
+      const {
+        reasonableValue
+      } = this
+      const idx = reasonableValue.findIndex(ele => ele === opt.value)
+      if (idx >= 0) { // 需要移除
+        reasonableValue.splice(idx, 1)
+      } else { // 需要添加
+        reasonableValue.push(opt.value)
+      }
+      this.$emit('input', reasonableValue)
     },
     valueChanged(value) {
       this.$emit("input", value);
     },
     blockOptionsOptionClass(opt) {
-      const { value } = this;
+      const { reasonableValue,multiple } = this;
+      let selected = false
+      if (multiple) {
+        const found = reasonableValue.find((str) => {
+          return str === opt.value
+        })
+        selected = found !== undefined
+      } else {
+        selected = reasonableValue === opt.value
+      }
       return {
-        selected: value === opt.value,
+        selected,
       };
+    },
+    optionClicked(val) {
+      const {
+        multiple,
+        reasonableValue
+      } = this
+      if (multiple) {
+        const idx = reasonableValue.findIndex(ele => ele === val)
+        if (idx >= 0) { // 需要移除
+          reasonableValue.splice(idx, 1)
+        } else { // 需要添加
+          reasonableValue.push(val)
+        }
+        this.$emit('input', reasonableValue)
+      } else {
+        this.$emit('input', val)
+      }
+      
     },
     loadData() {
       const that = this;
