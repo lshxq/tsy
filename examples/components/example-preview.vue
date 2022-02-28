@@ -17,7 +17,8 @@
 
     p.mt100
       .h2 Props
-      sy-table(:columns='propTableColumns')
+      sy-table(:columns='propTableColumns' :data='propTableData')
+        template(v-slot:comment='scope') {{scope.row.comment}}
 </template>
 
 <script>
@@ -25,7 +26,15 @@ import commentMixins from '../mixins/comment-mixins.js'
 
 export default {
   mixins: [commentMixins],
-
+  created() {
+    this.propTableData = [
+      {
+        name: 'images',
+        type: 'Array<URL>',
+        comment: '需要预览的图片的url数组.'
+      }
+    ]
+  },
   data() {
     return {
       images: [
