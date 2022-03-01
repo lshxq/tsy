@@ -1,4 +1,5 @@
 module.exports = {
+  publicPath: "/tsyvue",
   pages: {
     index: {
       entry: 'examples/main.js',
