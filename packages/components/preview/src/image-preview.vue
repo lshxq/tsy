@@ -5,9 +5,9 @@
         .mask
           .image-container
             img(:src='imgSrc')
-          .right-button.round-btn(@click='next(1)')
+          .right-button.round-btn(@click='next(1)' v-if='images.length > 1')
             .el-icon-arrow-right
-          .left-button.round-btn(@click='next(-1)')
+          .left-button.round-btn(@click='next(-1)' v-if='images.length > 1')
             .el-icon-arrow-left
           .close-button.round-btn(@click='visibility = false')
             .el-icon-close

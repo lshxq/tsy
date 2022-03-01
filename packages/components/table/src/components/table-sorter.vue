@@ -1,10 +1,10 @@
 <template lang="pug">
   .tsy-table-sorter-main
     .table-sorter-inner
-      img.icon(v-if='!ascend' src='../../../assets/images/arrow-up-gray.png' @click='sorterClicked("ascend")')
-      img.icon(v-else src='../../../assets/images/arrow-up-blue.png' @click='sorterClicked("")')
-      img.icon(v-if='!descend' src='../../../assets/images/arrow-down-gray.png' @click='sorterClicked("descend")')
-      img.icon(v-else src='../../../assets/images/arrow-down-blue.png' @click='sorterClicked("")')
+      img.icon(v-if='!ascend' src='../../../../assets/images/arrow-up-gray.png' @click='sorterClicked("ascend")')
+      img.icon(v-else src='../../../../assets/images/arrow-up-blue.png' @click='sorterClicked("")')
+      img.icon(v-if='!descend' src='../../../../assets/images/arrow-down-gray.png' @click='sorterClicked("descend")')
+      img.icon(v-else src='../../../../assets/images/arrow-down-blue.png' @click='sorterClicked("")')
 </template>
 
 <script>

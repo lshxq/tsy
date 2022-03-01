@@ -1,12 +1,15 @@
-import VTabs from "./vertical-tab";
-import Table from "./table";
-import PaginData from "./pagin-data";
-import PaginTable from "./pagin-table";
-import Options from "./options";
-import SearchInput from "./search-input";
-import Checkbox from './checkbox'
-import SplitScreenVertical from './split-screen-vertical'
-import ImagePreview from './preview'
+import VTabs from "./components/vertical-tab";
+import Table from "./components/table";
+import PaginData from "./components/pagin-data";
+import PaginTable from "./components/pagin-table";
+import Options from "./components/options";
+import SearchInput from "./components/search-input";
+import Checkbox from './components/checkbox'
+import SplitScreenVertical from './components/split-screen-vertical'
+import ImagePreview from './components/preview'
+
+
+import FormMixin from './mixins/form-mixin'
 
 const components = [SplitScreenVertical, Table, PaginData, PaginTable, VTabs, Options, SearchInput, Checkbox, ImagePreview];
 
@@ -21,6 +24,7 @@ if (typeof window !== "undefined" && window.Vue) {
 
 export default {
   install,
+  // components
   Table,
   PaginData,
   PaginTable,
@@ -28,5 +32,7 @@ export default {
   Options,
   Checkbox,
   SplitScreenVertical,
-  ImagePreview
+  ImagePreview,
+  // mixins
+  FormMixin
 };
