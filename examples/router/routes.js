@@ -96,6 +96,15 @@ const naviRoutes = [
     },
     component: () => import("../views/form-mixin/user-form-update.vue"),
   },
+  {
+    path: '/thanks',
+    name: 'thanks',
+    meta: {
+      label: '特别感谢',
+      navi: 'thanks'
+    },
+    component: () => import("../views/thanks.vue")
+  }
 ]
 
 export default naviRoutes

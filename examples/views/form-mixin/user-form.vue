@@ -1,8 +1,8 @@
 <template lang="pug">
   .tsy-form-mixin-example-main-form
     el-form(:model="modified", label-width="80px", ref="formRef", :rules="rules")
-      el-form-item(label="姓名", prop="name")
-        el-input.w400(v-model.trim="modified.name" show-word-limit :maxlength='30')
+      el-form-item(label="姓名", prop="name" )
+        el-input.w400(:disabled='!!id' v-model.trim="modified.name" show-word-limit :maxlength='30')
 
       el-form-item(label="性别")
         el-radio-group(v-model="modified.gender")

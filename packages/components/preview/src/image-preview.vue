@@ -3,15 +3,24 @@
     template(v-if='visibility')
       transition(name="fade")
         .mask
-          .image-container
-            img(:src='imgSrc')
+          .image-container(@mouseup='move = false' @mousemove='mousemove')
+            .anchor
+              img(:src='imgSrc' 
+                  :style='imageStyle'
+                  draggable='false' 
+                  @load='imageLoaded' 
+                  @mousedown='mousedown')
           .right-button.round-btn(@click='next(1)' v-if='images.length > 1')
             .el-icon-arrow-right
           .left-button.round-btn(@click='next(-1)' v-if='images.length > 1')
             .el-icon-arrow-left
           .close-button.round-btn(@click='visibility = false')
             .el-icon-close
-
+          .toolbar
+            .el-icon-zoom-out.btn(@click='zoom(-0.1)')
+            .el-icon-zoom-in.btn(@click='zoom(0.1)')
+            .el-icon-refresh-left.btn(@click='rotate -= 90')
+            .el-icon-refresh-right.btn(@click='rotate +=  90')
 </template>
 
 <script>
@@ -35,9 +44,23 @@ export default {
     return {
       visibility: false,
       showIndex: 0,
+      move: false,
+      left: 0,
+      top: 0,
+      scale: 1,
+      rotate: 0
     }
   },
   computed: {
+    imageStyle() {
+      return {
+        left: `${this.left}px`,
+        top: `${this.top}px`,
+        zoom: this.scale,
+        transform: `translate(-50%, -50%) rotate(${this.rotate}deg)`,
+        
+      }
+    },
     imgSrc() {
       const {
         showIndex,
@@ -50,11 +73,39 @@ export default {
     }
   },
   methods: {
+    zoom(step) {
+      this.scale += step
+      if (this.scale < .2) {
+        this.scale = .2
+      }
+    },
+    imageLoaded(evt) {
+      console.log(evt.target)
+    },
+    mousedown(event) {
+      this.move = true
+      this.lastEvent = event
+    },
+    mousemove(event) {
+      const {
+        lastEvent,
+        move
+      } = this
+
+      if (move) {
+        this.left += event.clientX - lastEvent.clientX
+        this.top += event.clientY - lastEvent.clientY
+        this.lastEvent = event
+      }
+    },
     show(index=0) {
       this.showIndex = index
       this.visibility = true
     },
     next(delta) {
+      this.left = 0
+      this.top = 0
+      this.rotate = 0
       let idx = this.showIndex + delta
       if (idx >= this.images.length) {
         idx = 0
@@ -84,7 +135,25 @@ export default {
     left: 0
     right: 0
     background-color: rgba(0, 0, 0, .5)
+    z-index: 999
     
+    .toolbar
+      background-color: rgba(0, 0, 0, .5)
+      color: #e0e0e0
+      position: absolute
+      bottom: 30px
+      left: calc(50% - 60px)
+      width: 200px
+      padding: 10px 20px
+      display: flex
+      justify-content: space-between
+      border-radius: 15px
+      .btn:hover
+        color: white
+      .btn
+        font-size: 25px
+        cursor: pointer
+
     .round-btn
       position: absolute
       top: 50%
@@ -112,9 +181,15 @@ export default {
       display: flex
       justify-content: center
       align-items: center
-      img 
-        max-height: 100%
-        max-width: 100%
+      .anchor
+        position: relative
+        display: inline-block
+        width: 1px
+        height: 1px
+        overflow: visible
+        img 
+          position: absolute
+          
 
 .fade-enter-active, .fade-leave-active 
   transition: opacity .5s

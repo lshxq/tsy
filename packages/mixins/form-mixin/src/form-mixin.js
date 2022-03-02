@@ -4,6 +4,7 @@ export default {
   props: {
     url: String,
     id: null,
+    mock: null
   },
   data() {
     return {
@@ -51,13 +52,14 @@ export default {
   },
   mounted() {
     const that = this;
-    const { id, url } = that;
+    const { id, url, mock } = that;
     if (that.editMode) {
       // 加载数据
       that.state.loading = true;
       that.$axios({
           url: `${url}/${id}`,
           method: "GET",
+          mock
         })
         .then((rv) => {
           const model = that.dataLoaded(_.get(rv, "data"));
