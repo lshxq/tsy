@@ -4,7 +4,7 @@
 
     axios-required
 
-    .criteria-bar
+    .criteria-bar.mb10
       el-input.w200(v-model='query.keyword')
       | &nbsp;
       el-select.w200(v-model='query.status')

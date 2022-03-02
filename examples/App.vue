@@ -1,94 +1,45 @@
 <template lang="pug">
   #app
-    sy-v-tabs(:tabs='tabs')
-      template(slot='home')
-        home
-
-      template(slot='basic-table')
-        table-example
-      
-      template(slot='pagin-data')
-        pagin-data-example
-
-      template(slot='pagin-table')
-        pagin-table-example
-
-      template(slot='options')
-        options-example
-
-      template(slot='search-input')
-        search-input-example
-
-      template(slot='split-screen-vertical')
-        split-screen-example
-
-      template(slot='preview')
-        preview-example
+    sy-split-screen-vertical
+      template(slot='left')
+        .route-link(
+          v-for='(rr, idx) of routes' 
+          :key='idx' 
+          @click='goto(rr.name)'
+          :class='linkClass(rr)'
+          v-if='rr.meta.label') {{rr.meta.label}}
+      template(slot='right')
+        .right-panel
+          router-view
 </template>
 
 <script>
-import Home from "./components/home.vue";
-import TableExample from "./components/example-table.vue";
-import PaginDataExample from "./components/example-pagin-data.vue";
-import PaginTableExample from "./components/example-pagin-table.vue";
-import OptionsExample from "./components/example-options.vue";
-import SearchInputExample from "./components/example-search-input.vue";
-import SplitScreenExample from './components/example-split-screen-vertical.vue'
-import PreviewExample from './components/example-preview.vue'
-
-const tabsData = () => {
-  return [
-    {
-      label: "Home",
-      slot: "home",
-    },
-    {
-      label: "基础Table   sy-table",
-      slot: "basic-table",
-    },
-    {
-      label: "分页数据   sy-pagin-data",
-      slot: "pagin-data",
-    },
-    {
-      label: "分页Table   sy-pagin-table",
-      slot: "pagin-table",
-    },
-    {
-      label: "备选项   sy-options",
-      slot: "options",
-    },
-    {
-      label: "检索输入框 sy-search-input",
-      slot: "search-input",
-    },
-    {
-      label: "纵向分屏 sy-split-screen-vertical",
-      slot: "split-screen-vertical",
-    },
-    {
-      label: "图片预览 sy-preview",
-      slot: "preview",
-    },
-  ];
-};
+import routes from './router/routes.js'
 
 export default {
   name: "App",
   components: {
-    OptionsExample,
-    TableExample,
-    PaginDataExample,
-    PaginTableExample,
-    Home,
-    SearchInputExample,
-    SplitScreenExample,
-    PreviewExample,
+
+  },
+  data() {
+    return {
+      route: routes[0]
+    }
   },
   created() {
-    this.tabs = tabsData();
   },
-  methods: {},
+  computed: {
+    routes() {
+      return routes
+    },
+  },
+  methods: {
+    linkClass(route) {
+      return {
+        current: route.meta.navi === this.$route.meta.navi
+      }
+    },
+  },
 };
 </script>
 <style lang="sass">
@@ -105,4 +56,15 @@ body,html
   padding: 0
   margin: 0
   background-color: rgba(200, 250, 240, .2)
+
+  .right-panel
+    padding: 10px
+  
+  .route-link
+    padding: 5px 10px
+    cursor: pointer
+  .route-link:hover, .route-link.current
+    background-color: rgba(20,20,20, .8)
+    color: white
+    font-weight: bolder
 </style>

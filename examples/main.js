@@ -3,6 +3,7 @@ import axios from 'axios'
 import App from './App.vue'
 import tsy from '../packages'
 import ElementUI from 'element-ui';
+import router from './router'
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/main.sass'
 
@@ -40,10 +41,19 @@ const myMixin = {
         })
       })
     }
+  },
+  methods: {
+    goto(routeName, opt) {
+      this.$router.push({
+        name: routeName,
+        ...opt
+      })
+    }
   }
 }
 
 Vue.mixin(myMixin)
 new Vue({
+  router,
   render: h => h(App),
 }).$mount('#app')

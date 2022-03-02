@@ -6,6 +6,10 @@
       template(slot='left') left
       template(slot='right') right
   p 我们需要一个可以把屏幕左右两块的区域，并且可以调整两侧的宽度占比，这个组件默认高度是100%
+  .code-block
+    .intend sy-split-screen-vertical(:left='200')
+      .intend template(slot='left') left
+      .intend template(slot='right') right
 
   p.mt100
     .h2 Props

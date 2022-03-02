@@ -1,6 +1,7 @@
 <template lang="pug">
   .user-form-update-main
-    user-form(v-if="memberId" url="member" :id="`${memberId}`")
+    .h1 编辑用户表单展示
+    user-form(v-if="memberId" url="/member" :id="`${memberId}`")
     .no-member-id-panel(v-else) 无法获得会员ID
 </template>
 
@@ -13,7 +14,7 @@ export default {
   },
   computed: {
     memberId() {
-      return this.$route.params.memberId;
+      return this.$route.params.id;
     },
   },
 };

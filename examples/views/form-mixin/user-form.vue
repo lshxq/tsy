@@ -20,11 +20,17 @@
 
       el-form-item
         .w200
-          apply-cancel(@apply="apply", @cancel="cancel")
+          el-button(type='primary' @click="apply") 确定
+          el-button(@click="cancel") 取消
 </template>
 
 <script>
-import { FormMixin } from 'tsyvue'
+import tsy from '/packages'
+const {
+  FormMixin
+} = tsy
+console.log('form-mixin', FormMixin)
+
 
 export default {
   mixins: [FormMixin],
@@ -68,11 +74,12 @@ export default {
       return data;
     },
     submitted() {
-      this.goto("member-list");
+      this.goto("form-mixin");
     },
     cancel() {
-      this.goto("member-list");
+      this.goto("form-mixin");
     },
+    
   },
 }
 </script>
