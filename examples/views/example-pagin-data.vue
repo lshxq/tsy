@@ -11,7 +11,7 @@
         el-option(label='停止' value='down')
 
     sy-pagin-data(
-      url='/pagin/data'
+      url='/user/list'
       :query='query'
       :mock='mockDataFunc'
       :pagin-data-mapper='paginDataMapper'

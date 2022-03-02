@@ -1,5 +1,16 @@
 module.exports = {
   publicPath: "/tsyvue",
+  devServer: {
+    proxy: {
+      '/api': {
+        target: `http://localhost:8081/test/api`,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api' : ''
+        }
+      }
+    }
+  },
   pages: {
     index: {
       entry: 'examples/main.js',

@@ -13,6 +13,7 @@
 </template>
 
 <script>
+let requestIdx = 0
 export default {
   name: 'SyPaginData',
   props: {
@@ -77,10 +78,14 @@ export default {
           mock
         } = that
         requestMethod = requestMethod.toLowerCase()
+        this.requestId = `${new Date().getTime()}${requestIdx++}` 
         const reqCfg = {
           url,
           method: requestMethod,
-          mock
+          mock,
+          headers: {
+            'sy-req-id': this.requestId
+          }
         }
         let paginInfo = {
           pageNo,
@@ -91,7 +96,8 @@ export default {
         }
         query = {
           ...query,
-          ...paginInfo
+          ...paginInfo,
+          
         }
         if ('put post patch'.indexOf(requestMethod) >= 0) {
           reqCfg.data = query
@@ -100,6 +106,15 @@ export default {
         }
         
         $axios(reqCfg).then(resp => {
+          const {
+            config
+          } = resp
+          if (config) {
+            const returnReqId = config.headers['sy-req-id']
+            if (`${returnReqId}` !== `${this.requestId}`) {
+              return false // 跳过这个数据
+            }
+          }
           let respData = resp.data
           if (respDataMapper) {
             respData = respDataMapper(respData)

@@ -11,7 +11,7 @@ Vue.config.productionTip = false
 
 Vue.use(tsy)
 Vue.use(ElementUI)
-
+axios.defaults.baseURL = '/api'
 const myMixin = {
   created() {
     this.$axios = reqCfg => {
