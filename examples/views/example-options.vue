@@ -6,7 +6,8 @@
 
     p 组件定义了多种常用的外观，可以通过传入type:Number 来指定外观
 
-    p.mt100 单选模式  multiple=false
+    p.mt100
+      b 单选模式  multiple=false
       p.mt30 type 1, 一般表单样式
         sy-options(
           label='颜色'
@@ -35,7 +36,8 @@
           type='3'
         )
 
-    p.mt100 多选模式  multiple=true
+    p.mt100 
+      b 多选模式  multiple=true
       p.mt30 type 1, 一般表单样式
         sy-options(
           label='颜色'
@@ -58,7 +60,6 @@
 
       p.mt30 type 3， 通常 card 类型的 检索结果 会 使用这这种 选择 器， 购物网站
         sy-options(
-          :first-option='{label: "全部", value: ""}'
           label='颜色'
           v-model='value'
           url='/example/options'
