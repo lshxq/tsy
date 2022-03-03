@@ -42,18 +42,18 @@
 </template>
 
 <script>
-import ColumnDefineComment from './column-define-object-comment.vue'
-import commentMixin from '../mixins/comment-mixins.js'
-import respDataMapperComment from './pagin-table-resp-data-mapper-comment.vue'
-import paginDataMapperComment from './pagin-data-mapper-comment.vue'
-import axiosRequired from './axios-required.vue'
+import ColumnDefineComment from "./components/column-define-object-comment.vue";
+import commentMixin from "../mixins/comment-mixins.js";
+import respDataMapperComment from "./components/pagin-table-resp-data-mapper-comment.vue";
+import paginDataMapperComment from "./components/pagin-data-mapper-comment.vue";
+import axiosRequired from "./components/axios-required.vue";
 
 export default {
   components: {
     ColumnDefineComment,
     respDataMapperComment,
     paginDataMapperComment,
-    axiosRequired
+    axiosRequired,
   },
   mixins: [commentMixin],
   data() {
@@ -64,14 +64,13 @@ export default {
     };
   },
   created() {
-    
     this.eventTableData = [
       {
-        name: 'data-loaded',
-        comment: '分页数据加载完成后触发，并把服务器返回结果作为参数返回。'
-      }
+        name: "data-loaded",
+        comment: "分页数据加载完成后触发，并把服务器返回结果作为参数返回。",
+      },
     ];
-    
+
     this.propTableData = [
       {
         name: "url",
@@ -101,17 +100,18 @@ export default {
         type: "Function",
       },
       {
-        name: 'stripe',
-        type: 'Boolean(true)',
-        comment: '是否 在行号 为偶数的 行 显示背景色，隔行高亮， 斑马线，默认显示斑马线'
+        name: "stripe",
+        type: "Boolean(true)",
+        comment:
+          "是否 在行号 为偶数的 行 显示背景色，隔行高亮， 斑马线，默认显示斑马线",
       },
       {
-        name: 'show-index',
-        type: 'Boolean(true)',
-        comment: '是否 显示 行号，默认是显示'
+        name: "show-index",
+        type: "Boolean(true)",
+        comment: "是否 显示 行号，默认是显示",
       },
     ];
-    
+
     this.columns = [
       {
         label: "姓名",
@@ -150,9 +150,9 @@ export default {
   },
   methods: {
     dataLoaded(respData) {
-      console.log('当前页数据', respData)
-    }
-  }
+      console.log("当前页数据", respData);
+    },
+  },
 };
 </script>
 

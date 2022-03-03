@@ -55,15 +55,15 @@
 </template>
 
 <script>
-import axiosRequired from './axios-required.vue'
+import axiosRequired from "./components/axios-required.vue";
 import paginDataExampleCodeJpg from "../assets/pagin-data-example-code.jpg";
-import commentMixin from '../mixins/comment-mixins.js'
-import paginDataMapperComment from './pagin-data-mapper-comment.vue'
+import commentMixin from "../mixins/comment-mixins.js";
+import paginDataMapperComment from "./components/pagin-data-mapper-comment.vue";
 
 export default {
   components: {
     paginDataMapperComment,
-    axiosRequired
+    axiosRequired,
   },
   mixins: [commentMixin],
   data() {
@@ -77,9 +77,9 @@ export default {
   created() {
     this.eventTableData = [
       {
-        name: 'data-loaded',
-        comment: '分页数据加载完成后触发，并把服务器返回结果作为参数返回。'
-      }
+        name: "data-loaded",
+        comment: "分页数据加载完成后触发，并把服务器返回结果作为参数返回。",
+      },
     ];
 
     this.propTableData = [
@@ -106,8 +106,9 @@ export default {
       {
         name: "resp-data-mapper",
         type: "Function",
-        comment: '服务器返回的应答，在传入命名slot之前，会通过这个钩子函数处理，参数是原始应答数据，返回值是处理后的结果。'
-      }
+        comment:
+          "服务器返回的应答，在传入命名slot之前，会通过这个钩子函数处理，参数是原始应答数据，返回值是处理后的结果。",
+      },
     ];
 
     this.paginDataExampleCodeJpg = paginDataExampleCodeJpg;

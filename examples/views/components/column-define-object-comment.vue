@@ -14,11 +14,11 @@
 </template>
 
 <script>
-import namedSlotCodePng from '../assets/pagin-table-example-code-named-slot.png'
+import namedSlotCodePng from "../../assets/pagin-table-example-code-named-slot.png";
 
 export default {
   created() {
-    this.namedSlotCodePng = namedSlotCodePng
-  }
-}
+    this.namedSlotCodePng = namedSlotCodePng;
+  },
+};
 </script>

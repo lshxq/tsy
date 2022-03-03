@@ -66,50 +66,50 @@
 
 <script>
 import Utils from "../../packages/utils";
-import ColumnDefineComment from './column-define-object-comment.vue'
-import commentMixin from '../mixins/comment-mixins.js'
+import ColumnDefineComment from "./components/column-define-object-comment.vue";
+import commentMixin from "../mixins/comment-mixins.js";
 
 export default {
   name: "SyTableExample",
   mixins: [commentMixin],
   components: {
-    ColumnDefineComment
+    ColumnDefineComment,
   },
   created() {
-    
     this.eventTableData = [
       {
-        name: 'data-loaded',
-        comment: '分页数据加载完成后触发，并把服务器返回结果作为参数返回。'
-      }
+        name: "data-loaded",
+        comment: "分页数据加载完成后触发，并把服务器返回结果作为参数返回。",
+      },
     ];
-    
+
     this.propTableData = [
       {
-        name: 'columns',
-        type: 'Array<Column>',
+        name: "columns",
+        type: "Array<Column>",
       },
       {
-        name: 'data',
-        type: 'Array[Object]',
-        comment: '数组的每个元素代表一行'
+        name: "data",
+        type: "Array[Object]",
+        comment: "数组的每个元素代表一行",
       },
       {
-        name: 'stripe',
-        type: 'Boolean(true)',
-        comment: '是否 在行号 为偶数的 行 显示背景色，隔行高亮， 斑马线，默认显示斑马线'
+        name: "stripe",
+        type: "Boolean(true)",
+        comment:
+          "是否 在行号 为偶数的 行 显示背景色，隔行高亮， 斑马线，默认显示斑马线",
       },
       {
-        name: 'show-index',
-        type: 'Boolean(true)',
-        comment: '是否 显示 行号，默认是显示'
+        name: "show-index",
+        type: "Boolean(true)",
+        comment: "是否 显示 行号，默认是显示",
       },
       {
-        name: 'index-base',
-        type: 'Number(1)',
-        comment: '行号起始值，默认值1，当处理分页的时候，可以指定这个值。'
-      }
-    ]
+        name: "index-base",
+        type: "Number(1)",
+        comment: "行号起始值，默认值1，当处理分页的时候，可以指定这个值。",
+      },
+    ];
   },
   computed: {
     tableData() {

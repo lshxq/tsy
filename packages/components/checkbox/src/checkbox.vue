@@ -1,5 +1,5 @@
 <template lang="pug">
-  .tsy-checkbox-main(@click='checkboxClicked')
+  .tsy-checkbox-main(@click.stop='checkboxClicked')
     .tsy-checkbox-inner(:class='checkboxClassComp')
       .checkbox
         .mark
@@ -7,30 +7,27 @@
 </template>
 
 <script>
-
-
 export default {
-  name: 'SyCheckbox',
+  name: "SyCheckbox",
   props: {
     checked: Boolean,
-    label: String
+    label: String,
+    value: null,
   },
   computed: {
     checkboxClassComp() {
-      const {
-        checked
-      } = this
+      const { checked } = this;
       return {
-        checked
-      }
-    }
+        checked,
+      };
+    },
   },
   methods: {
     checkboxClicked() {
-      this.$emit('click', !this.checked)
-    }
-  }
-}
+      this.$emit("click", !this.checked, this.value);
+    },
+  },
+};
 </script>
 
 <style lang="sass" scoped>
@@ -70,7 +67,7 @@ $blue: #409eff
       line-height: 17px
       transition: .4s
 
-    .checkbox:hover 
+    .checkbox:hover
       border: 1px solid $blue
     .label
       transition: .4s
@@ -80,5 +77,4 @@ $blue: #409eff
       margin-left: 10px
       display: inline-block
       line-height: 17px
-    
 </style>

@@ -1,53 +1,54 @@
 <template lang="pug">
   .tsy-checkbox-group-main(@click='checkboxClicked')
     sy-checkbox(
-      :key='idx' v-for='(opt, idx) of options' 
-      :label='opt.value'
+      v-for='(opt, idx) of options' 
+      :key='idx' 
+      :label='opt.label'
+      :value='opt.value'
       :checked='checkboxState(opt)'
-      @click='checkboxClicked(opt)') {{opt.label}}
+      @click='checkboxClicked')
 </template>
 
 <script>
-
-
 export default {
-  name: 'SyCheckboxGroup',
+  name: "SyCheckboxGroup",
   props: {
     value: Array,
-    options: Array
+    options: Array,
   },
-  computed: {
-    
-  },
+  computed: {},
   methods: {
     checkboxState(opt) {
-      const {
-        value
-      } = this
+      const { value } = this;
       if (value instanceof Array) {
-        const idx = value.findIndex(ele => ele === opt.value)
-        return idx >= 0
+        const idx = value.findIndex((ele) => ele === opt.value);
+        return idx >= 0;
       } else {
-        return opt.value === value
+        return opt.value === value;
       }
     },
-    checkboxClicked(opt) {
-      const {
-        reasonableValue
-      } = this
-      const idx = reasonableValue.findIndex(ele => ele === opt.value)
-      if (idx >= 0) { // 需要移除
-        reasonableValue.splice(idx, 1)
-      } else { // 需要添加
-        reasonableValue.push(opt.value)
+    checkboxClicked(checked, radioValue) {
+      const { value } = this;
+      const arr = [];
+
+      if (checked) {
+        // 添加
+        value.map((ele) => {
+          arr.push(ele);
+        });
+        arr.push(radioValue);
+      } else {
+        // 移除
+        value.map((ele) => {
+          if (ele != radioValue) {
+            arr.push(ele);
+          }
+        });
       }
-      this.$emit('input', reasonableValue)
+      this.$emit("input", arr);
     },
-  }
-}
+  },
+};
 </script>
 
-<style lang="sass" scoped>
-
-    
-</style>
+<style lang="sass" scoped></style>

@@ -1,4 +1,3 @@
-
 <template lang="pug">
   .tsy-radio-group-main
     sy-radio(
@@ -7,30 +6,30 @@
       :label='opt.label'
       :value='opt.value' 
       :checked='isChecked(opt)'
-      @input='radioClicked')
+      @click='radioClicked')
 </template>
 
 <script>
 export default {
-  name: 'SyRadioGroup',
+  name: "SyRadioGroup",
   props: {
     options: {
       type: Array,
       default() {
-        return []
-      }
+        return [];
+      },
     },
-    value: null
+    value: null,
   },
   methods: {
     isChecked(opt) {
-      return this.value == opt.value
+      return this.value == opt.value;
     },
     radioClicked(checked, value) {
-      this.$emit('input', value)
-    }
-  }
-}
+      this.$emit("input", value);
+    },
+  },
+};
 </script>
 
 <style lang="sass" scoped>

@@ -4,7 +4,7 @@ const naviRoutes = [
     name: "home",
     meta: {
       navi: "home",
-      label: '首页',
+      label: "首页",
     },
     component: () => import("../views/home.vue"),
   },
@@ -13,16 +13,34 @@ const naviRoutes = [
     name: "sy-table",
     meta: {
       navi: "sy-table",
-      label: '基础Table sy-table',
+      label: "基础Table sy-table",
     },
     component: () => import("../views/example-table.vue"),
+  },
+  {
+    path: "/sy-radio-group",
+    name: "sy-radio-group",
+    meta: {
+      navi: "sy-radio-group",
+      label: "单选按钮 sy-radio-group",
+    },
+    component: () => import("../views/example-radio.vue"),
+  },
+  {
+    path: "/sy-checkbox-group",
+    name: "sy-checkbox-group",
+    meta: {
+      navi: "sy-checkbox-group",
+      label: "单选按钮 sy-checkbox-group",
+    },
+    component: () => import("../views/example-checkbox.vue"),
   },
   {
     path: "/sy-pagin-data",
     name: "sy-pagin-data",
     meta: {
       navi: "sy-pagin-data",
-      label: '分页数据 sy-pagin-data',
+      label: "分页数据 sy-pagin-data",
     },
     component: () => import("../views/example-pagin-data.vue"),
   },
@@ -31,7 +49,7 @@ const naviRoutes = [
     name: "sy-pagin-table",
     meta: {
       navi: "sy-pagin-table",
-      label: '分页Table   sy-pagin-table',
+      label: "分页Table   sy-pagin-table",
     },
     component: () => import("../views/example-pagin-table.vue"),
   },
@@ -40,7 +58,7 @@ const naviRoutes = [
     name: "sy-options",
     meta: {
       navi: "sy-options",
-      label: '备选项   sy-options',
+      label: "备选项   sy-options",
     },
     component: () => import("../views/example-options.vue"),
   },
@@ -49,7 +67,7 @@ const naviRoutes = [
     name: "sy-search-input",
     meta: {
       navi: "sy-search-input",
-      label: '检索输入框 sy-search-input',
+      label: "检索输入框 sy-search-input",
     },
     component: () => import("../views/example-search-input.vue"),
   },
@@ -58,7 +76,7 @@ const naviRoutes = [
     name: "sy-split-screen-vertical",
     meta: {
       navi: "sy-split-screen-vertical",
-      label: '纵向分屏 sy-split-screen-vertical',
+      label: "纵向分屏 sy-split-screen-vertical",
     },
     component: () => import("../views/example-split-screen-vertical.vue"),
   },
@@ -67,7 +85,7 @@ const naviRoutes = [
     name: "sy-preview",
     meta: {
       navi: "sy-preview",
-      label: '图片预览 sy-preview',
+      label: "图片预览 sy-preview",
     },
     component: () => import("../views/example-preview.vue"),
   },
@@ -76,7 +94,7 @@ const naviRoutes = [
     name: "form-mixin",
     meta: {
       navi: "form-mixin",
-      label: '标准Form',
+      label: "标准Form",
     },
     component: () => import("../views/form-mixin/example-form-mixin.vue"),
   },
@@ -97,14 +115,14 @@ const naviRoutes = [
     component: () => import("../views/form-mixin/user-form-update.vue"),
   },
   {
-    path: '/thanks',
-    name: 'thanks',
+    path: "/thanks",
+    name: "thanks",
     meta: {
-      label: '特别感谢',
-      navi: 'thanks'
+      label: "特别感谢",
+      navi: "thanks",
     },
-    component: () => import("../views/thanks.vue")
-  }
-]
+    component: () => import("../views/thanks.vue"),
+  },
+];
 
-export default naviRoutes
+export default naviRoutes;

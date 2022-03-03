@@ -1,5 +1,5 @@
 <template lang="pug">
-  .tsy-radio-main(:class='radioClassComp' @click='radioClicked')
+  .tsy-radio-main(:class='radioClassComp' @click.stop='radioClicked')
     .mark
       .round-outter
         .round-inner
@@ -8,34 +8,30 @@
 
 <script>
 export default {
-  name: 'SyRadio',
+  name: "SyRadio",
   props: {
     checked: Boolean,
     label: String,
-    value: null
+    value: null,
   },
   computed: {
     radioClassComp() {
-      const {
-        checked
-      } = this
+      const { checked } = this;
       return {
-        checked
-      }
+        checked,
+      };
     },
     labelComp() {
-      const {
-        label
-      } = this
-      return label || '未指定label'
-    }
+      const { label } = this;
+      return label || "未指定label";
+    },
   },
   methods: {
     radioClicked() {
-      this.$emit('input', !this.checked, this.value) // checked, value
-    }
-  }
-}
+      this.$emit("click", !this.checked, this.value); // checked, value
+    },
+  },
+};
 </script>
 
 <style lang="sass" scoped>

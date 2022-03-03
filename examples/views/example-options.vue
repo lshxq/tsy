@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import axiosRequired from "./axios-required.vue";
+import axiosRequired from "./components/axios-required.vue";
 import commentMixin from "../mixins/comment-mixins.js";
 
 export default {
