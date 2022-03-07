@@ -16,7 +16,7 @@
           :index-base='indexBaseComputed'
           :show-index='showIndex'
           :stripe='stripe'
-          )
+          @sort='tableSortChanged')
           template(:slot='slotName'  v-for='slotName of slotNameArray' slot-scope='scope')
             slot(:name='slotName' :data='scope')
             
@@ -56,7 +56,8 @@ export default {
   data() {
     return {
       pageNo: 1,
-      pageSize: 10
+      pageSize: 10,
+      sort: {}
     }
   },
   computed: {
@@ -68,9 +69,16 @@ export default {
       return (pageNo - 1) * pageSize + 1
     },
     queryComp() {
-      return {
+      const {
+        sort
+      } = this
+      const query = {
         ...this.query,
       }
+      if (sort && sort.order) {
+        query.sorter = `${sort.order === 'descend' ? '-' : '+'}${sort.key}`
+      }
+      return query
     },
     slotNameArray() {
       const slots = []
@@ -88,6 +96,9 @@ export default {
   methods: {
     dataLoaded(respData) {
       this.$emit('data-loaded', respData)
+    },
+    tableSortChanged(sort) {
+      this.sort = sort
     },
     paginDataMapperPriv(paginInfo) {
       const {

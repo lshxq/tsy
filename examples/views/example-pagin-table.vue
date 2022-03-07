@@ -116,12 +116,14 @@ export default {
       {
         label: "姓名",
         prop: "name",
+        sorter: 'name'
       },
       {
         label: "性别",
         getContent(data) {
           return data.row.gender;
         },
+        sorter: 'gender'
       },
       {
         label: "年龄",

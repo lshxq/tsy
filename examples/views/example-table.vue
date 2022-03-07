@@ -62,6 +62,9 @@
               template(v-if='scope.row.name == "columns"')
                 column-define-comment
     
+      p.mt100
+        .h2 Events
+        sy-table(:columns='eventTableColumns' :data='eventTableData')
 </template>
 
 <script>
@@ -78,8 +81,8 @@ export default {
   created() {
     this.eventTableData = [
       {
-        name: "data-loaded",
-        comment: "分页数据加载完成后触发，并把服务器返回结果作为参数返回。",
+        name: "sort",
+        comment: "在列定义中通过sorter指定列key后，该列就可以触发sort事件，会把列key和order作为事件参数传入",
       },
     ];
 
