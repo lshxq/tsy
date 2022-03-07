@@ -23,6 +23,9 @@
     
     p
       p.mt100 因为大部分的查询页面是以表格的形式绘制的数据，所以我们把sy-pagin-data 和 sy-table做了一下融合，形成了sy-pagin-table，支持的props 就是这两个组件的合集。
+      p Sort 如果在列定义中，指定了sort，那么sy-pagin-table会自动向后端接口上报 排序 信息。 排序信息作为 请求参数 以如下形式上报
+      p sort=(+/-)sorkKey
+      p 其中减号代表降序，加号为升序，sortKey就是在列定义中指定的内容， sort=-name，表示按照名称降序排列，后端接口需要做对应处理
       p.mt100
         .h2 Props
         sy-table(:columns='propTableColumns' :data='propTableData')
