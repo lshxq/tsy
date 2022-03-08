@@ -12,13 +12,16 @@
 
     p vue实例
       .code-block
-        .intend this.options = [
+        .intend this.options = [{
           .intend label: '选项一',
-          .intend value: 1}, {
+          .intend value: 1
+        .intend }, {
           .intend label: '蓝色',
-          .intend value: 'b'}, {
+          .intend value: 'b'
+        .intend }, {
           .intend label: '橙子',
-          .intend value: 'orange'}]
+          .intend value: 'orange'
+        .intend }]
 
     p 和radio的情况一样，这里复写了checkbox
 </template>

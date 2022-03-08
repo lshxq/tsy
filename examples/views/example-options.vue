@@ -4,71 +4,125 @@
 
     axios-required
 
+    
+    p 项目中很多备选项，是以数据字典的形式，配置在后端数据库中的，需要前端通过 ajax调用接口 拉回来数据集合，并展示，如果每个人单独开发，开发成本高，维护成本也高。
     p 组件定义了多种常用的外观，可以通过传入type:Number 来指定外观
 
-    p.mt100
+    .section.mt100
       b 单选模式  multiple=false
-      p.mt30 type 1, 一般表单样式
+      p.mt30 
+        .highlight Type 1
+        .mb10 下拉列表
         sy-options(
           label='颜色'
-          v-model='value'
+          v-model='valueRadio'
           :first-option='{label: "All", value: ""}'
           url='/example/options'
           :mock='mockData'
         )
 
-      p.mt30 type 2， radio 
+      p.mt30 
+        .highlight Type 2
+        .mb10 单选按钮Radio 
         sy-options(
           label='颜色'
-          v-model='value'
+          v-model='valueRadio'
           url='/example/options'
           :mock='mockData'
           type='2'
         )
 
-      p.mt30 type 3， 通常 card 类型的 检索结果 会 使用这这种 选择 器， 购物网站
+      p.mt30 
+        .highlight Type 3
+        .mb10 通常 card 类型的 检索条件 会 使用这这种 选择 器， 购物网站
         sy-options(
           :first-option='{label: "全部", value: ""}'
           label='颜色'
-          v-model='value'
+          v-model='valueRadio'
           url='/example/options'
           :mock='mockData'
           type='3'
         )
+      p 当前值： {{valueRadio}}
 
-    p.mt100 
+    .section.mt100 
       b 多选模式  multiple=true
-      p.mt30 type 1, 一般表单样式
+      p.mt30 
+        .highlight Type 1
+        .mb10 下拉列表
         sy-options(
           label='颜色'
-          v-model='value'
+          v-model='valueCheckbox'
           :first-option='{label: "All", value: ""}'
           url='/example/options'
           :mock='mockData'
           multiple
         )
 
-      p.mt30 type 2， checkbox
+      p.mt30 
+        .highlight Type 2
+        .mb10 复选按钮 Checkbox
         sy-options(
           label='颜色'
-          v-model='value'
+          v-model='valueCheckbox'
           url='/example/options'
           :mock='mockData'
           type='2'
           multiple
         )
 
-      p.mt30 type 3， 通常 card 类型的 检索结果 会 使用这这种 选择 器， 购物网站
+      p.mt30 
+        .highlight Type 3
+        .mb10 通常 card 类型的 检索结果 会 使用这这种 选择 器， 购物网站
         sy-options(
           label='颜色'
-          v-model='value'
+          v-model='valueCheckbox'
           url='/example/options'
           :mock='mockData'
           type='3'
           multiple
         )
+      p 当前值： {{valueCheckbox}}
 
-    .mt100 项目中很多备选项，是以数据字典的形式，配置在后端数据库中的，需要前端通过 ajax调用接口 拉回来数据集合，并展示，如果每个人单独开发，开发成本高，维护成本也高。
+    .section
+      p 通过options初始化的备选项，不拉数据
+      sy-options(
+          label='颜色'
+          v-model='value3'
+          :options='mockData'
+          type='3'
+        )
+
+    p 通过URL初始化备选项
+      .code-block
+        .intend sy-options(
+          .intend  label='颜色'
+          .intend  v-model='value'
+          .intend  url='/example/options'
+          .intend  type='3'
+          .intend  multiple
+        .intend )
+
+    p.mt10 通过options初始化备选项，不会发起数据拉取请求
+      .code-block
+        .intend // 模板部分
+        .intend sy-options(
+          .intend  label='颜色'
+          .intend  v-model='value'
+          .intend  options='opts'
+        .intend )
+        .intend.mt30 // vue实例上绑定的备选项
+        .intend this.opts = [{
+          .intend label: "备选项1",
+          .intend value: "1",
+        .intend }, {
+          .intend label: "2222",
+          .intend value: "B",
+        .intend },{
+          .intend label: "CCCC",
+          .intend value: "C",
+        .intend }];
+
     p sy-options集成了数拉取的动作，使用该组件，仅需要提供数据源的url地址即可。
     .mt100
       .h2 Props
@@ -76,8 +130,11 @@
         template(v-slot:comment='scope')
           template(v-if='scope.row.comment') {{scope.row.comment}}
           template(v-else)
+            template(v-if='scope.row.name=="first-option"')
+              p 第一个备选项往往不是配置在数据字典的，比如 全部。传入Option对象
+              option-defined
             template(v-if='scope.row.name == "url"') 
-              p 拉取数据字典的url地址，服务器应该返回如下格式的应该
+              p 拉取数据字典的url地址，服务器应该返回Option对象的数组
               .code-block
                 .intend [
                   .intend {
@@ -86,21 +143,26 @@
                   .intend },
                   .intend ...
                 .intend ]
+              
 
 </template>
 
 <script>
 import axiosRequired from "./components/axios-required.vue";
 import commentMixin from "../mixins/comment-mixins.js";
+import optionDefined from './components/option-object-desc.vue'
 
 export default {
   components: {
     axiosRequired,
+    optionDefined
   },
   mixins: [commentMixin],
   data() {
     return {
-      value: "",
+      valueRadio: "",
+      valueCheckbox: [],
+      value3: ''
     };
   },
   created() {
@@ -126,7 +188,7 @@ export default {
       },
       {
         name: "v-model",
-        comnent: "支持绑定值",
+        comment: "绑定的值",
       },
       {
         name: "url",
@@ -137,6 +199,10 @@ export default {
         type: "Array<Option>",
         comment:
           "如果是前端定义的备选项数据，不需要ajax拉取，可以直接传入 options 代替url 地址。options的结构和接口返回的数据一致",
+      },
+      {
+        name: 'first-option',
+        type: 'Option',
       },
       {
         name: "resp-data-mapper",
@@ -150,6 +216,16 @@ export default {
         comment:
           "因为数据字典极少发生变化，意味着相同的url每次返回的应答应该是一样的，因此组件会对相同的url默认做缓存，在刷新页面之前不会尝试从新拉取数据。",
       },
+      {
+        name: 'multiple',
+        type: "Boolean(false)",
+        comment: '是否支持多选，默认是单选模式'
+      },
+      {
+        name: 'type',
+        type: 'Number(1)',
+        comment: '默认值1. 三种表现形式， 分别是1，下拉列表；2，单选复选按钮；3，以标签形式平铺展开备选项'
+      }
     ];
   },
 };

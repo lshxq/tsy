@@ -10,8 +10,9 @@
     p 可以看到，新建和编辑 纯在 很多共通的部分。
     p form-mixin倡导 仅开发一个核心form，这个form中处理 了数据拉取（编辑）、layout、验证，提交， 而且用户只要关心 layout和表单验证即可，剩下的交给form-mixin。
     p 然后再新建 和  编辑的 视图中只要引入 这个核心form 组件就可以了， 通过是否向组件传入ID决定是编辑还是新建的逻辑。
-     
-
+    p.red 这里语言描述比较晦涩，难以理解中心思想，推荐下载例子工程亲知体验一下这种开发模式，可以发现相比你现在的开发思路会大大节省代码。
+    p 
+      a(href='https://github.com/lshxq/examples_tsyvue' target='new') https://github.com/lshxq/examples_tsyvue
 </template>
 
 <script>

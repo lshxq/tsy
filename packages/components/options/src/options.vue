@@ -54,12 +54,13 @@ export default {
       },
     },
     firstOption: Object,
+    options: Array,
   },
   created() {},
   data() {
     return {
       loading: false,
-      options: [],
+      optionsInner: [],
     };
   },
   computed: {
@@ -84,13 +85,13 @@ export default {
     optionsComputed() {
       const {
         firstOption,
-        options,
+        optionsInner,
       } = this
       const arr = []
       if (firstOption) {
         arr.push(firstOption)
       }
-      options.map(opt => arr.push(opt))
+      optionsInner.map(opt => arr.push(opt))
       return arr;
     },
     placeholderComp() {
@@ -106,7 +107,15 @@ export default {
     },
   },
   mounted() {
-    this.loadData();
+    const {
+      options
+    } = this
+    if (options) {
+      this.optionsInner = options
+    } else {
+      this.loadData();
+    }
+    
   },
   methods: {
     valueChanged(value) {
@@ -163,7 +172,7 @@ export default {
             if (respDataMapper) {
               respData = respDataMapper(respData);
             }
-            this.options = respData;
+            this.optionsInner = respData;
           })
           .catch((ex) => {
             console.log(`加载Options失败 ${url}`, ex);
