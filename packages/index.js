@@ -10,7 +10,8 @@ import Radio from './components/radio';
 import RadioGroup from './components/radio-group';
 import SplitScreenVertical from './components/split-screen-vertical';
 import ImagePreview from './components/preview';
-
+import Scrollbar from './components/scrollbar';
+import Panel from './components/panel';
 
 import FormMixin from './mixins/form-mixin'
 
@@ -27,6 +28,8 @@ const components = [
   ImagePreview,         // 图片预览
   Radio,                // 单选按钮
   RadioGroup,           // 单选按钮组
+  Scrollbar,            // 滚动条,
+  Panel,                // 面板
 ];
 
 const install = (Vue) => {
@@ -52,6 +55,8 @@ export default {
   Radio,
   SplitScreenVertical,
   ImagePreview,
+  Scrollbar,
+  Panel,
   // mixins
   FormMixin
 };
