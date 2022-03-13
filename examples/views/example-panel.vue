@@ -5,6 +5,9 @@
       .item(v-for='row of rows' :key='row') {{row}}
 
     .mt100
+      p 面板增加的一下内容
+      p mount事件，标示面板已经载入dom
+      p resize事件，当面板大小改变时，事件接受两个参数，分别是当前size和变化前的size。
 </template>
 
 <script>
