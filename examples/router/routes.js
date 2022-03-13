@@ -90,13 +90,13 @@ const naviRoutes = [
     component: () => import("../views/example-preview.vue"),
   },
   {
-    path: "/sy-scroll",
-    name: "sy-scroll",
+    path: "/sy-panel",
+    name: "sy-panel",
     meta: {
-      navi: "sy-scroll",
-      label: "滚动条 sy-scroll",
+      navi: "sy-panel",
+      label: "面板 sy-panel",
     },
-    component: () => import("../views/example-scrollbar.vue"),
+    component: () => import("../views/example-panel.vue"),
   },
   {
     path: "/form-mixin",
