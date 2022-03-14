@@ -22,8 +22,8 @@
               :multiple='input.multiple')
 
       el-form-item
-        el-button.mr20(@click='apply' type='primary') 确定
-        el-buttom(@click='cancel') 取消
+        el-button(@click='apply' type='primary') 确定
+        el-button(@click='cancel') 取消
 </template>
 
 <script>
