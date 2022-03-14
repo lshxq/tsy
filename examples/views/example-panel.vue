@@ -1,5 +1,6 @@
 <template lang="pug">
   .tsy-scrollbar-example-main
+    .h1 面板 sy-panel
     sy-panel.inline-block(@mount='panelMounted' @resize='panelResized')
       el-button(type='primary' @click='addRow') 添加内容
       .item(v-for='row of rows' :key='row') {{row}}

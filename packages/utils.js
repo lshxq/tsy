@@ -16,5 +16,13 @@ export default {
       str += String.fromCharCode(bool() ? random(48, 57) : random(65, 122))
     }
     return str
+  },
+  strInArray(str, arr=[]) {
+    for (const ele of arr) {
+      if (`${str}` === `${ele}`) {
+        return true
+      }
+    }
+    return false
   }
 }

@@ -99,6 +99,15 @@ const naviRoutes = [
     component: () => import("../views/example-panel.vue"),
   },
   {
+    path: "/sy-tags",
+    name: "sy-tags",
+    meta: {
+      navi: "sy-tags",
+      label: "标签 sy-tags",
+    },
+    component: () => import("../views/example-tags.vue"),
+  },
+  {
     path: "/form-mixin",
     name: "form-mixin",
     meta: {
