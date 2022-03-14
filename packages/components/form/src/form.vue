@@ -11,7 +11,10 @@
         )
           .input-bar(:style='inputBarStyle(input)')
             el-input(v-if='input.type == "input"' 
-              v-model='modified[input.name]')
+              v-model.trim='modified[input.name]'
+              :maxlength='input.maxlength'
+              :placeholder='input.placeholder'
+              show-word-limit)
             
             sy-options(v-else-if='input.type == "options"'
               v-model='modified[input.name]' 
@@ -20,6 +23,11 @@
               :type='input.kind'
               :mock='input.mock'
               :multiple='input.multiple')
+            
+            el-date-picker(v-else-if='input.type == "datepicker"'
+              v-model='modified[input.name]'
+              type='date'
+              value-format='yyyy-MM-dd') 
 
       el-form-item
         el-button(@click='apply' type='primary') 确定
@@ -46,7 +54,18 @@ export default {
       }
     }
   },
-
+  data() {
+    const modified = {}
+    const {
+      inputs
+    } = this
+    for(const input of inputs) {
+      modified[input.name] = input.value
+    }
+    return {
+      modified,
+    }
+  },
   computed: {
     rulesComp() {
       const {

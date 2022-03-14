@@ -36,11 +36,11 @@
       .mt100
       sy-form(:inputs='formInputs' 
         :options='formOptions'
-        url='/example/form/url')
+        url='/example/syform/submit-url')
 
       sy-form(:inputs='formInputs' 
         :options='formOptions'
-        url='/example/form/url'
+        url='/example/syform/submit-url'
         id='test')
 </template>
 
@@ -52,8 +52,11 @@ export default {
       {
         type: 'input',
         name: 'xingming',
+        value: 'tsy',
         label: '姓名',
+        placeholder: '请输入姓名',
         width: 300,
+        maxlength: 30,
         rule: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
           { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
@@ -63,6 +66,7 @@ export default {
         type: 'options',
         kind: 2,
         name: 'gender',
+        value: 'male',
         label: '性别',
         url: '/example/gender/options',
         mock() {
@@ -74,6 +78,7 @@ export default {
       {
         type: 'options',
         name: 'xueli',
+        value: 'bachelor',
         label: '学历',
         options: [{
           label: '中学',
@@ -128,6 +133,12 @@ export default {
           }]
         }
       },
+      {
+        type: 'datepicker',
+        name: 'birthday',
+        label: '生日',
+        value: '1983-7-4'
+      }
     ]
   },
   methods: {
