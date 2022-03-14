@@ -21,6 +21,9 @@
               :mock='input.mock'
               :multiple='input.multiple')
 
+      el-form-item
+        el-button.mr20(@click='apply' type='primary') 确定
+        el-buttom(@click='cancel') 取消
 </template>
 
 <script>
@@ -36,12 +39,14 @@ export default {
   mixins: [FormMixin],
   props: {
     inputs: Array,
-    options: Object
-  },
-  data() {
-    return {
+    options: {
+      type: Object,
+      default() {
+        return {}
+      }
     }
   },
+
   computed: {
     rulesComp() {
       const {

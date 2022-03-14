@@ -36,7 +36,10 @@ export default {
         value.map((ele) => {
           arr.push(ele);
         });
-        arr.push(radioValue);
+        if (radioValue != undefined) {
+          arr.push(radioValue);
+        }
+        
       } else {
         // 移除
         value.map((ele) => {

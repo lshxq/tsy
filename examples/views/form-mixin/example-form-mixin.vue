@@ -15,12 +15,39 @@
       a(href='https://github.com/lshxq/examples_tsyvue' target='new') https://github.com/lshxq/examples_tsyvue
 
     .mt100
-      sy-form(:inputs='formInputs')
+      .h2 除了form-mixins,我们还可以直接通过纯数据的方式构造表单。
+      .code-block 
+        .intend // 新建场合
+        .intend sy-form(:inputs='formInputs' 
+          .intend :options='formOptions'
+          .intend url='/example/form/url')
+      .code-block.mt20
+        .intend // 编辑场合，传入ID
+        .intend sy-form(:inputs='formInputs' 
+          .intend :options='formOptions'
+          .intend id='test'
+          .intend url='/example/form/url')
+      
+      p formInputs 定义了表单的输入项目
+      p
+        img(src='../../assets/form-inputs.png')
+      p 目前支持的input 包括 input 和 options，options具体配置参考 sy-options
+      
+      .mt100
+      sy-form(:inputs='formInputs' 
+        :options='formOptions'
+        url='/example/form/url')
+
+      sy-form(:inputs='formInputs' 
+        :options='formOptions'
+        url='/example/form/url'
+        id='test')
 </template>
 
 <script>
 export default {
   created() {
+
     this.formInputs = [
       {
         type: 'input',
@@ -79,6 +106,25 @@ export default {
           }, {
             label: '乒乓',
             value: 'pingpang'
+          }]
+        }
+      },
+      {
+        type: 'options',
+        name: 'gangwei',
+        label: '岗位',
+        url: '/example/gangwei/options',
+        multiple: true,
+        mock() {
+          return [{
+            label: '前端工程师', 
+            value: 'FE'
+          },{
+            label: '后端工程师', 
+            value: 'BE'
+          }, {
+            label: '技术经理',
+            value: 'MGR'
           }]
         }
       },
