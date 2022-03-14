@@ -2,7 +2,7 @@
   .tsy-image-preview-main
     template(v-if='visibility')
       transition(name="fade")
-        .mask
+        .mask(v-loading='loading')
           .image-container(@mouseup='move = false' @mousemove='mousemove')
             .center
               .anchor(:style='anchorStyle')
@@ -43,6 +43,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       visibility: false,
       showIndex: 0,
       move: false,
@@ -98,8 +99,8 @@ export default {
         this.scale = .2
       }
     },
-    imageLoaded(evt) {
-      console.log(evt.target)
+    imageLoaded() {
+      this.loading = false
     },
     mousedown(event) {
       this.move = true
@@ -120,12 +121,13 @@ export default {
     show(index=0) {
       this.showIndex = index
       this.visibility = true
-    },
-    next(delta) {
+      this.loading = true
+      this.scale = 1
       this.left = 0
       this.top = 0
       this.rotate = 0
-      this.scale = 1
+    },
+    next(delta) {
       let idx = this.showIndex + delta
       if (idx >= this.images.length) {
         idx = 0
@@ -149,6 +151,7 @@ export default {
   .trigger:hover
     outline: 1px solid red
   .mask
+    user-select: none
     position: fixed
     top: 0
     bottom: 0
