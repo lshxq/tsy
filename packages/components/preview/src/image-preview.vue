@@ -4,12 +4,13 @@
       transition(name="fade")
         .mask
           .image-container(@mouseup='move = false' @mousemove='mousemove')
-            .anchor
-              img(:src='imgSrc' 
-                  :style='imageStyle'
-                  draggable='false' 
-                  @load='imageLoaded' 
-                  @mousedown='mousedown')
+            .center
+              .anchor(:style='anchorStyle')
+                img(:src='imgSrc' 
+                    :style='imageStyle'
+                    draggable='false' 
+                    @load='imageLoaded' 
+                    @mousedown='mousedown')
           .right-button.round-btn(@click='next(1)' v-if='images.length > 1')
             .el-icon-arrow-right
           .left-button.round-btn(@click='next(-1)' v-if='images.length > 1')
@@ -52,10 +53,15 @@ export default {
     }
   },
   computed: {
-    imageStyle() {
+    anchorStyle() {
       return {
         left: `${this.left}px`,
         top: `${this.top}px`,
+      }
+    },
+    imageStyle() {
+      return {
+        
         zoom: this.scale,
         transform: `translate(-50%, -50%) rotate(${this.rotate}deg)`,
         
@@ -72,7 +78,20 @@ export default {
       return images[images.length - 1]
     }
   },
+  mounted() {
+    window.addEventListener('mousewheel',this.handleScroll);
+  },
+  destroyed() {
+    window.removeEventListener('mousewheel',this.handleScroll)
+  },
   methods: {
+    handleScroll(event) {
+      if(event.deltaY > 0) {
+        this.zoom(.1)
+      } else {
+        this.zoom(-.1)
+      }
+    },
     zoom(step) {
       this.scale += step
       if (this.scale < .2) {
@@ -106,6 +125,7 @@ export default {
       this.left = 0
       this.top = 0
       this.rotate = 0
+      this.scale = 1
       let idx = this.showIndex + delta
       if (idx >= this.images.length) {
         idx = 0
@@ -181,14 +201,14 @@ export default {
       display: flex
       justify-content: center
       align-items: center
-      .anchor
+      .center
         position: relative
-        display: inline-block
-        width: 1px
-        height: 1px
-        overflow: visible
-        img 
+        display: inline
+        .anchor
+          display: inline
+          overflow: visible
           position: absolute
+
           
 
 .fade-enter-active, .fade-leave-active 

@@ -24,7 +24,7 @@
       img(src='../assets/beach.jpg' draggable='false')
     
     el-dialog(:visible.sync='visible' title='捐赠窗口' width='390px')
-      img(src='../assets/donate.jpg' style='width: 350px')
+      img(src='../assets/donate.jpg' style='width: 350px' draggable='false')
 </template>
 
 <script>
