@@ -112,9 +112,18 @@ const naviRoutes = [
     name: "form-mixin",
     meta: {
       navi: "form-mixin",
-      label: "标准Form",
+      label: "form-mixin",
     },
     component: () => import("../views/form-mixin/example-form-mixin.vue"),
+  },
+  {
+    path: "/sy-form",
+    name: "sy-form",
+    meta: {
+      navi: "sy-form",
+      label: "数据化表单 sy-form",
+    },
+    component: () => import("../views/example-form.vue"),
   },
   {
     path: "/user-form/new",
