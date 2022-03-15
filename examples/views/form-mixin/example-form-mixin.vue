@@ -14,7 +14,47 @@
     p 
       a(href='https://github.com/lshxq/examples_tsyvue' target='new') https://github.com/lshxq/examples_tsyvue
 
+    p 这里是核心form的代码示例，模板部分是基于element-ui开发的form的layout。然后混入了form-mixin，从而集成了表单验证和数据提交，以及在编辑的场合加载数据的能力。
+    p form-mixin中，表单编辑的model叫modified，对应了还有original，original保存的加载下来的原始数据，用于在编辑时，做增量编辑。
+    p form-mixin以post的方式创建新数据，以patch的方式，提交增量的变更数据。
+    p form-mixin的created中定义了用于表单验证的rules，并且传给了el-form，这里完全符合element-ui规范的操作。
+    p 按钮调用的而apply函数，是form-mixin中提供的功能，用于表单提交，这个函数执行会先做表单验证，如果验证通过，会提交数据，完成后会调用钩子函数submitted，我们只需要复写这个submitted函数，来做提交成功后而处理即可。
+    p 按钮调用的cancel函数是自己定义的，处理取消的场合即可。
+    img(src='../../assets/form-mixin-core-form.png')
    
+    p.mt100 上面就是核心form的开发，具体步骤如下
+      ul
+        li 通过element-ui搭建表单的layout
+        li vue中混入form-mixin 
+        li 在created中绑定element-ui的表单验证
+        li 提交按钮直接调用form-mixin中的apply函数
+        li 通过复写submitted函数来做表单提交后的处理
+        li 自己编写cancel函数来处理取消按钮的操作。
+
+      p 做到以上几点，核心form就开发完成了，我们来看在新建和编辑中如何使用这个核心form
+    
+    p.mt100
+      .h2 新建场合的表单
+    p
+      img(src='../../assets/form-mixin-new-form.png')
+    p 可以看到引入核心form后，只需要通过prop传入用来提交数据的url即完成了新建表单的开发。
+
+    p.mt100
+      .h2 编辑场合的表单
+    p 
+      img(src='../../assets/form-mixin-update-form.png')
+    p 编辑成场合使用核心form多了一些步骤。
+    p memberId是从url中解析出来的，要显示的会员的ID，memberId作为id传给核心form，form-mixin会把有ID参数的当作编辑的场合。并以GET方式调用url/id，获得要编辑的数据。
+    p 因为例子提供的是假的接口地址，注定是拉不回来数据的，因为我提供了一个mock数据，mockData，传给了form-mixin，form-mixin会在拉取数据失败时，使用这个mock数据返回，并填充画面。
+    p 和新建相比，就是多传了一个ID给form-mixin，form-mixin就是加载待编辑的数据，并做patch的增量提交。
+
+    p.mt100  通过示例代码，可以看到使用form-mixin的方式节省了大量的开发成本。调试form-mixin要注意观察network选项卡的数据交互。
+    p form-mixin的钩子函数如下
+    ul
+      li dataLoaded，在编辑的场合，当待编辑数据加载后，会先调用这个函数用来数据处理，可能会牵扯到数据变形。默认行为是直接返回服务器的数据。
+      li beforePost，在提交数据时调用，接受的待提交的数据，期待返回处理后的数据，用于提价前数据变形，以满足接口要求。默认行为是不做任何处理。
+      li submitted, 数据提交完成后 的处理，默认不做任何操作。通常是用来页面迁移
+      li serverError，在调用接口时，接口返回失败，默认打印了错误信息。
 </template>
 
 <script>

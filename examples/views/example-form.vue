@@ -1,8 +1,9 @@
 <template lang="pug">
   .examples-sy-form-main
     .h1 数据表单 sy-form
-    .mt100.h2 除了form-mixins,我们还可以直接通过纯数据的方式构造表单。
-    p
+    .mt100 除了form-mixins,我们还可以直接通过纯数据的方式构造表单。
+    p form-mixin 需要自己构建layout，这样比较灵活，但是不利于统一的表单样式，而且开发layout也是有成本的。
+    p 为了进一步减轻页面的开发成本，我提供了基于数据的sy-form。使用该组件只要通过inputs传入表单内容即可。
       .code-block 
         .intend // 新建场合
         .intend sy-form(:inputs='formInputs' 
@@ -18,7 +19,11 @@
       p formInputs 定义了表单的输入项目
       p
         img(src='../assets/form-inputs.png')
-      p 目前支持的input 包括 input 和 options，options具体配置参考 sy-options
+      p 目前支持的input如下
+      ul 
+        li input, 标准el-input的输入框，支持el-input的常用属性透传，如placeholder，maxlength等 
+        li options，options具体配置参考 sy-options，主要是能根据url初始化备选项，能指定单选多选多种外观。
+        li datepicker， 日期选择器
       
       .mt100
       sy-form(:inputs='formInputs' 

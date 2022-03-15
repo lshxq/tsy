@@ -5,10 +5,8 @@
     .no-member-id-panel(v-else) 无法获得会员ID
     .mt100 因为没有后端，所以数据拉取的/member/:id会404，我在axios上实现了一个mock数据的方式，这里在404后使用的是mock数据填充的表单。
 </template>
-
 <script>
 import UserForm from "./user-form.vue";
-
 export default {
   components: {
     UserForm,
@@ -23,7 +21,7 @@ export default {
         gender: 1,
         phone: '18XXXXX5821',
         email: 'lshxqwww@gmail.com',
-        birth: '1983-08-21'
+        birth: '1983-6-5'
       }
     }
   },

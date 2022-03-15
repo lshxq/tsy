@@ -66,8 +66,8 @@ export default {
           that.original = model;
           that.modified = JSON.parse(JSON.stringify(model));
         })
-        .catch(() => {
-          that.$message.error("加载数据失败");
+        .catch((ex) => {
+          that.serverError(ex, "加载数据失败")
         })
         .finally(() => {
           that.state.loading = false;
@@ -93,9 +93,9 @@ export default {
     submitted(rv) {
       console.log(rv, "default submitted implementation.");
     },
-    serverError(ex) {
+    serverError(ex, msg) {
       console.log(ex, "default serverError implementation.");
-      this.$message.error("数据提交失败，请稍后再试，如问题依旧，请联系管理员");
+      this.$message.error(msg);
     },
     apply() {
       const that = this;
@@ -112,7 +112,7 @@ export default {
                 that.submitted(rv.data);
               })
               .catch((ex) => {
-                that.serverError(ex);
+                that.serverError(ex, "数据提交失败，请稍后再试，如问题依旧，请联系管理员");
               })
               .finally(() => {
                 that.state.submitted = false;
