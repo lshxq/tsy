@@ -12,17 +12,17 @@
           .input-bar(:style='inputBarStyle(input)')
             el-input(v-if='input.type == "input"' 
               v-model.trim='modified[input.name]'
-              :maxlength='input.maxlength'
-              :placeholder='input.placeholder'
+              :maxlength='getMeta(input, "maxlength")'
+              :placeholder='getMeta(input, "placeholder")'
               show-word-limit)
             
             sy-options(v-else-if='input.type == "options"'
               v-model='modified[input.name]' 
-              :url='input.url'
-              :options='input.options' 
-              :type='input.kind'
-              :mock='input.mock'
-              :multiple='input.multiple')
+              :url='getMeta(input, "url")'
+              :options='getMeta(input, "options")' 
+              :type='getMeta(input, "type")'
+              :mock='getMeta(input, "mock")'
+              :multiple='getMeta(input, "multiple")')
             
             el-date-picker(v-else-if='input.type == "datepicker"'
               v-model='modified[input.name]'
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import FormMixin from '../../../mixins/form-mixin'
+import FormMixin from "../../../mixins/form-mixin";
 // import _ from 'lodash'
 
 // const get = (key, ...objs) => {
@@ -43,60 +43,61 @@ import FormMixin from '../../../mixins/form-mixin'
 // }
 
 export default {
-  name: 'SyForm',
+  name: "SyForm",
   mixins: [FormMixin],
   props: {
     inputs: Array,
     options: {
       type: Object,
       default() {
-        return {}
-      }
-    }
+        return {};
+      },
+    },
   },
   data() {
-    const modified = {}
-    const {
-      inputs
-    } = this
-    for(const input of inputs) {
-      modified[input.name] = input.value
+    const modified = {};
+    const { inputs } = this;
+    for (const input of inputs) {
+      modified[input.name] = input.value;
     }
     return {
       modified,
-    }
+    };
   },
   computed: {
     rulesComp() {
-      const {
-        inputs
-      } = this
-      const rulesMeta = inputs.filter(input => input.rule)
-      const rules = {}
+      const { inputs } = this;
+      const rulesMeta = inputs.filter((input) => input.rule);
+      const rules = {};
       for (const input of rulesMeta) {
-        rules[input.name] = input.rule
+        rules[input.name] = input.rule;
       }
-      return rules
+      return rules;
     },
     labelWidthComp() {
-      return '100px'
-    }
+      return "100px";
+    },
   },
   methods: {
+    getMeta(input, key) {
+      const { meta = {} } = input;
+      return meta[key];
+    },
     inputBarStyle(input) {
-      const ww = input.width
-      let width = ''
+      const { meta = {} } = input;
+      const ww = meta.width;
+      let width = "";
       if (`${ww}`.match(/^\d+$/)) {
-        width = `${ww}px`
+        width = `${ww}px`;
       } else {
-        width = ww
+        width = ww;
       }
       return {
-        width
-      }
-    }
-  }
-}
+        width,
+      };
+    },
+  },
+};
 </script>
 
 <style lang="sass" scoped>
