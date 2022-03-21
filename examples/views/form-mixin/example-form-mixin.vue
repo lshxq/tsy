@@ -10,11 +10,11 @@
     p 可以看到，新建和编辑 纯在 很多共通的部分。
     p form-mixin倡导 仅开发一个核心form，这个form中处理 了数据拉取（编辑）、layout、验证，提交， 而且用户只要关心 layout和表单验证即可，剩下的交给form-mixin。
     p 然后再新建 和  编辑的 视图中只要引入 这个核心form 组件就可以了， 通过是否向组件传入ID决定是编辑还是新建的逻辑。
-    p.red 这里语言描述比较晦涩，难以理解中心思想，推荐下载例子工程亲知体验一下这种开发模式，可以发现相比你现在的开发思路会大大节省代码。
+    p.red 这里语言描述比较晦涩，难以理解中心思想，推荐下载例子工程亲自体验一下这种开发模式，可以发现相比你现在的开发思路会大大节省代码。
     p 
       a(href='https://github.com/lshxq/examples_tsyvue' target='new') https://github.com/lshxq/examples_tsyvue
 
-    p 这里是核心form的代码示例，模板部分是基于element-ui开发的form的layout。然后混入了form-mixin，从而集成了表单验证和数据提交，以及在编辑的场合加载数据的能力。
+    p.mt100 这里是核心form的代码示例，模板部分是基于element-ui开发的form的layout。然后混入了form-mixin，从而集成了表单验证和数据提交，以及在编辑的场合加载数据的能力。
     p form-mixin中，表单编辑的model叫modified，对应了还有original，original保存的加载下来的原始数据，用于在编辑时，做增量编辑。
     p form-mixin以post的方式创建新数据，以patch的方式，提交增量的变更数据。
     p form-mixin的created中定义了用于表单验证的rules，并且传给了el-form，这里完全符合element-ui规范的操作。
