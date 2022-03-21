@@ -90,6 +90,15 @@ const naviRoutes = [
     component: () => import("../views/example-preview.vue"),
   },
   {
+    path: "/sy-img",
+    name: "sy-img",
+    meta: {
+      navi: "sy-img",
+      label: "图片 sy-img",
+    },
+    component: () => import("../views/example-image.vue"),
+  },
+  {
     path: "/sy-panel",
     name: "sy-panel",
     meta: {

@@ -12,7 +12,8 @@ import SplitScreenVertical from "./components/split-screen-vertical";
 import ImagePreview from "./components/preview";
 import Panel from "./components/panel";
 import Tags from './components/tags';
-import Form from './components/form'
+import Form from './components/form';
+import Image from './components/image'
 
 import FormMixin from "./mixins/form-mixin";
 
@@ -32,6 +33,7 @@ const components = [
   Panel, // 面板
   Tags, // Tag
   Form, // 自能表单
+  Image, // 图片
 ];
 
 const install = (Vue) => {
@@ -60,6 +62,7 @@ export default {
   Panel,
   Tags,
   Form,
+  Image,
   // mixins
   FormMixin,
 };

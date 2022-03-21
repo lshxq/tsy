@@ -5,6 +5,8 @@
       sy-preview(ref='previewRef' :images='images')
       img.image(v-for='(url, idx) of images' :src='url' @click='$refs.previewRef.show(idx)')
 
+    
+
       sy-preview(ref='preview2Ref' :images='[images[0]]')
       el-button(type='primary' @click='$refs.preview2Ref.show()') 显示预览
     .code-block.mt100.pad10
