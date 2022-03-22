@@ -1,6 +1,8 @@
 <template lang="pug">
   .tsy-preview-example
     .h1 图片预览 sy-preview
+
+    .mt30 用于预览图片，通过images传入需要预览的图片，在需要显示预览的时候，调用组件的show(idx)来显示对应的图片。
     p
       sy-preview(ref='previewRef' :images='images')
       img.image(v-for='(url, idx) of images' :src='url' @click='$refs.previewRef.show(idx)')
@@ -26,34 +28,34 @@
 </template>
 
 <script>
-import commentMixins from '../mixins/comment-mixins.js'
+import commentMixins from "../mixins/comment-mixins.js";
 
 export default {
   mixins: [commentMixins],
   created() {
     this.propTableData = [
       {
-        name: 'images',
-        type: 'Array<URL>',
-        comment: '需要预览的图片的url数组.'
-      }
-    ]
+        name: "images",
+        type: "Array<URL>",
+        comment: "需要预览的图片的url数组.",
+      },
+    ];
   },
   data() {
     return {
       images: [
-        './images/1.jpg',
-        './images/2.jpg',
-        './images/3.jpg',
-        './images/4.jpg'
-      ]
-    }
-  }
-}
+        "./images/1.jpg",
+        "./images/2.jpg",
+        "./images/3.jpg",
+        "./images/4.jpg",
+      ],
+    };
+  },
+};
 </script>
 
 <style lang="sass" scoped>
-.image 
+.image
   max-height: 100px
   max-width: 100px
   border: 1px solid gray
