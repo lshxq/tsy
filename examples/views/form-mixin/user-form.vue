@@ -1,5 +1,5 @@
 <template lang="pug">
-  .tsy-form-mixin-example-main-form
+  .tsy-form-mixin-example-main-form(v-loading='locking')
     el-form(:model="modified", label-width="80px", ref="formRef", :rules="rules")
       el-form-item(label="姓名", prop="name" )
         el-input.w400(:disabled='!!id' v-model.trim="modified.name" show-word-limit :maxlength='30')

@@ -1,5 +1,5 @@
 <template lang="pug">
-  .tsy-form-main(v-loading='state.submitted || state.loading')
+  .tsy-form-main(v-loading='locking')
     el-form(ref='formRef' 
       :model='modified' 
       :label-width='labelWidthComp'

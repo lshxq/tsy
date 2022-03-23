@@ -1,9 +1,6 @@
 <template lang="pug">
   .tsy-form-mixin-example
     .h1 form-mixin 
-    p
-      el-button(type='primary' @click='goto("user-form-new")') 新建
-      el-button(type='primary' @click='goto("user-form-update", {params: {id:123}})') 编辑
 
     p.mt100 form-mixin 是另一个大大提高开发效率的抽象
     p 以往我们开发一个新建表单，要处理layout，表单验证，数据提交，然后再去写编辑表单，还要处理layout，数据拉取，数据验证，以及表单提交。
@@ -15,17 +12,19 @@
       a(href='https://github.com/lshxq/examples_tsyvue' target='new') https://github.com/lshxq/examples_tsyvue
 
     p.mt100 这里是核心form的代码示例，模板部分是基于element-ui开发的form的layout。然后混入了form-mixin，从而集成了表单验证和数据提交，以及在编辑的场合加载数据的能力。
-    p form-mixin中，表单编辑的model叫modified，对应了还有original，original保存的加载下来的原始数据，用于在编辑时，做增量编辑。
+    p form-mixin中，表单编辑的model叫modified。
     p form-mixin以post的方式创建新数据，以patch的方式，提交增量的变更数据。
-    p form-mixin的created中定义了用于表单验证的rules，并且传给了el-form，这里完全符合element-ui规范的操作。
-    p 按钮调用的而apply函数，是form-mixin中提供的功能，用于表单提交，这个函数执行会先做表单验证，如果验证通过，会提交数据，完成后会调用钩子函数submitted，我们只需要复写这个submitted函数，来做提交成功后而处理即可。
+    p vue实例created中定义了用于表单验证的rules，并且传给了el-form，这里完全符合element-ui规范的操作。
+    p 按钮调用的apply函数，是form-mixin中提供的功能，用于表单提交，这个函数执行会先做表单验证，如果验证通过，会提交数据，完成后会调用钩子函数submitted，我们只需要复写这个submitted函数，来做提交成功后而处理即可。
     p 按钮调用的cancel函数是自己定义的，处理取消的场合即可。
+    p form-mixin提供了一个表单锁定状态，locking，在数据载入和数据提交过程中，locking值为true，可以利用它来锁定form
     img(src='../../assets/form-mixin-core-form.png')
    
     p.mt100 上面就是核心form的开发，具体步骤如下
       ul
         li 通过element-ui搭建表单的layout
         li vue中混入form-mixin 
+        li 通过locking的值来锁定form，禁止用户操作form
         li 在created中绑定element-ui的表单验证
         li 提交按钮直接调用form-mixin中的apply函数
         li 通过复写submitted函数来做表单提交后的处理
@@ -55,6 +54,10 @@
       li beforePost，在提交数据时调用，接受的待提交的数据，期待返回处理后的数据，用于提价前数据变形，以满足接口要求。默认行为是不做任何处理。
       li submitted, 数据提交完成后 的处理，默认不做任何操作。通常是用来页面迁移
       li serverError，在调用接口时，接口返回失败，默认打印了错误信息。
+
+    .mt100 基于form-mixins的例子入口
+      el-button(type='primary' @click='goto("user-form-new")') 新建
+      el-button(type='primary' @click='goto("user-form-update", {params: {id:123}})') 编辑
 </template>
 
 <script>
