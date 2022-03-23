@@ -7,12 +7,19 @@
       .code-block 
         .intend // 新建场合
         .intend sy-form(:inputs='formInputs' 
-          .intend url='/example/form/url')
+          .intend url='/example/form/url'
+          .intend @submitted='formSubmitted'
+          .intend @canceled='formCanceled')
+
       .code-block.mt20
         .intend // 编辑场合，传入ID
         .intend sy-form(:inputs='formInputs' 
           .intend id='test'
-          .intend url='/example/form/url')
+          .intend url='/example/form/url'
+          .intend :data-loaded-handler='dataLoadedHandler'
+          .intend :before-post-handler='beforePostHandler'
+          .intend @submitted='formSubmitted'
+          .intend @canceled='formCanceled')
       
       p formInputs 定义了表单的输入项目
       p
@@ -24,135 +31,81 @@
         li datepicker， 日期选择器
       
       .mt100
-      sy-form(:inputs='formInputs' 
-        url='/example/syform/submit-url')
+        .h2 Props
+        sy-table(:columns='propTableColumns' :data='propTableData')
+          template(v-slot:comment='scope') 
+            template(v-if='scope.row.comment') {{scope.row.comment}}
 
-      sy-form(:inputs='formInputs' 
-        url='/example/syform/submit-url'
-        id='test')
+            template(v-else-if='scope.row.name == "url"')
+              p 后端接口的基础地址, 
+              p 新建：最终会以post方式提交到url指定位置
+              p 编辑：首先通过get的方式 在url/id的位置拉取待编辑数据。最后会以patch的方式，在url/id的位置提交增量更新数据。
+
+      .mt100
+        .h2 Events
+        sy-table(:columns='eventTableColumns' :data='eventTableData')
+
+      .mt100 通过下面入口进入表单的用例 
+        el-button(@click='goto("sy-form-create")' type='primary') 新建表单
+        el-button(@click='goto("sy-form-update")' type='primary') 编辑表单
+
+      .mt100 
+        .h2 Inputs定义
+        p 通过一个json对象来描述input，
+        .code-block
+          .intend {
+            .intend type: String, // 可选值 input（输入框）, options(备选项),datepicker(日期选择器) 
+            .intend name: String, // model中的名字，待编辑字段的名字
+            .intend value: String, // 该字段默认值
+            .intend label: String, // 该字段在表单中展示的名称
+            .intend meta: Object    // 用于配置该输入框的附件信息，每种输入框的附加信息不同。
+          .intend }
 </template>
 
 <script>
+import CommnetMixins from '../mixins/comment-mixins.js'
 export default {
+  mixins: [CommnetMixins],
   created() {
-    this.formInputs = [
+    this.propTableData = [
       {
-        type: "input",
-        name: "xingming",
-        value: "tsy",
-        label: "姓名",
-        meta: {
-          placeholder: "请输入姓名",
-          width: 300,
-          maxlength: 30,
-        },
-
-        rule: [
-          { required: true, message: "请输入活动名称", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
-        ],
+        name: 'url',
+        type: 'String',
       },
       {
-        type: "options",
-        name: "gender",
-        value: "male",
-        label: "性别",
-        meta: {
-          url: "/example/gender/options",
-          type: 2,
-          mock() {
-            return [
-              { label: "男", value: "male" },
-              { label: "女", value: "female" },
-            ];
-          },
-        },
+        name: 'inputs',
+        type: 'Array[Input]',
+        comment: '表单输入项目的定义数组，关于输入项目定义，本文底部的说明'
       },
       {
-        type: "options",
-        name: "xueli",
-        value: "bachelor",
-        label: "学历",
-        meta: {
-          options: [
-            {
-              label: "中学",
-              value: "highschool",
-            },
-            {
-              label: "大专",
-              value: "college",
-            },
-            {
-              label: "大学（本科）",
-              value: "bachelor",
-            },
-            {
-              label: "研究生",
-              value: "master",
-            },
-          ],
-        },
+        name: 'id',
+        type: 'String',
+        comment: '待编辑数据的ID，如果指定了ID，表单改为编辑模式，默认是新建模式，两个模式的提交方式不一样，新建是以POST方式全量提交，编辑是以Patch方式增量提交。'
       },
       {
-        type: "options",
-        kind: 2,
-        name: "xingqu",
-        label: "兴趣",
-        meta: {
-          url: "/example/xingqu/options",
-          type: 2,
-          multiple: true,
-          mock() {
-            return [
-              {
-                label: "篮球",
-                value: "lanqiu",
-              },
-              {
-                label: "足球",
-                value: "zuqiu",
-              },
-              {
-                label: "乒乓",
-                value: "pingpang",
-              },
-            ];
-          },
-        },
+        name: 'data-loaded-handler',
+        type: 'Function',
+        comment: '在编辑模式下，会通过get方式在url/id的位置拉取待编辑数据，但是数可能和表单要求的数据格式不一样，这时候需要做数据变形，通过传入这个函数，可以在数据填充页面之前，进行数据变形，接收接口返回的数据，并返回处理后的数据。'
       },
       {
-        type: "options",
-        name: "gangwei",
-        label: "岗位",
-        meta: {
-          url: "/example/gangwei/options",
-          multiple: true,
-          mock() {
-            return [
-              {
-                label: "前端工程师",
-                value: "FE",
-              },
-              {
-                label: "后端工程师",
-                value: "BE",
-              },
-              {
-                label: "技术经理",
-                value: "MGR",
-              },
-            ];
-          },
-        },
+        name: 'before-post-handler',
+        type: 'Function',
+        comment: '表单数据提交之前，通过这个函数完成数据变形，以满足接口要求。表单数据的格式可能和接口要求的格式不一致，这时候可以通过这个函数做提交前的数据处理'
+      }
+    ]
+    this.eventTableData = [
+      {
+        name: 'submitted',
+        comment: '当表单完成验证，提交后端后，如果后端返回正常（http 2XX），则触发这个事件，并把后端返回作为参数传过来。开发者可以在这里做页面迁移等动作。'
       },
       {
-        type: "datepicker",
-        name: "birthday",
-        label: "生日",
-        value: "1983-7-4",
-      },
-    ];
+        name: 'canceled',
+        comment: '当用户点击取消按钮时触发这个事件。'
+      }
+    ]
   },
+  methods: {
+    
+  }
 };
 </script>

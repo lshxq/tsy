@@ -1,5 +1,5 @@
 <template lang="pug">
-  .tsy-form-main
+  .tsy-form-main(v-loading='state.submitted || state.loading')
     el-form(ref='formRef' 
       :model='modified' 
       :label-width='labelWidthComp'
@@ -36,16 +36,13 @@
 
 <script>
 import FormMixin from "../../../mixins/form-mixin";
-// import _ from 'lodash'
-
-// const get = (key, ...objs) => {
-
-// }
 
 export default {
   name: "SyForm",
   mixins: [FormMixin],
   props: {
+    beforePostHandler: Function,
+    dataLoadedHandler: Function,
     inputs: Array,
     options: {
       type: Object,
@@ -79,6 +76,30 @@ export default {
     },
   },
   methods: {
+    submitted(param) {
+      this.$emit('submitted', param)
+    },
+    cancel() {
+      this.$emit("canceled")
+    },
+    dataLoaded(data) {
+      const {
+        dataLoadedHandler
+      } = this
+      if(dataLoadedHandler) {
+        return dataLoadedHandler(data)
+      }
+      return data;
+    },
+    beforePost(data) {
+      const {
+        beforePostHandler
+      } = this
+      if (beforePostHandler) {
+        return beforePostHandler(data)
+      }
+      return data;
+    },
     getMeta(input, key) {
       const { meta = {} } = input;
       return meta[key];

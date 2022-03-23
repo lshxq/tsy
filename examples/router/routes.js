@@ -135,6 +135,22 @@ const naviRoutes = [
     component: () => import("../views/example-form.vue"),
   },
   {
+    path: "/sy-form-create",
+    name: "sy-form-create",
+    meta: {
+      navi: "sy-form",
+    },
+    component: () => import("../views/example-form-create.vue"),
+  },
+  {
+    path: "/sy-form-update",
+    name: "sy-form-update",
+    meta: {
+      navi: "sy-form",
+    },
+    component: () => import("../views/example-form-update.vue"),
+  },
+  {
     path: "/user-form/new",
     name: "user-form-new",
     meta: {
