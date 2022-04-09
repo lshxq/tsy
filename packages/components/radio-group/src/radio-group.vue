@@ -1,12 +1,7 @@
-<template lang="pug">
-  .tsy-radio-group-main
-    sy-radio(
-      v-for='(opt, idx) of options' 
-      :key='idx' 
-      :label='opt.label'
-      :value='opt.value' 
-      :checked='isChecked(opt)'
-      @click='radioClicked')
+<template>
+<div class="tsy-radio-group-main">
+  <sy-radio v-for="(opt, idx) of options" :key="idx" :label="opt.label" :value="opt.value" :checked="isChecked(opt)" @click="radioClicked"></sy-radio>
+</div>
 </template>
 
 <script>
@@ -32,8 +27,10 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-.tsy-radio-group-main
-  display: flex
-  flex-flow: row wrap
+<style lang="css" scoped>
+.tsy-radio-group-main {
+  display: flex;
+  flex-flow: row wrap;
+}
+
 </style>

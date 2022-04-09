@@ -1,27 +1,25 @@
-<template lang="pug">
-  .tsy-options-main(v-loading='loading')
-    .tsy-options-type-1(v-if='type == 1')
-      el-select(:value='reasonableValue'  :placeholder='placeholderComp' @input='valueChanged' :multiple='multiple')
-        el-option(v-for='(opt, idx) of optionsComputed' :value='opt.value' :label='opt.label')
-
-    .tsy-options-type-2(v-if='type == 2')
-      template(v-if='multiple')
-        sy-checkbox-group(
-          :options='optionsComputed'
-          :value='reasonableValue'
-          @input='valueChanged')
-
-      sy-radio-group(v-else :options='optionsComputed' :value='reasonableValue' @input='optionClicked')
-    
-    .tsy-options-type-3(v-if='type == 3')
-      .block-options
-        .label {{labelComp}}：
-        .options
-          .option(
-            :class='blockOptionsOptionClass(opt)' 
-            v-for='(opt, idx) of optionsComputed'
-            :key='idx'
-            @click='optionClicked(opt.value)') {{opt.label}}
+<template>
+<div class="tsy-options-main" v-loading="loading">
+  <div class="tsy-options-type-1" v-if="type == 1">
+    <el-select :value="reasonableValue" :placeholder="placeholderComp" @input="valueChanged" :multiple="multiple">
+      <el-option v-for="(opt, idx) of optionsComputed" :value="opt.value" :label="opt.label" :key='idx'></el-option>
+    </el-select>
+  </div>
+  <div class="tsy-options-type-2" v-if="type == 2">
+    <template v-if="multiple">
+      <sy-checkbox-group :options="optionsComputed" :value="reasonableValue" @input="valueChanged"></sy-checkbox-group>
+    </template>
+    <sy-radio-group v-else :options="optionsComputed" :value="reasonableValue" @input="optionClicked"></sy-radio-group>
+  </div>
+  <div class="tsy-options-type-3" v-if="type == 3">
+    <div class="block-options">
+      <div class="label">{{labelComp}}：</div>
+      <div class="options">
+        <div class="option" :class="blockOptionsOptionClass(opt)" v-for="(opt, idx) of optionsComputed" :key="idx" @click="optionClicked(opt.value)">{{opt.label}}</div>
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>
@@ -186,31 +184,44 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-.block-options
-  display: flex
-  align-items: center
-  user-select: none
-  .label
-    min-width: 80px
-    margin-bottom: 10px
-  .options
-    display: flex
-    flex-flow: row wrap
-    align-items: center
-    .option
-      padding: 5px 10px
-      cursor: pointer
-      margin-right: 10px
-      margin-bottom: 10px
-    .option:hover, .option.selected
-      background-color: #D9B300
-      color: white
+<style lang="css" scoped>
+.block-options {
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
 
-.tsy-options-type-1
-  display: flex
-  align-items: center
-  .label
-    margin-right: 10px
-    min-width: 120px
+.block-options .label {
+  min-width: 80px;
+  margin-bottom: 10px;
+}
+
+.block-options .options {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+.block-options .options .option {
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.block-options .options .option:hover, .block-options .options .option.selected {
+  background-color: #D9B300;
+  color: white;
+}
+
+.tsy-options-type-1 {
+  display: flex;
+  align-items: center;
+}
+
+.tsy-options-type-1 .label {
+  margin-right: 10px;
+  min-width: 120px;
+}
+
 </style>

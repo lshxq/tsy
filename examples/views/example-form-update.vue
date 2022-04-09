@@ -1,14 +1,8 @@
-<template lang="pug">
-  .tsy-example-form-update-main
-    .h2 编辑表单用例
-    sy-form(:inputs='formInputs'
-      id='test'
-      url='/example/syform/submit-url'
-      :data-loaded-handler='dataLoadedHandler'
-      :before-post-handler='beforePostHandler'
-      :mock='loadDataMock'
-      @submitted='updateSubmitted'
-      @canceled='updateCanceled')
+<template>
+<div class="tsy-example-form-update-main">
+  <div class="h2">编辑表单用例</div>
+  <sy-form :inputs="formInputs" id="test" url="/example/syform/submit-url" :data-loaded-handler="dataLoadedHandler" :before-post-handler="beforePostHandler" :mock="loadDataMock" @submitted="updateSubmitted" @canceled="updateCanceled"></sy-form>
+</div>
 </template>
 
 

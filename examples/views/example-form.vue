@@ -1,65 +1,73 @@
-<template lang="pug">
-  .examples-sy-form-main
-    .h1 数据表单 sy-form
-    .mt100 除了form-mixins,我们还可以直接通过纯数据的方式构造表单。
-    p form-mixin 需要自己构建layout，这样比较灵活，但是不利于统一的表单样式，而且开发layout也是有成本的。
-    p 为了进一步减轻页面的开发成本，我提供了基于数据的sy-form。使用该组件只要通过inputs传入表单内容即可。
-      .code-block 
-        .intend // 新建场合
-        .intend sy-form(:inputs='formInputs' 
-          .intend url='/example/form/url'
-          .intend @submitted='formSubmitted'
-          .intend @canceled='formCanceled')
-
-      .code-block.mt20
-        .intend // 编辑场合，传入ID
-        .intend sy-form(:inputs='formInputs' 
-          .intend id='test'
-          .intend url='/example/form/url'
-          .intend :data-loaded-handler='dataLoadedHandler'
-          .intend :before-post-handler='beforePostHandler'
-          .intend @submitted='formSubmitted'
-          .intend @canceled='formCanceled')
-      
-      p formInputs 定义了表单的输入项目
-      p
-        img(src='../assets/form-inputs.jpg')
-      p 目前支持的input如下
-      ul 
-        li input, 标准el-input的输入框，支持el-input的常用属性透传，如placeholder，maxlength等 
-        li options，options具体配置参考 sy-options，主要是能根据url初始化备选项，能指定单选多选多种外观。
-        li datepicker， 日期选择器
-      
-      .mt100
-        .h2 Props
-        sy-table(:columns='propTableColumns' :data='propTableData')
-          template(v-slot:comment='scope') 
-            template(v-if='scope.row.comment') {{scope.row.comment}}
-
-            template(v-else-if='scope.row.name == "url"')
-              p 后端接口的基础地址, 
-              p 新建：最终会以post方式提交到url指定位置
-              p 编辑：首先通过get的方式 在url/id的位置拉取待编辑数据。最后会以patch的方式，在url/id的位置提交增量更新数据。
-
-      .mt100
-        .h2 Events
-        sy-table(:columns='eventTableColumns' :data='eventTableData')
-
-      .mt100 通过下面入口进入表单的用例 
-        el-button(@click='goto("sy-form-create")' type='primary') 新建表单
-        el-button(@click='goto("sy-form-update")' type='primary') 编辑表单
-
-      .mt100 
-        .h2 Inputs定义
-        p 通过一个json对象来描述input，
-        .code-block
-          .intend {
-            .intend type: String, // 可选值 input（输入框）, options(备选项),datepicker(日期选择器) 
-            .intend name: String, // model中的名字，待编辑字段的名字
-            .intend value: String, // 该字段默认值
-            .intend label: String, // 该字段在表单中展示的名称
-            .intend meta: Object    // 用于配置该输入框的附件信息，每种输入框的附加信息不同。
-          .intend }
+<template>
+<div class="examples-sy-form-main">
+  <div class="h1">数据表单 sy-form</div>
+  <div class="mt100">除了form-mixins,我们还可以直接通过纯数据的方式构造表单。</div>
+  <p>form-mixin 需要自己构建layout，这样比较灵活，但是不利于统一的表单样式，而且开发layout也是有成本的。</p>
+  <div>为了进一步减轻页面的开发成本，我提供了基于数据的sy-form。使用该组件只要通过inputs传入表单内容即可。
+    <div class="code-block"> 
+      <div class="intend">// 新建场合</div>
+      <div class="intend">sy-form(:inputs='formInputs' 
+        <div class="intend">url='/example/form/url'</div>
+        <div class="intend">@submitted='formSubmitted'</div>
+        <div class="intend">@canceled='formCanceled')</div>
+      </div>
+    </div>
+    <div class="code-block mt20">
+      <div class="intend">// 编辑场合，传入ID</div>
+      <div class="intend">sy-form(:inputs='formInputs' 
+        <div class="intend">id='test'</div>
+        <div class="intend">url='/example/form/url'</div>
+        <div class="intend">:data-loaded-handler='dataLoadedHandler'</div>
+        <div class="intend">:before-post-handler='beforePostHandler'</div>
+        <div class="intend">@submitted='formSubmitted'</div>
+        <div class="intend">@canceled='formCanceled')</div>
+      </div>
+    </div>
+    <p>formInputs 定义了表单的输入项目</p>
+    <p><img src="../assets/form-inputs.jpg"/></p>
+    <p>目前支持的input如下</p>
+    <ul> 
+      <li>input, 标准el-input的输入框，支持el-input的常用属性透传，如placeholder，maxlength等 </li>
+      <li>options，options具体配置参考 sy-options，主要是能根据url初始化备选项，能指定单选多选多种外观。</li>
+      <li>datepicker， 日期选择器</li>
+    </ul>
+    <div class="mt100">
+      <div class="h2">Props</div>
+      <sy-table :columns="propTableColumns" :data="propTableData">
+        <template v-slot:comment="scope"> 
+          <template v-if="scope.row.comment">{{scope.row.comment}}</template>
+          <template v-else-if="scope.row.name == &quot;url&quot;">
+            <p>后端接口的基础地址, </p>
+            <p>新建：最终会以post方式提交到url指定位置</p>
+            <p>编辑：首先通过get的方式 在url/id的位置拉取待编辑数据。最后会以patch的方式，在url/id的位置提交增量更新数据。</p>
+          </template>
+        </template>
+      </sy-table>
+    </div>
+    <div class="mt100">
+      <div class="h2">Events</div>
+      <sy-table :columns="eventTableColumns" :data="eventTableData"></sy-table>
+    </div>
+    <div class="mt100">通过下面入口进入表单的用例 
+      <el-button @click="goto(&quot;sy-form-create&quot;)" type="primary">新建表单</el-button>
+      <el-button @click="goto(&quot;sy-form-update&quot;)" type="primary">编辑表单</el-button>
+    </div>
+    <div class="mt100"> 
+      <div class="h2">Inputs定义</div>
+      <p>通过一个json对象来描述input，</p>
+      <div class="code-block">
+        <div class="intend">{
+          <div class="intend">type: String, // 可选值 input（输入框）, options(备选项),datepicker(日期选择器) </div>
+          <div class="intend">name: String, // model中的名字，待编辑字段的名字</div>
+          <div class="intend">value: String, // 该字段默认值</div>
+          <div class="intend">label: String, // 该字段在表单中展示的名称</div>
+          <div class="intend">meta: Object    // 用于配置该输入框的附件信息，每种输入框的附加信息不同。</div>
+        </div>
+        <div class="intend">}</div>
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>

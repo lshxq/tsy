@@ -5,7 +5,7 @@ import tsy from '../packages'
 import ElementUI from 'element-ui';
 import router from './router'
 import 'element-ui/lib/theme-chalk/index.css';
-import './assets/main.sass'
+import './assets/main.css'
 
 Vue.config.productionTip = false
 

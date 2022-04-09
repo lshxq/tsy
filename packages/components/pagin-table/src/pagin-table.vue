@@ -1,25 +1,15 @@
-<template lang="pug">
-  .tsy-pagin-table-main
-    sy-pagin-data(
-      :url='url',
-      :query='queryComp'
-      :mock='mock'
-      :request-method='requestMethod'
-      :resp-data-mapper='respDataMapper'
-      :pagin-data-mapper='paginDataMapperPriv'
-      @data-loaded='dataLoaded'
-    )
-      template(slot-scope='scope') 
-        sy-table(
-          :data='scope.data' 
-          :columns='columns' 
-          :index-base='indexBaseComputed'
-          :show-index='showIndex'
-          :stripe='stripe'
-          @sort='tableSortChanged')
-          template(:slot='slotName'  v-for='slotName of slotNameArray' slot-scope='scope')
-            slot(:name='slotName' :data='scope')
-            
+<template >
+<div class="tsy-pagin-table-main">
+  <sy-pagin-data :url="url" :query="queryComp" :mock="mock" :request-method="requestMethod" :resp-data-mapper="respDataMapper" :pagin-data-mapper="paginDataMapperPriv" @data-loaded="dataLoaded">
+    <template slot-scope="scope"> 
+      <sy-table :data="scope.data" :columns="columns" :index-base="indexBaseComputed" :show-index="showIndex" :stripe="stripe" @sort="tableSortChanged">
+        <template :slot="slotName" v-for="slotName of slotNameArray" slot-scope="scope">
+          <slot :name="slotName" :data="scope"></slot>
+        </template>
+      </sy-table>
+    </template>
+  </sy-pagin-data>
+</div>      
 </template>
 
 <script>

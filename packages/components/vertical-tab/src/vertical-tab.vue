@@ -1,15 +1,20 @@
-<template lang="pug">
-.tsy-vertical-tab-main
-  sy-split-screen-vertical
-    template(slot='left')
-      .tabs
-        .tab(:key='idx' v-for='(tab, idx) of tabs' @click='currentTabIdx = idx') {{tab.label}}
-      
-        
-    template(slot='right')
-      transition(name="fade" :key='idx' v-for='(tab, idx) of tabs')
-        .tab-panel(v-if='currentTabIdx === idx' )
-          slot(:name='tab.slot')
+<template>
+<div class="tsy-vertical-tab-main">
+  <sy-split-screen-vertical>
+    <template slot="left">
+      <div class="tabs">
+        <div class="tab" :key="idx" v-for="(tab, idx) of tabs" @click="currentTabIdx = idx">{{tab.label}}</div>
+      </div>
+    </template>
+    <template slot="right">
+      <transition name="fade" :key="idx" v-for="(tab, idx) of tabs">
+        <div class="tab-panel" v-if="currentTabIdx === idx">
+          <slot :name="tab.slot"></slot>
+        </div>
+      </transition>
+    </template>
+  </sy-split-screen-vertical>
+</div>
 </template>
 
 <script>
@@ -36,17 +41,23 @@ export default {
 }
 </script>
 
-<style lang='sass' scoped>
-  .tsy-vertical-tab-main
-    height: 100%
-    position: relative
-    
-    .tab-panel
-      height: 100%
-      padding: 10px 10px 50px 10px
+<style lang='css' scoped>
+.tsy-vertical-tab-main {
+  height: 100%;
+  position: relative;
+}
 
-  .fade-enter-active, .fade-leave-active 
-    transition: opacity .5s
-  .fade-enter, .fade-leave-to
-    opacity: 0
+.tsy-vertical-tab-main .tab-panel {
+  height: 100%;
+  padding: 10px 10px 50px 10px;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
 </style>

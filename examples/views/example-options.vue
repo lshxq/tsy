@@ -1,150 +1,116 @@
-<template lang="pug">
-  .tsy-options-example-main
-    .h1 备选项 sy-options
-
-    axios-required
-
-    
-    p 项目中很多备选项，是以数据字典的形式，配置在后端数据库中的，需要前端通过 ajax调用接口 拉回来数据集合，并展示，如果每个人单独开发，开发成本高，维护成本也高。
-    p 组件定义了多种常用的外观，可以通过传入type:Number 来指定外观
-
-    .section.mt100
-      b 单选模式  multiple=false
-      p.mt30 
-        .highlight Type 1
-        .mb10 下拉列表
-        sy-options(
-          label='颜色'
-          v-model='valueRadio'
-          :first-option='{label: "All", value: ""}'
-          url='/example/options'
-          :mock='mockData'
-        )
-
-      p.mt30 
-        .highlight Type 2
-        .mb10 单选按钮Radio 
-        sy-options(
-          label='颜色'
-          v-model='valueRadio'
-          url='/example/options'
-          :mock='mockData'
-          type='2'
-        )
-
-      p.mt30 
-        .highlight Type 3
-        .mb10 通常 card 类型的 检索条件 会 使用这这种 选择 器， 购物网站
-        sy-options(
-          :first-option='{label: "全部", value: ""}'
-          label='颜色'
-          v-model='valueRadio'
-          url='/example/options'
-          :mock='mockData'
-          type='3'
-        )
-      p 当前值： {{valueRadio}}
-
-    .section.mt100 
-      b 多选模式  multiple=true
-      p.mt30 
-        .highlight Type 1
-        .mb10 下拉列表
-        sy-options(
-          label='颜色'
-          v-model='valueCheckbox'
-          :first-option='{label: "All", value: ""}'
-          url='/example/options'
-          :mock='mockData'
-          multiple
-        )
-
-      p.mt30 
-        .highlight Type 2
-        .mb10 复选按钮 Checkbox
-        sy-options(
-          label='颜色'
-          v-model='valueCheckbox'
-          url='/example/options'
-          :mock='mockData'
-          type='2'
-          multiple
-        )
-
-      p.mt30 
-        .highlight Type 3
-        .mb10 通常 card 类型的 检索结果 会 使用这这种 选择 器， 购物网站
-        sy-options(
-          label='颜色'
-          v-model='valueCheckbox'
-          url='/example/options'
-          :mock='mockData'
-          type='3'
-          multiple
-        )
-      p 当前值： {{valueCheckbox}}
-
-    .section
-      p 通过options初始化的备选项，不拉数据
-      sy-options(
-          label='颜色'
-          v-model='value3'
-          :options='mockData'
-          type='3'
-        )
-
-    p 通过URL初始化备选项
-      .code-block
-        .intend sy-options(
-          .intend  label='颜色'
-          .intend  v-model='value'
-          .intend  url='/example/options'
-          .intend  type='3'
-          .intend  multiple
-        .intend )
-
-    p.mt10 通过options初始化备选项，不会发起数据拉取请求
-      .code-block
-        .intend // 模板部分
-        .intend sy-options(
-          .intend  label='颜色'
-          .intend  v-model='value'
-          .intend  options='opts'
-        .intend )
-        .intend.mt30 // vue实例上绑定的备选项
-        .intend this.opts = [{
-          .intend label: "备选项1",
-          .intend value: "1",
-        .intend }, {
-          .intend label: "2222",
-          .intend value: "B",
-        .intend },{
-          .intend label: "CCCC",
-          .intend value: "C",
-        .intend }];
-
-    p sy-options集成了数拉取的动作，使用该组件，仅需要提供数据源的url地址即可。
-    .mt100
-      .h2 Props
-      sy-table(:columns='propTableColumns' :data='propTableData') 
-        template(v-slot:comment='scope')
-          template(v-if='scope.row.comment') {{scope.row.comment}}
-          template(v-else)
-            template(v-if='scope.row.name=="first-option"')
-              p 第一个备选项往往不是配置在数据字典的，比如 全部。传入Option对象
-              option-defined
-            template(v-if='scope.row.name == "url"') 
-              p 拉取数据字典的url地址，服务器应该返回Option对象的数组
-              .code-block
-                .intend [
-                  .intend {
-                    .intend label: String, // 显示的值
-                    .intend value: String, // 提交的值
-                  .intend },
-                  .intend ...
-                .intend ]
-              
-
+<template>
+<div class="tsy-options-example-main">
+  <div class="h1">备选项 sy-options</div>
+  <axios-required></axios-required>
+  <div>项目中很多备选项，是以数据字典的形式，配置在后端数据库中的，需要前端通过 ajax调用接口 拉回来数据集合，并展示，如果每个人单独开发，开发成本高，维护成本也高。</div>
+  <div>组件定义了多种常用的外观，可以通过传入type:Number 来指定外观</div>
+  <div class="section mt100"><b>单选模式  multiple=false</b>
+    <div class="mt30"> 
+      <div class="highlight">Type 1</div>
+      <div class="mb10">下拉列表</div>
+      <sy-options label="颜色" v-model="valueRadio" :first-option="{label: &quot;All&quot;, value: &quot;&quot;}" url="/example/options" :mock="mockData"></sy-options>
+    </div>
+    <div class="mt30"> 
+      <div class="highlight">Type 2</div>
+      <div class="mb10">单选按钮Radio </div>
+      <sy-options label="颜色" v-model="valueRadio" url="/example/options" :mock="mockData" type="2"></sy-options>
+    </div>
+    <div class="mt30"> 
+      <div class="highlight">Type 3</div>
+      <div class="mb10">通常 card 类型的 检索条件 会 使用这这种 选择 器， 购物网站</div>
+      <sy-options :first-option="{label: &quot;全部&quot;, value: &quot;&quot;}" label="颜色" v-model="valueRadio" url="/example/options" :mock="mockData" type="3"></sy-options>
+    </div>
+    <div>当前值： {{valueRadio}}</div>
+  </div>
+  <div class="section mt100"> <b>多选模式  multiple=true</b>
+    <div class="mt30"> 
+      <div class="highlight">Type 1</div>
+      <div class="mb10">下拉列表</div>
+      <sy-options label="颜色" v-model="valueCheckbox" :first-option="{label: &quot;All&quot;, value: &quot;&quot;}" url="/example/options" :mock="mockData" multiple="multiple"></sy-options>
+    </div>
+    <div class="mt30"> 
+      <div class="highlight">Type 2</div>
+      <div class="mb10">复选按钮 Checkbox</div>
+      <sy-options label="颜色" v-model="valueCheckbox" url="/example/options" :mock="mockData" type="2" multiple="multiple"></sy-options>
+    </div>
+    <div class="mt30"> 
+      <div class="highlight">Type 3</div>
+      <div class="mb10">通常 card 类型的 检索结果 会 使用这这种 选择 器， 购物网站</div>
+      <sy-options label="颜色" v-model="valueCheckbox" url="/example/options" :mock="mockData" type="3" multiple="multiple"></sy-options>
+    </div>
+    <div>当前值： {{valueCheckbox}}</div>
+  </div>
+  <div class="section">
+    <div>通过options初始化的备选项，不拉数据</div>
+    <sy-options label="颜色" v-model="value3" :options="mockData" type="3"></sy-options>
+  </div>
+  <div>通过URL初始化备选项
+    <div class="code-block">
+      <div class="intend">sy-options(
+        <div class="intend"> label='颜色'</div>
+        <div class="intend"> v-model='value'</div>
+        <div class="intend"> url='/example/options'</div>
+        <div class="intend"> type='3'</div>
+        <div class="intend"> multiple</div>
+      </div>
+      <div class="intend">)</div>
+    </div>
+  </div>
+  <div class="mt10">通过options初始化备选项，不会发起数据拉取请求
+    <div class="code-block">
+      <div class="intend">// 模板部分</div>
+      <div class="intend">sy-options(
+        <div class="intend"> label='颜色'</div>
+        <div class="intend"> v-model='value'</div>
+        <div class="intend"> options='opts'</div>
+      </div>
+      <div class="intend">)</div>
+      <div class="intend mt30">// vue实例上绑定的备选项</div>
+      <div class="intend">this.opts = [{
+        <div class="intend">label: "备选项1",</div>
+        <div class="intend">value: "1",</div>
+      </div>
+      <div class="intend">}, {
+        <div class="intend">label: "2222",</div>
+        <div class="intend">value: "B",</div>
+      </div>
+      <div class="intend">},{
+        <div class="intend">label: "CCCC",</div>
+        <div class="intend">value: "C",</div>
+      </div>
+      <div class="intend">}];</div>
+    </div>
+  </div>
+  <div>sy-options集成了数拉取的动作，使用该组件，仅需要提供数据源的url地址即可。</div>
+  <div class="mt100">
+    <div class="h2">Props</div>
+    <sy-table :columns="propTableColumns" :data="propTableData"> 
+      <template v-slot:comment="scope">
+        <template v-if="scope.row.comment">{{scope.row.comment}}</template>
+        <template v-else>
+          <template v-if="scope.row.name==&quot;first-option&quot;">
+            <div>第一个备选项往往不是配置在数据字典的，比如 全部。传入Option对象</div>
+            <option-defined></option-defined>
+          </template>
+          <template v-if="scope.row.name == &quot;url&quot;"> 
+            <div>拉取数据字典的url地址，服务器应该返回Option对象的数组</div>
+            <div class="code-block">
+              <div class="intend">[
+                <div class="intend">{
+                  <div class="intend">label: String, // 显示的值</div>
+                  <div class="intend">value: String, // 提交的值</div>
+                </div>
+                <div class="intend">},</div>
+                <div class="intend">...</div>
+              </div>
+              <div class="intend">]</div>
+            </div>
+          </template>
+        </template>
+      </template>
+    </sy-table>
+  </div>
+</div>
 </template>
 
 <script>

@@ -1,11 +1,9 @@
-<template lang="pug">
-  .tsy-search-input-main
-    el-input(
-      :placeholder='placeholder'
-      v-model='valueInner'
-      @change='exposeValue')
-        el-button(slot="append" icon="el-icon-search" @click='exposeValue')
-
+<template>
+<div class="tsy-search-input-main">
+  <el-input :placeholder="placeholder" v-model="valueInner" @change="exposeValue">
+    <el-button slot="append" icon="el-icon-search" @click="exposeValue"></el-button>
+  </el-input>
+</div>
 </template>
 
 <script>
@@ -27,7 +25,9 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-.tsy-search-input-main
-  width: 280px
+<style lang="css" scoped>
+.tsy-search-input-main {
+  width: 280px;
+}
+
 </style>

@@ -1,15 +1,10 @@
-<template lang="pug">
-  .tsy-pagin-data-main(v-loading='loading')
-    slot(:data='data')
-    .paginator-bar
-      el-pagination(
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page='pageNo'
-        :page-size='pageSize'
-        :total='total'
-        layout="total, sizes, prev, pager, next, jumper"
-      )
+<template>
+<div class="tsy-pagin-data-main" v-loading="loading">
+  <slot :data="data"></slot>
+  <div class="paginator-bar">
+    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageNo" :page-size="pageSize" :total="total" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
+  </div>
+</div>
 </template>
 
 <script>
@@ -137,12 +132,16 @@ export default {
 }
 </script>
 
-<style lang="sass" scoped>
-.tsy-pagin-data-main
-  width: 100%
-  .paginator-bar
-    width: 100%
-    display: flex
-    justify-content: flex-end
-    margin-top: 20px
+<style lang="css" scoped>
+.tsy-pagin-data-main {
+  width: 100%;
+}
+
+.tsy-pagin-data-main .paginator-bar {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
 </style>

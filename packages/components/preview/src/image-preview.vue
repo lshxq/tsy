@@ -1,27 +1,32 @@
-<template lang="pug">
-  .tsy-image-preview-main
-    template(v-if='visibility')
-      transition(name="fade")
-        .mask(v-loading='loading')
-          .image-container(@mouseup='move = false' @mousemove='mousemove')
-            .center
-              .anchor(:style='anchorStyle')
-                img(:src='imgSrc' 
-                    :style='imageStyle'
-                    draggable='false' 
-                    @load='imageLoaded' 
-                    @mousedown='mousedown')
-          .right-button.round-btn(@click='next(1)' v-if='images.length > 1')
-            .el-icon-arrow-right
-          .left-button.round-btn(@click='next(-1)' v-if='images.length > 1')
-            .el-icon-arrow-left
-          .close-button.round-btn(@click='visibility = false')
-            .el-icon-close
-          .toolbar
-            .el-icon-zoom-out.btn(@click='zoom(-0.1)')
-            .el-icon-zoom-in.btn(@click='zoom(0.1)')
-            .el-icon-refresh-left.btn(@click='rotate -= 90')
-            .el-icon-refresh-right.btn(@click='rotate +=  90')
+<template>
+<div class="tsy-image-preview-main">
+  <template v-if="visibility">
+    <transition name="fade">
+      <div class="mask" v-loading="loading">
+        <div class="image-container" @mouseup="move = false" @mousemove="mousemove">
+          <div class="center">
+            <div class="anchor" :style="anchorStyle"><img :src="imgSrc" :style="imageStyle" draggable="false" @load="imageLoaded" @mousedown="mousedown"/></div>
+          </div>
+        </div>
+        <div class="right-button round-btn" @click="next(1)" v-if="images.length &gt; 1">
+          <div class="el-icon-arrow-right"></div>
+        </div>
+        <div class="left-button round-btn" @click="next(-1)" v-if="images.length &gt; 1">
+          <div class="el-icon-arrow-left"></div>
+        </div>
+        <div class="close-button round-btn" @click="visibility = false">
+          <div class="el-icon-close"></div>
+        </div>
+        <div class="toolbar">
+          <div class="el-icon-zoom-out btn" @click="zoom(-0.1)"></div>
+          <div class="el-icon-zoom-in btn" @click="zoom(0.1)"></div>
+          <div class="el-icon-refresh-left btn" @click="rotate -= 90"></div>
+          <div class="el-icon-refresh-right btn" @click="rotate +=  90"></div>
+        </div>
+      </div>
+    </transition>
+  </template>
+</div>
 </template>
 
 <script>
@@ -140,82 +145,106 @@ export default {
 }
 </script>
 
-<style lang="sass" scoped>
-.tsy-image-preview-main
-  .trigger
-    cursor: pointer
-    height: auto
-    display: inline-block
-    padding: 0
-    margin: 0
-  .trigger:hover
-    outline: 1px solid red
-  .mask
-    user-select: none
-    position: fixed
-    top: 0
-    bottom: 0
-    left: 0
-    right: 0
-    background-color: rgba(0, 0, 0, .5)
-    z-index: 999
-    
-    .toolbar
-      background-color: rgba(0, 0, 0, .5)
-      color: #e0e0e0
-      position: absolute
-      bottom: 30px
-      left: calc(50% - 60px)
-      width: 200px
-      padding: 10px 20px
-      display: flex
-      justify-content: space-between
-      border-radius: 15px
-      .btn:hover
-        color: white
-      .btn
-        font-size: 25px
-        cursor: pointer
+<style lang="css" scoped>
+.tsy-image-preview-main .trigger {
+  cursor: pointer;
+  height: auto;
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
 
-    .round-btn
-      position: absolute
-      top: 50%
-      display: flex
-      justify-content: center
-      align-items: center
-      border-radius: 50%
-      width: 45px
-      height: 45px
-      background-color: rgba(0, 0, 0, .3)
-      color: white
-      font-weight: bolder
-      font-size: 26px
-      cursor: pointer
-    .right-button
-      right: 30px
-    .left-button
-      left: 30px
-    .close-button
-      top: 30px
-      right: 30px
-    .image-container
-      height: 100%
-      width: 100%
-      display: flex
-      justify-content: center
-      align-items: center
-      .center
-        position: relative
-        display: inline
-        .anchor
-          display: inline
-          overflow: visible
-          position: absolute
+.tsy-image-preview-main .trigger:hover {
+  outline: 1px solid red;
+}
 
-          
+.tsy-image-preview-main .mask {
+  user-select: none;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
 
-.fade-enter-active, .fade-leave-active 
-  transition: opacity .5s
-.fade-enter, .fade-leave-to
-  opacity: 0
+.tsy-image-preview-main .mask .toolbar {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #e0e0e0;
+  position: absolute;
+  bottom: 30px;
+  left: calc(50% - 60px);
+  width: 200px;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 15px;
+}
+
+.tsy-image-preview-main .mask .toolbar .btn:hover {
+  color: white;
+}
+
+.tsy-image-preview-main .mask .toolbar .btn {
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.tsy-image-preview-main .mask .round-btn {
+  position: absolute;
+  top: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  font-weight: bolder;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.tsy-image-preview-main .mask .right-button {
+  right: 30px;
+}
+
+.tsy-image-preview-main .mask .left-button {
+  left: 30px;
+}
+
+.tsy-image-preview-main .mask .close-button {
+  top: 30px;
+  right: 30px;
+}
+
+.tsy-image-preview-main .mask .image-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tsy-image-preview-main .mask .image-container .center {
+  position: relative;
+  display: inline;
+}
+
+.tsy-image-preview-main .mask .image-container .center .anchor {
+  display: inline;
+  overflow: visible;
+  position: absolute;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
 </style>

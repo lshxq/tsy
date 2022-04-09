@@ -1,7 +1,8 @@
-<template lang="pug">
-  .user-form-new-main
-    .h1 新建用户 表单展示
-    user-form(url="/member")
+<template>
+<div class="user-form-new-main">
+  <div class="h1">新建用户 表单展示</div>
+  <user-form url="/member"></user-form>
+</div>
 </template>
 
 <script>

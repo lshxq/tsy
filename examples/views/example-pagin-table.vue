@@ -1,80 +1,89 @@
-<template lang="pug">
-  .pagin-table-example-main
-    .h1 分页Table  sy-pagin-table
-
-    axios-required
-
-    .criteria-bar.mb10
-      el-input.w200(v-model='query.keyword')
-      | &nbsp;
-      el-select.w200(v-model='query.status')
-        el-option(label='启动' value='up')
-        el-option(label='停止' value='down')
-
-    sy-pagin-table(
-      url='/pagin/table/example'
-      :query='query'
-      :mock='mockDataFunc'
-      :columns='columns'
-      style='width:1000px'
-      @data-loaded='dataLoaded'
-    )
-      template(v-slot:age='scope') {{scope.data.row.age}}
-
-    p.mt100 因为大部分的查询页面是以表格的形式绘制的数据，所以我们把sy-pagin-data 和 sy-table做了一下融合，形成了sy-pagin-table，支持的props 就是这两个组件的合集。
-    p
-      .mt100 模板部分的代码
-      .code-block
-        .intend sy-pagin-table(
-          .intend url='/pagin/table/example'
-          .intend :query='query'
-          .intend :columns='columns'
-          .intend style='width:1000px'
-          .intend @data-loaded='dataLoaded'
-        .intend )
-          .intend template(v-slot:age='scope') { {scope.data.row.age} }
-      .mt100
-        p 上面例子table的column定义
-        .code-block 
-          .intend this.columns = [
-            .intend {
-              .intend label: "姓名",
-              .intend prop: "name",
-              .intend sorter: 'name'
-            .intend },
-            .intend {
-              .intend label: "性别",
-              .intend getContent(data) {
-                .intend return data.row.gender;
-              .intend },
-              .intend sorter: 'gender'
-            .intend },
-            .intend {
-              .intend label: "年龄",
-              .intend slot: "age",
-            .intend },
-          .intend ];
-      p 如果在列定义中指定了sorter，那么sy-pagin-table会在该列上生成排序器， 并根据排序器状态，自动向后端接口上报 排序 信息。 排序信息作为 请求参数 以如下形式上报
-      p sort=(+/-)sorkKey
-      p 其中减号代表降序，加号为升序，sortKey就是在列定义中指定的内容， sort=-name，表示按照名称降序排列，后端接口需要做对应处理
-      p sort=-birthay   表示按照生日降序排列
-      
-      p.mt100
-        .h2 Props
-        sy-table(:columns='propTableColumns' :data='propTableData')
-          template(v-slot:comment='scope') 
-            template(v-if='scope.row.comment') {{scope.row.comment}}
-            template(v-else)
-              template(v-if='scope.row.name == "columns"')
-                column-define-comment
-
-              template(v-if='scope.row.name == "pagin-data-mapper"')
-                pagin-data-mapper-comment
-              template(v-if='scope.row.name == "resp-data-mapper"')
-                resp-data-mapper-comment  
-      p.mt100
-        .h2 Events
-        sy-table(:columns='eventTableColumns' :data='eventTableData')
+<template>
+<div class="pagin-table-example-main">
+  <div class="h1">分页Table  sy-pagin-table</div>
+  <axios-required></axios-required>
+  <div class="criteria-bar mb10">
+    <el-input class="w200" v-model="query.keyword"></el-input>&nbsp;
+    <el-select class="w200" v-model="query.status">
+      <el-option label="启动" value="up"></el-option>
+      <el-option label="停止" value="down"></el-option>
+    </el-select>
+  </div>
+  <sy-pagin-table url="/pagin/table/example" :query="query" :mock="mockDataFunc" :columns="columns" style="width:1000px" @data-loaded="dataLoaded">
+    <template v-slot:age="scope">{{scope.data.row.age}}</template>
+  </sy-pagin-table>
+  <div class="mt100">因为大部分的查询页面是以表格的形式绘制的数据，所以我们把sy-pagin-data 和 sy-table做了一下融合，形成了sy-pagin-table，支持的props 就是这两个组件的合集。</div>
+  <div>
+    <div class="mt100">模板部分的代码</div>
+    <div class="code-block">
+      <div class="intend">sy-pagin-table(
+        <div class="intend">url='/pagin/table/example'</div>
+        <div class="intend">:query='query'</div>
+        <div class="intend">:columns='columns'</div>
+        <div class="intend">style='width:1000px'</div>
+        <div class="intend">@data-loaded='dataLoaded'</div>
+      </div>
+      <div class="intend">)
+        <div class="intend">template(v-slot:age='scope') { {scope.data.row.age} }</div>
+      </div>
+    </div>
+    <div class="mt100">
+      <div>上面例子table的column定义</div>
+      <div class="code-block"> 
+        <div class="intend">this.columns = [
+          <div class="intend">{
+            <div class="intend">label: "姓名",</div>
+            <div class="intend">prop: "name",</div>
+            <div class="intend">sorter: 'name'</div>
+          </div>
+          <div class="intend">},</div>
+          <div class="intend">{
+            <div class="intend">label: "性别",</div>
+            <div class="intend">getContent(data) {
+              <div class="intend">return data.row.gender;</div>
+            </div>
+            <div class="intend">},</div>
+            <div class="intend">sorter: 'gender'</div>
+          </div>
+          <div class="intend">},</div>
+          <div class="intend">{
+            <div class="intend">label: "年龄",</div>
+            <div class="intend">slot: "age",</div>
+          </div>
+          <div class="intend">},</div>
+        </div>
+        <div class="intend">];</div>
+      </div>
+    </div>
+    <div>如果在列定义中指定了sorter，那么sy-pagin-table会在该列上生成排序器， 并根据排序器状态，自动向后端接口上报 排序 信息。 排序信息作为 请求参数 以如下形式上报</div>
+    <div>sort=(+/-)sorkKey</div>
+    <div>其中减号代表降序，加号为升序，sortKey就是在列定义中指定的内容， sort=-name，表示按照名称降序排列，后端接口需要做对应处理</div>
+    <div>sort=-birthay   表示按照生日降序排列</div>
+    <div class="mt100">
+      <div class="h2">Props</div>
+      <sy-table :columns="propTableColumns" :data="propTableData">
+        <template v-slot:comment="scope"> 
+          <template v-if="scope.row.comment">{{scope.row.comment}}</template>
+          <template v-else>
+            <template v-if="scope.row.name == &quot;columns&quot;">
+              <column-define-comment></column-define-comment>
+            </template>
+            <template v-if="scope.row.name == &quot;pagin-data-mapper&quot;">
+              <pagin-data-mapper-comment></pagin-data-mapper-comment>
+            </template>
+            <template v-if="scope.row.name == &quot;resp-data-mapper&quot;">
+              <resp-data-mapper-comment> </resp-data-mapper-comment>
+            </template>
+          </template>
+        </template>
+      </sy-table>
+    </div>
+    <div class="mt100">
+      <div class="h2">Events</div>
+      <sy-table :columns="eventTableColumns" :data="eventTableData"></sy-table>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>
@@ -194,7 +203,9 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-.w200
-  width: 200px
+<style lang="css" scoped>
+.w200 {
+  width: 200px;
+}
+
 </style>

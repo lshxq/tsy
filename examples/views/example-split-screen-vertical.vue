@@ -1,24 +1,24 @@
-<template lang="pug">
-.tsy-split-screen-vertical-example-main
-  .h1 纵向分屏 sy-split-screen-vertical
-  .example-panel
-    sy-split-screen-vertical(:left='200')
-      template(slot='left') left
-      template(slot='right') right
-  p 我们需要一个可以把屏幕左右两块的区域，并且可以调整两侧的宽度占比，这个组件默认高度是100%
-  .code-block
-    .intend sy-split-screen-vertical(:left='200')
-      .intend template(slot='left') left
-      .intend template(slot='right') right
-
-  p.mt100
-    .h2 Props
-    sy-table(:columns='propTableColumns' :data='propTableData')
-      template(v-slot:comment='slot') {{slot.row.comment}}
-  
-  p.mt100
-    .h2 slot
-    p 有两个命名slot，分别是left 和 right。
+<template>
+<div class="tsy-split-screen-vertical-example-main">
+    <div class="h1">纵向分屏 sy-split-screen-vertical</div>
+    <div class="example-panel">
+        <sy-split-screen-vertical :left="200"><template slot="left">left</template><template slot="right">right</template></sy-split-screen-vertical>
+    </div>
+    <p>我们需要一个可以把屏幕左右两块的区域，并且可以调整两侧的宽度占比，这个组件默认高度是100%</p>
+    <div class="code-block">
+        <div class="intend">sy-split-screen-vertical(:left='200')<div class="intend">template(slot='left') left</div>
+            <div class="intend">template(slot='right') right</div>
+        </div>
+    </div>
+    <div class="mt100">
+    <div class="h2">Props</div>
+    <sy-table :columns="propTableColumns" :data="propTableData"><template v-slot:comment="slot">{{slot.row.comment}}</template></sy-table>
+    </div>
+    <div class="mt100">
+    <div class="h2">slot</div>
+    <p>有两个命名slot，分别是left 和 right。</p>
+    </div>
+</div>
 </template>
 
 <script>
@@ -38,12 +38,16 @@ export default {
 }
 </script>
 
-<style lang="sass" scoped>
-.tsy-split-screen-vertical-example-main
-  height: 100%
-  .example-panel
-    display: block
-    height: 400px
-    width: 800px
-    border: 1px solid gray
+<style lang="css" scoped>
+.tsy-split-screen-vertical-example-main {
+  height: 100%;
+}
+
+.tsy-split-screen-vertical-example-main .example-panel {
+  display: block;
+  height: 400px;
+  width: 800px;
+  border: 1px solid gray;
+}
+
 </style>

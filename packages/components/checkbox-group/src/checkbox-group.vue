@@ -1,12 +1,7 @@
-<template lang="pug">
-  .tsy-checkbox-group-main(@click='checkboxClicked')
-    sy-checkbox(
-      v-for='(opt, idx) of options' 
-      :key='idx' 
-      :label='opt.label'
-      :value='opt.value'
-      :checked='checkboxState(opt)'
-      @click='checkboxClicked')
+<template>
+<div class="tsy-checkbox-group-main" @click="checkboxClicked">
+  <sy-checkbox v-for="(opt, idx) of options" :key="idx" :label="opt.label" :value="opt.value" :checked="checkboxState(opt)" @click="checkboxClicked"></sy-checkbox>
+</div>
 </template>
 
 <script>
@@ -54,4 +49,4 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped></style>
+<style lang="css" scoped></style>

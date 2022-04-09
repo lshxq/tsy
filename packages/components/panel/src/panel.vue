@@ -1,6 +1,7 @@
-<template lang="pug">
-  .tsy-panel-main(ref='mainPanelRef')
-    slot
+<template>
+<div class="tsy-panel-main" ref="mainPanelRef">
+  <slot></slot>
+</div>
 </template>
 
 <script>

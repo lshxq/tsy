@@ -1,10 +1,8 @@
-<template lang="pug">
-  .tsy-example-form-create-main
-    .h2 新建表单用例
-    sy-form(:inputs='formInputs' 
-      url='/example/syform/submit-url'
-      @submitted='createSubmitted'
-      @canceled='createCanceled')
+<template>
+<div class="tsy-example-form-create-main">
+  <div class="h2">新建表单用例</div>
+  <sy-form :inputs="formInputs" url="/example/syform/submit-url" @submitted="createSubmitted" @canceled="createCanceled"></sy-form>
+</div>
 </template>
 
 <script>

@@ -1,9 +1,12 @@
-<template lang="pug">
-  .tsy-radio-main(:class='radioClassComp' @click.stop='radioClicked')
-    .mark
-      .round-outter
-        .round-inner
-    .label {{labelComp}}
+<template>
+<div class="tsy-radio-main" :class="radioClassComp" @click.stop="radioClicked">
+  <div class="mark">
+    <div class="round-outter">
+      <div class="round-inner"></div>
+    </div>
+  </div>
+  <div class="label">{{labelComp}}</div>
+</div>
 </template>
 
 <script>
@@ -34,51 +37,60 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-$blue: #409eff
-.tsy-radio-main.checked
-  .mark
-    .round-outter
-      background-color: $blue
-      .round-inner
-        background-color: white
-  .label
-    color: $blue
-    font-weight: bold
+<style lang="css" scoped>
+.tsy-radio-main.checked .mark .round-outter {
+  background-color: #409eff;
+}
 
-.tsy-radio-main:hover
-  .mark
-    .round-outter
-      outline: 1px solid $blue
+.tsy-radio-main.checked .mark .round-outter .round-inner {
+  background-color: white;
+}
 
-.tsy-radio-main
-  display: flex
-  margin-right: 20px
-  height: 30px
-  align-items: center
+.tsy-radio-main.checked .label {
+  color: #409eff;
+  font-weight: bold;
+}
 
-  .mark
-    display: flex
-    align-items: center
-    margin-right: 10px
-    .round-outter
-      display: flex
-      justify-content: center
-      align-items: center
-      transition: .4s
-      cursor: pointer
-      outline: 1px solid lightgray
-      width: 16px
-      height: 16px
-      border-radius: 10px
-      .round-inner
-        transition: .4s
-        width: 6px
-        height: 6px
-        border-radius: 3px
-  .label
-    transition: .4s
-    cursor: pointer
-    white-space:nowrap
-    word-break: keep-all
+.tsy-radio-main:hover .mark .round-outter {
+  outline: 1px solid #409eff;
+}
+
+.tsy-radio-main {
+  display: flex;
+  margin-right: 20px;
+  height: 30px;
+  align-items: center;
+}
+
+.tsy-radio-main .mark {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.tsy-radio-main .mark .round-outter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: .4s;
+  cursor: pointer;
+  outline: 1px solid lightgray;
+  width: 16px;
+  height: 16px;
+  border-radius: 10px;
+}
+
+.tsy-radio-main .mark .round-outter .round-inner {
+  transition: .4s;
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+}
+
+.tsy-radio-main .label {
+  transition: .4s;
+  cursor: pointer;
+  word-break: keep-all;
+}
+
 </style>

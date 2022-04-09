@@ -1,37 +1,19 @@
-<template lang="pug">
-  .tsy-form-main(v-loading='locking')
-    el-form(ref='formRef' 
-      :model='modified' 
-      :label-width='labelWidthComp'
-      :rules='rulesComp')
-      el-form-item(v-for='(input, idx) of inputs' 
-        :key='idx' 
-        :label='input.label'
-        :prop='input.name'
-        )
-          .input-bar(:style='inputBarStyle(input)')
-            el-input(v-if='input.type == "input"' 
-              v-model.trim='modified[input.name]'
-              :maxlength='getMeta(input, "maxlength")'
-              :placeholder='getMeta(input, "placeholder")'
-              show-word-limit)
-            
-            sy-options(v-else-if='input.type == "options"'
-              v-model='modified[input.name]' 
-              :url='getMeta(input, "url")'
-              :options='getMeta(input, "options")' 
-              :type='getMeta(input, "type")'
-              :mock='getMeta(input, "mock")'
-              :multiple='getMeta(input, "multiple")')
-            
-            el-date-picker(v-else-if='input.type == "datepicker"'
-              v-model='modified[input.name]'
-              type='date'
-              value-format='yyyy-MM-dd') 
-
-      el-form-item
-        el-button(@click='apply' type='primary') 确定
-        el-button(@click='cancel') 取消
+<template>
+<div class="tsy-form-main" v-loading="locking">
+  <el-form ref="formRef" :model="modified" :label-width="labelWidthComp" :rules="rulesComp">
+    <el-form-item v-for="(input, idx) of inputs" :key="idx" :label="input.label" :prop="input.name">
+      <div class="input-bar" :style="inputBarStyle(input)">
+        <el-input v-if="input.type == &quot;input&quot;" v-model.trim="modified[input.name]" :maxlength="getMeta(input, &quot;maxlength&quot;)" :placeholder="getMeta(input, &quot;placeholder&quot;)" show-word-limit="show-word-limit"></el-input>
+        <sy-options v-else-if="input.type == &quot;options&quot;" v-model="modified[input.name]" :url="getMeta(input, &quot;url&quot;)" :options="getMeta(input, &quot;options&quot;)" :type="getMeta(input, &quot;type&quot;)" :mock="getMeta(input, &quot;mock&quot;)" :multiple="getMeta(input, &quot;multiple&quot;)"></sy-options>
+        <el-date-picker v-else-if="input.type == &quot;datepicker&quot;" v-model="modified[input.name]" type="date" value-format="yyyy-MM-dd"> </el-date-picker>
+      </div>
+    </el-form-item>
+    <el-form-item>
+      <el-button @click="apply" type="primary">确定</el-button>
+      <el-button @click="cancel">取消</el-button>
+    </el-form-item>
+  </el-form>
+</div>
 </template>
 
 <script>
@@ -121,10 +103,11 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
-.tsy-form-main
-  .input-bar
-    height: 40px
-    display: flex
-    align-items: center
+<style lang="css" scoped>
+.tsy-form-main .input-bar {
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
 </style>
