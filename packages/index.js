@@ -13,7 +13,8 @@ import ImagePreview from "./components/preview";
 import Panel from "./components/panel";
 import Tags from './components/tags';
 import Form from './components/form';
-import Image from './components/image'
+import Image from './components/image';
+import LeftRight from './components/left-right'
 
 import FormMixin from "./mixins/form-mixin";
 
@@ -34,6 +35,7 @@ const components = [
   Tags, // Tag
   Form, // 自能表单
   Image, // 图片
+  LeftRight, // 左右布局
 ];
 
 const install = (Vue) => {

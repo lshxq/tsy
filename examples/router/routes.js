@@ -108,6 +108,15 @@ const naviRoutes = [
     component: () => import("../views/example-panel.vue"),
   },
   {
+    path: "/sy-left-right",
+    name: "sy-left-right",
+    meta: {
+      navi: "sy-left-right",
+      label: "左右布局 sy-left-right",
+    },
+    component: () => import("../views/example-left-right.vue"),
+  },
+  {
     path: "/sy-tags",
     name: "sy-tags",
     meta: {
