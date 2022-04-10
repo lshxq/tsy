@@ -5,7 +5,7 @@
       <div class="mask" v-loading="loading">
         <div class="image-container" @mouseup="move = false" @mousemove="mousemove">
           <div class="center">
-            <div class="anchor" :style="anchorStyle"><img :src="imgSrc" :style="imageStyle" draggable="false" @load="imageLoaded" @mousedown="mousedown"/></div>
+            <div class="anchor" :style="anchorStyle"><img :src="imgSrc" ref='imgRef' :style="imageStyle" draggable="false" @load="imageLoaded" @mousedown="mousedown"/></div>
           </div>
         </div>
         <div class="right-button round-btn" @click="next(1)" v-if="images.length &gt; 1">
@@ -105,6 +105,18 @@ export default {
       }
     },
     imageLoaded() {
+      const img = this.$refs.imgRef
+      const heightRate = window.innerHeight / img.height
+      const widthRate = window.innerWidth / img.width
+      const rate = Math.min(heightRate, widthRate)
+      if (rate < 1) {
+        if (rate > .2) {
+          this.scale = rate
+        } else {
+          this.scale = .2
+        }
+      }
+      
       this.loading = false
     },
     mousedown(event) {
