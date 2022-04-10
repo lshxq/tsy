@@ -61,7 +61,8 @@ body, html {
   height: 100%;
   padding: 0;
   margin: 0;
-  background-color: white;
+  background-image: linear-gradient(#201010, #404040, #201010);
+  color: white;
 }
 
 #app .right-panel {
@@ -74,8 +75,8 @@ body, html {
 }
 
 #app .route-link:hover, #app .route-link.current {
-  background-color: rgba(20, 20, 20, 0.8);
-  color: white;
+  background-color: white;
+  color: black;
   font-weight: bolder;
 }
 
