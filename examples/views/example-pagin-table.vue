@@ -9,7 +9,7 @@
       <el-option label="停止" value="down"></el-option>
     </el-select>
   </div>
-  <sy-pagin-table url="/pagin/table/example" :query="query" :mock="mockDataFunc" :columns="columns" style="width:1000px" @data-loaded="dataLoaded">
+  <sy-pagin-table url="/pagin/table/example" :query="query" :mock="mockDataFunc" :columns="columns" style="width:1000px" @data-loaded="dataLoaded" paginator-layout='total, sizes, prev, pager, next, jumper'>
     <template v-slot:age="scope">{{scope.data.row.age}}</template>
   </sy-pagin-table>
   <div class="mt100">因为大部分的查询页面是以表格的形式绘制的数据，所以我们把sy-pagin-data 和 sy-table做了一下融合，形成了sy-pagin-table，支持的props 就是这两个组件的合集。</div>
@@ -135,6 +135,11 @@ export default {
       {
         name: "columns",
         type: "Array<Column>",
+      },
+      {
+        name: 'paginator-layout',
+        type: 'String',
+        comment: '配置分页器的布局，参考 element-ui的pagination的layout属性，默认值 total, sizes, prev, pager, next, jumper'
       },
       {
         name: "pagin-data-mapper",

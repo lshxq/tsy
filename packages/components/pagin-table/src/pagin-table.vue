@@ -1,6 +1,6 @@
 <template >
 <div class="tsy-pagin-table-main">
-  <sy-pagin-data :url="url" :query="queryComp" :mock="mock" :request-method="requestMethod" :resp-data-mapper="respDataMapper" :pagin-data-mapper="paginDataMapperPriv" @data-loaded="dataLoaded">
+  <sy-pagin-data :url="url" :query="queryComp" :mock="mock" :request-method="requestMethod" :resp-data-mapper="respDataMapper" :pagin-data-mapper="paginDataMapperPriv" @data-loaded="dataLoaded" :paginator-layout='paginatorLayout'>
     <template slot-scope="scope"> 
       <sy-table :data="scope.data" :columns="columns" :index-base="indexBaseComputed" :show-index="showIndex" :stripe="stripe" @sort="tableSortChanged">
         <template :slot="slotName" v-for="slotName of slotNameArray" slot-scope="scope">
@@ -29,6 +29,12 @@ export default {
     },
     respDataMapper: Function,
     paginDataMapper: Function,
+    paginatorLayout: {
+      type: String,
+      default() {
+        return 'total, sizes, prev, pager, next, jumper'
+      }
+    },
     mock: null,
     stripe: { // 隔行变色
       type: Boolean,

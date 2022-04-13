@@ -4,7 +4,8 @@ export default {
   props: {
     url: String,
     id: null,
-    mock: null
+    mock: null,
+    getDataUrl: String,
   },
   data() {
     return {
@@ -52,12 +53,12 @@ export default {
   },
   mounted() {
     const that = this;
-    const { id, url, mock } = that;
+    const { id, url, mock, getDataUrl } = that;
     if (that.editMode) {
       // 加载数据
       that.state.loading = true;
       that.$axios({
-          url: `${url}/${id}`,
+          url: getDataUrl ? getDataUrl : `${url}/${id}`,
           method: "GET",
           mock
         })

@@ -2,7 +2,7 @@
 <div class="tsy-pagin-data-main" v-loading="loading">
   <slot :data="data"></slot>
   <div class="paginator-bar">
-    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageNo" :page-size="pageSize" :total="total" layout="total, sizes, prev, pager, next, jumper"></el-pagination>
+    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageNo" :page-size="pageSize" :total="total" :layout="paginatorLayout"></el-pagination>
   </div>
 </div>
 </template>
@@ -18,6 +18,12 @@ export default {
       type: String,
       default() {
         return 'get'
+      }
+    },
+    paginatorLayout: {
+      type: String,
+      default() {
+        return 'total, sizes, prev, pager, next, jumper'
       }
     },
     respDataMapper: Function, // 返回数据的mapper, 服务器返回的数据接口 需要映射成 {data:Array, total:Number}的形式

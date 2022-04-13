@@ -99,7 +99,11 @@ export default {
         type: "Plain Object",
         comment: "检索条件对象，发起ajax请求时作为参数传给后端",
       },
-
+      {
+        name: 'paginator-layout',
+        type: 'String',
+        comment: '配置分页器的布局，参考 element-ui的pagination的layout属性，默认值 total, sizes, prev, pager, next, jumper'
+      },
       {
         name: "pagin-data-mapper",
         type: "Function",

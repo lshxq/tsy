@@ -67,6 +67,11 @@ body, html {
 
 #app .right-panel {
   padding: 10px;
+  background: #fefefe;
+  height: 100%;
+  overflow: auto;
+  color: black;
+  box-sizing: border-box;
 }
 
 #app .route-link {
@@ -75,8 +80,8 @@ body, html {
 }
 
 #app .route-link:hover, #app .route-link.current {
-  background-color: white;
-  color: black;
+  background-color: #ff9966;
+  color: white;
   font-weight: bolder;
 }
 
