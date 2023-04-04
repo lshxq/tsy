@@ -15,7 +15,7 @@ import Tags from './components/tags';
 import Form from './components/form';
 import Image from './components/image';
 import LeftRight from './components/left-right'
-
+import Calendar from './components/calendar'
 import FormMixin from "./mixins/form-mixin";
 
 const components = [
@@ -36,6 +36,7 @@ const components = [
   Form, // 自能表单
   Image, // 图片
   LeftRight, // 左右布局
+  Calendar, // 日历
 ];
 
 const install = (Vue) => {
@@ -65,6 +66,7 @@ export default {
   Tags,
   Form,
   Image,
+  Calendar,
   // mixins
   FormMixin,
 };

@@ -176,6 +176,15 @@ const naviRoutes = [
     component: () => import("../views/form-mixin/user-form-update.vue"),
   },
   {
+    path: "/sy-calendar",
+    name: "sy-calendar",
+    meta: {
+      navi: "sy-calendar",
+      label: "日历 sy-calendar",
+    },
+    component: () => import("../views/example-calendar.vue"),
+  },
+  {
     path: "/thanks",
     name: "thanks",
     meta: {
