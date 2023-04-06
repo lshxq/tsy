@@ -1,5 +1,6 @@
 import VTabs from "./components/vertical-tab";
 import Table from "./components/table";
+import Paginator from "./components/paginator";
 import PaginData from "./components/pagin-data";
 import PaginTable from "./components/pagin-table";
 import Options from "./components/options";
@@ -22,6 +23,7 @@ import FormMixin from "./mixins/form-mixin";
 const components = [
   SplitScreenVertical, // 左右分屏
   Table, // 基础Table
+  Paginator, // 分页器
   PaginData, // 分页查询
   PaginTable, // 分页查询table
   VTabs, // 左右分屏tab
@@ -54,6 +56,7 @@ export default {
   install,
   // components
   Table,
+  Paginator,
   PaginData,
   PaginTable,
   VTabs,

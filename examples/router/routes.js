@@ -36,6 +36,15 @@ const naviRoutes = [
     component: () => import("../views/example-checkbox.vue"),
   },
   {
+    path: "/sy-paginator",
+    name: "sy-paginator",
+    meta: {
+      navi: "sy-paginator",
+      label: "分页器 sy-paginator",
+    },
+    component: () => import("../views/example-paginator.vue"),
+  },
+  {
     path: "/sy-pagin-data",
     name: "sy-pagin-data",
     meta: {
