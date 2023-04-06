@@ -146,6 +146,9 @@ export default {
     }
   },
   methods: {
+    setDisplay(date) {
+      this.display = date;
+    },
     cellClicked(date) {
       this.$emit('input', date);
       this.display = date;
@@ -157,11 +160,14 @@ export default {
       } = this;
       const gray = display.getMonth() != date.getMonth();
       const highlight = date.getFullYear() === value.getFullYear() && date.getMonth() === value.getMonth() && date.getDate() === value.getDate();
+      const today = new Date();
+      const todayMark = date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && date.getDate() === today.getDate();
       return {
         'date-item': true,
         item: true,
         gray,
         highlight,
+        today: todayMark,
       }
     },
     month(mon) {
@@ -236,5 +242,8 @@ export default {
   color: orangered;
   border: 1px solid lightgray;
   box-shadow: 0 0 12px lightgray;
+}
+.even-7>.today {
+  color: orangered;
 }
 </style>

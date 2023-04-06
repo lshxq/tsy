@@ -185,6 +185,15 @@ const naviRoutes = [
     component: () => import("../views/example-calendar.vue"),
   },
   {
+    path: "/sy-water-drop",
+    name: "sy-water-drop",
+    meta: {
+      navi: "sy-water-drop",
+      label: "水滴 sy-water-drop",
+    },
+    component: () => import("../views/example-water-drop.vue"),
+  },
+  {
     path: "/thanks",
     name: "thanks",
     meta: {
