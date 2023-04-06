@@ -26,7 +26,7 @@ export default {
 
 <style lang="css" scoped>
 .calendar-container {
-  width: 400px;
+  width: 300px;
   
 }
 

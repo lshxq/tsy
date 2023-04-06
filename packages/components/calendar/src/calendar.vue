@@ -3,19 +3,19 @@
     <div :class="showBorderComputed">
       <div class="button-row">
         <div class="left button-group">
-          <div class="button">
+          <div class="button" @click='month(-12)'>
             &lt;&lt;
           </div>
-          <div class="button">
+          <div class="button" @click='month(-1)'>
             &lt;
           </div>
         </div>
         <div class="middle button-group">{{displayComputed}}</div>
         <div class="right button-group">
-          <div class="button">
+          <div class="button" @click='month(1)'>
             &gt;
           </div>
-          <div class="button ">
+          <div class="button" @click='month(12)'>
             &gt;&gt;
           </div>
         </div>
@@ -33,11 +33,10 @@
 
       <div class="date-picker-panel">
         <div class="even-7" v-for="(row, idx) of datePickerDataComputed" :key="idx">
-          <div class="item" v-for="(date, idx) of row" :key="idx">{{date.getDate()}}</div>
+          <div :class="cellClass(date)" v-for="(date, idx) of row" :key="idx" @click="cellClicked(date)">{{date.getDate()}}</div>
         </div>
       </div>
     </div>
-    {{previousMonthDayCountComputed}}
   </div>
 </template>
 
@@ -113,17 +112,17 @@ export default {
       }
 
       if (currRow.length > 0) { // 说明这个月的最后1天不是周日，还需要用下个月的几天 补这一周的几天
+        let dateInNextMonth = 1;
         for (let idx=currRow.length; idx<7; idx++) {
           const {
             nextMonthComputed
           } = this
-          currRow.push(new Date(nextMonthComputed.year, nextMonthComputed.month, 1))
+          currRow.push(new Date(nextMonthComputed.year, nextMonthComputed.month, dateInNextMonth));
+          dateInNextMonth++;
         }
         data.push(currRow);
       }
       
-
-      console.log(data, dayCount)
       return data
     },
 
@@ -144,6 +143,30 @@ export default {
         previousMonthComputed: date
       } = this
       return utils.getMonthDay(date.year, date.month)
+    }
+  },
+  methods: {
+    cellClicked(date) {
+      this.$emit('input', date);
+      this.display = date;
+    },
+    cellClass(date) {
+      const {
+        display,
+        value
+      } = this;
+      const gray = display.getMonth() != date.getMonth();
+      const highlight = date.getFullYear() === value.getFullYear() && date.getMonth() === value.getMonth() && date.getDate() === value.getDate();
+      return {
+        'date-item': true,
+        item: true,
+        gray,
+        highlight,
+      }
+    },
+    month(mon) {
+      const {display} = this;
+      this.display = new Date(display.getFullYear(), display.getMonth() + mon, display.getDate());
     }
   }
 }
@@ -166,6 +189,8 @@ export default {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
+  border-bottom: 1px solid lightgray;
+  padding: 5px
 }
 
 .button-row>.button-group {
@@ -186,10 +211,30 @@ export default {
 
 .even-7 {
   display: flex;
-  margin-bottom: 10px;
 }
 .even-7>.item {
   width: calc(100% / 7);
   text-align: center;
+  border: 1px solid rgba(0,0,0,0);
+  margin: 5px;
+  padding: 5px;
+  min-height: 22px;
+  vertical-align: middle;
+}
+.even-7>.date-item {
+  cursor: pointer;
+}
+.even-7>.date-item:hover {
+  font-weight: bolder;
+  border: 1px solid lightgray;
+  box-shadow: 0 0 12px lightgray;
+}
+.even-7>.gray {
+  color: lightgray;
+}
+.even-7>.highlight {
+  color: orangered;
+  border: 1px solid lightgray;
+  box-shadow: 0 0 12px lightgray;
 }
 </style>
