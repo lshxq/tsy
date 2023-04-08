@@ -1,5 +1,5 @@
 <template>
-  <div class="tsy-paginator-main"> {{curr}}
+  <div class="tsy-paginator-main">
     <template v-for="(layoutType, idx) of layoutComputed">
       <div class="pagin-item" v-if="layoutType === 'total' && total >= 0" :key="idx">
         共{{total}}条
@@ -14,7 +14,10 @@
         <sy-options label="页面大小" :options="pageSizesComputed" v-model="activePageSize" class="page-sizes-select"/>
       </div>
       <div class="pagin-item pager-block" v-if="layoutType === 'pager'" :key="idx">
-        <div :class="pagerClass(pager)" v-for="(pager, idx) of pagerComputed" :key="idx" @click="pagin(pager)">{{pager.pageNo}}</div>
+        <template v-for="(pager, idx) of pagerComputed">
+          <div class="pager label" v-if="pager.label && pager.label.length > 0" :key="`${idx}-${pager.label}`">{{pager.label}}</div>
+          <div v-else :class="pagerClass(pager)"  :key="`${idx}=${pager.pageNo}` " @click="pagin(pager)">{{pager.pageNo}}</div>
+        </template>
       </div>
     </template>
   </div>
@@ -67,6 +70,13 @@ export default {
       activePageSize: pageSize,    // 真正发挥作用的页面大小
     }
   },
+  watch: {
+    activePageSize(vNew, vOld) {
+      if (vNew != vOld) {
+        this.$emit('pagin', {pageNo: 1, pageSize: vNew})
+      }
+    }
+  },
   computed: {
     pageCountComputed() {
       const {
@@ -81,11 +91,25 @@ export default {
         curr,
         pageCountComputed
       } = this;
-      const buqi = 5;
-      for (let idx=curr, cnt=0; idx>1&&cnt<buqi; cnt++,idx--) {
-        if(curr > buqi) {
+
+
+      /*
+      * 处理左面的补齐
+      */
+      let buqil = 5;
+      if (curr > buqil + 1) {
+        buqil--;
+        arr.push({
+          pageNo: 1
+        })
+        arr.push({
+          label: '...'
+        })
+      }
+      for (let idx=curr, cnt=0; idx>1&&cnt<buqil; cnt++,idx--) {
+        if(curr > buqil) {
           arr.push({
-            pageNo: curr - buqi + cnt
+            pageNo: curr - buqil + cnt
           })
         } else {
           arr.push({
@@ -94,16 +118,36 @@ export default {
         }
       }
 
-      arr.push({
+
+      arr.push({ // 当前页
         pageNo: curr
       })
       
 
-      for (let idx=curr + 1, cnt=0; idx<pageCountComputed && cnt < buqi; idx++, cnt++) {
+      /*
+      * 处理右面的补齐
+      */
+      let buqir = 5;
+      let lastPageNeeded = false;
+      if(pageCountComputed > buqir + curr) {
+        buqir--;
+        lastPageNeeded = true;
+      }
+      for (let idx=curr + 1, cnt=0; idx<=pageCountComputed && cnt < buqir; idx++, cnt++) {
         arr.push({
           pageNo: idx
         })
       }
+      if (lastPageNeeded) {
+        arr.push({
+          label: '...'
+        });
+        arr.push({
+          pageNo: pageCountComputed
+        })
+      }
+
+
       return arr;
     },
     pageSizesComputed() {
@@ -128,7 +172,9 @@ export default {
         ll = layout
       }
 
-      return ll.split(',');
+      return ll.split(',').map(layoutStr => {
+        return layoutStr.trim();
+      });
     }
   },
   methods: {
@@ -138,9 +184,6 @@ export default {
       } = this;
       return {
         pager: true,
-        pointer: true,
-        'pagin-item': true,
-        bolder: true,
         current: curr === pager.pageNo
       }
     },
@@ -163,9 +206,17 @@ export default {
 
 
 <style scoped>
+.pager.label {
+  cursor: default;
+}
 .pager.current {
   color: orange;
   cursor: default;
+}
+.pager {
+  padding: 5px 10px;
+  cursor: pointer;
+  font-weight: bolder;
 }
 .pager-block {
   display: flex;

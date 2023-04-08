@@ -2,7 +2,7 @@
 <div class="tsy-pagin-data-main" v-loading="loading">
   <slot :data="data"></slot>
   <div class="paginator-bar">
-    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageNo" :page-size="pageSize" :total="total" :layout="paginatorLayout"></el-pagination>
+    <sy-paginator :total="total" :curr="pageNo" @pagin="pagin" :layout="paginatorLayout" :page-size="pageSize"/>
   </div>
 </div>
 </template>
@@ -51,14 +51,13 @@ export default {
     this.reload()
   },
   methods: {
-    handleSizeChange(pageSize) {
-      this.pageSize = pageSize
-      this.reload()
+    pagin({pageNo, pageSize}) {
+      this.pageNo = pageNo;
+      this.pageSize = pageSize;
+      this.reload();
     },
-    handleCurrentChange(pageNo) {
-      this.pageNo = pageNo
-      this.reload()
-    },
+
+
     reload() {
       const that = this
       that.loading = true
