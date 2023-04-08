@@ -1,5 +1,5 @@
 <template>
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" :width="6 + 8 * count" height="14">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" :width=" 8 * count" height="14">
   <polyline v-for="(line, idx) of lines" :key="idx" :points="line" :style="`fill:none; stroke:${color}; stroke-width:2`" />
 </svg>
 </template>

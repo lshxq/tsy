@@ -1,12 +1,6 @@
 <template>
 <div class="tsy-options-main" v-loading="loading">
   <div class="tsy-options-type-1" v-if="type == 1">
-    <el-select :value="reasonableValue" :placeholder="placeholderComp" @input="valueChanged" :multiple="multiple">
-      <el-option v-for="(opt, idx) of optionsComputed" :value="opt.value" :label="opt.label" :key='idx'></el-option>
-    </el-select>
-  </div>
-
-  <div class="tsy-options-type-1" v-if="type == 1">
     <sy-select :value="reasonableValue" :placeholder="placeholderComp" @input="valueChanged" :multiple="multiple" :options="optionsComputed"/>
   </div>
 

@@ -203,6 +203,15 @@ const naviRoutes = [
     component: () => import("../views/example-water-drop.vue"),
   },
   {
+    path: "/sy-arrow",
+    name: "sy-arrow",
+    meta: {
+      navi: "sy-arrow",
+      label: "箭头 sy-arrow",
+    },
+    component: () => import("../views/example-arrow.vue"),
+  },
+  {
     path: "/thanks",
     name: "thanks",
     meta: {
