@@ -4,19 +4,19 @@
       <div class="button-row">
         <div class="left button-group">
           <div class="button" @click='month(-12)'>
-            &lt;&lt;
+            <sy-arrow color="gray" count="2" class="rotated180 arrow"/>
           </div>
           <div class="button" @click='month(-1)'>
-            &lt;
+            <sy-arrow color="gray" class="rotated180 arrow"/>
           </div>
         </div>
         <div class="middle button-group">{{displayComputed}}</div>
         <div class="right button-group">
           <div class="button" @click='month(1)'>
-            &gt;
+            <sy-arrow color="gray" class='arrow'/>
           </div>
           <div class="button" @click='month(12)'>
-            &gt;&gt;
+            <sy-arrow color="gray" count="2" class='arrow'/>
           </div>
         </div>
       </div>
@@ -179,6 +179,12 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.arrow:hover {
+  opacity: .6;
+}
+.rotated180 {
+  transform: rotate(180deg);
+}
 .tsy-calendar-main-panel {
   width: 100%;
   min-width: 300px;

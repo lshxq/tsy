@@ -1,4 +1,6 @@
 import VTabs from "./components/vertical-tab";
+import Arrow from './components/arrow';
+import Select from "./components/select";
 import Table from "./components/table";
 import Paginator from "./components/paginator";
 import PaginData from "./components/pagin-data";
@@ -22,6 +24,8 @@ import FormMixin from "./mixins/form-mixin";
 
 const components = [
   SplitScreenVertical, // 左右分屏
+  Arrow,
+  Select, // 下拉选择
   Table, // 基础Table
   Paginator, // 分页器
   PaginData, // 分页查询
@@ -55,6 +59,8 @@ if (typeof window !== "undefined" && window.Vue) {
 export default {
   install,
   // components
+  Arrow,
+  Select,
   Table,
   Paginator,
   PaginData,
