@@ -63,6 +63,15 @@ const naviRoutes = [
     component: () => import("../views/example-pagin-table.vue"),
   },
   {
+    path: "/sy-select",
+    name: "sy-select",
+    meta: {
+      navi: "sy-select",
+      label: "下拉列表   sy-select",
+    },
+    component: () => import("../views/example-select.vue"),
+  },
+  {
     path: "/sy-options",
     name: "sy-options",
     meta: {

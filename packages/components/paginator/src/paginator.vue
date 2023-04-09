@@ -11,7 +11,8 @@
         &gt;
       </div>
       <div class="pagin-item" v-if="layoutType === 'sizes'" :key="idx">
-        <sy-options label="页面大小" :options="pageSizesComputed" v-model="activePageSize" class="page-sizes-select"/>
+        页面大小
+        <sy-select :options="pageSizesComputed" v-model="activePageSize" class="page-sizes-select"/>
       </div>
       <div class="pagin-item pager-block" v-if="layoutType === 'pager'" :key="idx">
         <template v-for="(pager, idx) of pagerComputed">
