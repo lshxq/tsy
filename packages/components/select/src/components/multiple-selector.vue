@@ -16,12 +16,6 @@
 export default {
   name: 'SySelect',
   props: {
-    multiple: {
-      type: Boolean,
-      default() {
-        return false;
-      }
-    },
     value: null,
     placeholder: String,
     options: {

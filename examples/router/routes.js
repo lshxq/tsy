@@ -9,6 +9,15 @@ const naviRoutes = [
     component: () => import("../views/home.vue"),
   },
   {
+    path: "/sy-rolling-image",
+    name: "sy-rolling-image",
+    meta: {
+      navi: "sy-rolling-image",
+      label: "旋转照片 sy-rolling-image",
+    },
+    component: () => import("../views/example-rolling-image.vue"),
+  },
+  {
     path: "/sy-table",
     name: "sy-table",
     meta: {
