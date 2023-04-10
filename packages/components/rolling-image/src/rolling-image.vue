@@ -1,7 +1,7 @@
 <template>
   <div class="tsy-rolling-image-main">
-    <div class="pics">
-      <img v-for='(img, idx) of images' :src="img" :key="idx">
+    <div class="pics" ref="picsRef">
+      <img v-for='(img, idx) of images' :src="img" :key="idx" draggable="false">
     </div>
   </div>
 </template>
@@ -22,6 +22,13 @@ export default {
       default() {
         return [i1, i2, i3, i4, i5, i6]
       }
+    }
+  },
+  mounted() {
+    const pics = this.$refs.picsRef;
+    const images = pics.children;
+    for (let idx=0; idx<images.length; idx++) {
+      images[idx].style.transform = `rotateY(${360 / images.length * idx}deg) translateZ(500px) `
     }
   }
 }
@@ -56,30 +63,8 @@ export default {
   height: 225px;
   position: absolute;
   -webkit-box-reflect: below 15px -webkit-linear-gradient(transparent 10%, rgba(255,255,255, .3));
+  user-select: none;
 }
 
-.pics>img:nth-child(1) {
-  transform: translateZ(500px);
-}
-
-.pics>img:nth-child(2) {
-  transform: rotateY(60deg) translateZ(500px);
-}
-
-.pics>img:nth-child(3) {
-  transform: rotateY(120deg) translateZ(500px);
-}
-
-.pics>img:nth-child(4) {
-  transform: rotateY(180deg) translateZ(500px);
-}
-
-.pics>img:nth-child(5) {
-  transform: rotateY(240deg) translateZ(500px);
-}
-
-.pics>img:nth-child(6) {
-  transform: rotateY(300deg) translateZ(500px);
-}
 
 </style>

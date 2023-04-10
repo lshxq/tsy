@@ -18,6 +18,15 @@ const naviRoutes = [
     component: () => import("../views/example-rolling-image.vue"),
   },
   {
+    path: "/sy-ray-border",
+    name: "sy-ray-border",
+    meta: {
+      navi: "sy-ray-border",
+      label: "旋转照片 sy-ray-border",
+    },
+    component: () => import("../views/example-ray-border.vue"),
+  },
+  {
     path: "/sy-table",
     name: "sy-table",
     meta: {

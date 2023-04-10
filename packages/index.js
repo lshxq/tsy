@@ -1,5 +1,6 @@
 import VTabs from "./components/vertical-tab";
 import RollingImage from './components/rolling-image';
+import RayBorder from './components/ray-border';
 import Arrow from './components/arrow';
 import Select from "./components/select";
 import Table from "./components/table";
@@ -26,6 +27,7 @@ import FormMixin from "./mixins/form-mixin";
 const components = [
   SplitScreenVertical, // 左右分屏
   RollingImage,
+  RayBorder,
   Arrow,
   Select, // 下拉选择
   Table, // 基础Table
@@ -63,6 +65,7 @@ export default {
   // components
   Arrow,
   RollingImage,
+  RayBorder,
   Select,
   Table,
   Paginator,
