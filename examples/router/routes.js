@@ -18,6 +18,15 @@ const naviRoutes = [
     component: () => import("../views/example-rolling-image.vue"),
   },
   {
+    path: "/colors",
+    name: "colors",
+    meta: {
+      navi: "colors",
+      label: "color代码表",
+    },
+    component: () => import("../views/example-colors.vue"),
+  },
+  {
     path: "/sy-ray-border",
     name: "sy-ray-border",
     meta: {
