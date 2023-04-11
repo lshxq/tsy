@@ -1,7 +1,7 @@
 <template>
   <div class="tsy-select-main" @blur="expend = false">
-    <multiple-selector v-if="multiple" v-bind="$attrs" @input="$emit('input', $event)"/>
-    <single-selector v-else v-bind="$attrs" @input="$emit('input', $event)"/>
+    <multiple-selector v-if="multiple" v-bind="$attrs" @input="input"/>
+    <single-selector v-else v-bind="$attrs" @input="input"/>
   </div>
 </template>
 
@@ -31,7 +31,9 @@ export default {
     
   },
   methods: {
-    
+    input(event) {
+      this.$emit('input', event)
+    }
   }
 }
 </script>
