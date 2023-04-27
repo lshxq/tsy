@@ -24,6 +24,7 @@ import Calendar from './components/calendar';
 import WaterDrop from './components/water-drop';
 import FormMixin from "./mixins/form-mixin";
 
+
 const components = [
   SplitScreenVertical, // 左右分屏
   RollingImage,
@@ -51,9 +52,23 @@ const components = [
   WaterDrop, // 水滴
 ];
 
+
+
+import resize from './directives/resize.js';
+import drag from './directives/drag.js'
+
+const directives =  [
+  resize,
+  drag
+]
+
 const install = (Vue) => {
   if (install.installed) return;
   components.map((com) => com.install(Vue));
+
+  directives.map(dir => {
+    Vue.directive(dir.name, dir)
+  })
 };
 
 if (typeof window !== "undefined" && window.Vue) {

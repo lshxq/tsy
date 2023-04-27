@@ -1,7 +1,7 @@
 <template>
   <div class="water-drop-main">
-    <sy-water-drop :zoom="1"/>
-    <div class="mt30">&lt;sy-water-drop :zoom="1"/&gt;</div>
+    <sy-water-drop :zoom="3" v-drag/>
+    <div class="mt30">&lt;sy-water-drop :zoom="3"/&gt;</div>
   </div>
 </template>
 
@@ -9,8 +9,6 @@
 .water-drop-main {
   height: 100%;
   background: #00BFFF;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: relative;
 }
 </style>

@@ -2,7 +2,7 @@
 <div>
   &lt;sy-arrow :count='cnt'/&gt;
   <div v-for="cnt of counts" :key="cnt" class="mt10">
-    <div>{{cnt }}</div>
+    <div>cnt: {{cnt }}</div>
     <div><sy-arrow :count='cnt'/></div>
   </div>
   
