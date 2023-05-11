@@ -1,12 +1,12 @@
 <template>
 <div id="app">
   <sy-split-screen-vertical>
-    <template slot="left">
+    <div class="left" slot="left">
       <template v-for="(rr, idx) of routes">
         <div v-if="rr.meta.label" :key='idx' :class="linkClass(rr)" @click="goto(rr.name)">{{rr.meta.label}}
         </div>
         </template>
-    </template>
+    </div>
     <template slot="right">
       <div class="right-panel">
         <router-view></router-view>
@@ -65,6 +65,11 @@ body, html {
   color: white;
 }
 
+#app .left {
+  height: 100%;
+  overflow: auto;
+  width: 100%;
+}
 #app .right-panel {
   padding: 10px;
   background: #fefefe;

@@ -257,6 +257,15 @@ const naviRoutes = [
     component: () => import("../views/example-border-radius.vue"),
   },
   {
+    path: "/directives",
+    name: "directives",
+    meta: {
+      navi: "directives",
+      label: "directives",
+    },
+    component: () => import("../views/example-directives.vue"),
+  },
+  {
     path: "/thanks",
     name: "thanks",
     meta: {
