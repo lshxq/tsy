@@ -1,7 +1,7 @@
 <template>
   <div class="tsy-single-select-main" >
     <div class='input' @click="expend = !expend">
-      <input  :value="valueDisplayComputed" readonly @blur="expend = false" :placeholder="placeholder"/>
+      <input  :value="valueDisplayComputed" readonly @blur="inputBlur" :placeholder="placeholder"/>
     </div>
 
     <sy-arrow :class="arrowClassComputed" color="#BBBBBB"/>
@@ -66,6 +66,12 @@ export default {
     }
   },
   methods: {
+    inputBlur() {
+      const that = this;
+      setTimeout(() => {
+        that.expend = false
+      }, 20) // 便面立即消失，导致点击不到option
+    },
     optionClicked(opt) {
       this.expend = false;
       this.$emit('input', opt.value);

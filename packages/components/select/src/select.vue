@@ -1,5 +1,5 @@
 <template>
-  <div class="tsy-select-main" @blur="expend = false">
+  <div class="tsy-select-main">
     <multiple-selector v-if="multiple" v-bind="$attrs" @input="input"/>
     <single-selector v-else v-bind="$attrs" @input="input"/>
   </div>

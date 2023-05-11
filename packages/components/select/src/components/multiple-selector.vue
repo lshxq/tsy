@@ -1,5 +1,5 @@
 <template>
-  <div class="tsy-select-main" @blur="expend = false">
+  <div class="tsy-multi-select-main">
     <div class='input' @click="expend = !expend">
       <input  :value="valueDisplayComputed" readonly />
     </div>
@@ -32,15 +32,14 @@ export default {
   },
   mounted() {
     const {
-      multiple,
       value
     } = this
-    if (multiple) {
-      if (!value || !(value instanceof Array)) {
-        this.$emit('input', []); // 确保传入的值为数组类型
-      }
+
+    if (!value || !(value instanceof Array)) {
+      this.$emit('input', []); // 确保传入的值为数组类型
     }
   },
+  
   computed: {
     optionPanelClassComputed() {
       const {
@@ -77,30 +76,21 @@ export default {
   methods: {
     optionClicked(opt) {
       const {
-        multiple,
+        value
       } = this;
-      if (multiple) { // 多选
-        const {
-          value
-        } = this;
-        let found = false;
-        const newValue = []
-        for (const vv of value) {
-          if (vv === opt.value) {
-            found = true
-          } else {
-            newValue.push(vv)
-          }
+      let found = false;
+      const newValue = []
+      for (const vv of value) {
+        if (vv === opt.value) {
+          found = true
+        } else {
+          newValue.push(vv)
         }
-        if (!found) {
-          newValue.push(opt.value)
-        }
-        this.$emit('input', newValue);
-
-      } else { // 单选
-        this.expend = false;
-        this.$emit('input', opt.value);
       }
+      if (!found) {
+        newValue.push(opt.value)
+      }
+      this.$emit('input', newValue);
     },
 
     optionItemClass(opt) {
@@ -128,7 +118,7 @@ export default {
 </script>
 
 <style scoped>
-.tsy-select-main {
+.tsy-multi-select-main {
   display: inline-block;
   user-select: none;
   position: relative;
@@ -147,11 +137,11 @@ export default {
   transform: rotate(270deg);
 }
 
-.tsy-select-main>.input {
+.tsy-multi-select-main>.input {
   cursor: pointer;
 }
 
-.tsy-select-main>.input>input {
+.tsy-multi-select-main>.input>input {
   margin: 1px;
   padding: 0 30px 0 15px;
   border-radius: 5px;
@@ -162,7 +152,7 @@ export default {
   box-sizing: border-box;
   cursor: pointer;
 }
-.tsy-select-main>.input>input:focus {
+.tsy-multi-select-main>.input>input:focus {
   outline: 1px solid #409EFF;
   border: 0;
 }

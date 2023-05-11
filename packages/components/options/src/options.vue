@@ -10,6 +10,7 @@
     </template>
     <sy-radio-group v-else :options="optionsComputed" :value="reasonableValue" @input="optionClicked"></sy-radio-group>
   </div>
+  
   <div class="tsy-options-type-3" v-if="type == 3">
     <div class="block-options">
       <div class="label">{{labelComp}}：</div>
