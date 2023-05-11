@@ -4,14 +4,15 @@ export default {
   inserted(el) {
     el.style.position = 'absolute';
     let odiv = null, disX, disY;
-    el.addEventListener('mousedown', dragMove)
-    function dragMove(e) {
+    el.addEventListener('mousedown', dragdown)
+    function dragdown(e) {
       odiv = e.currentTarget;
       disX = e.clientX - odiv.offsetLeft;
       disY = e.clientY - odiv.offsetTop;
       document.addEventListener('mousemove', dragDomMove)
-      document.addEventListener('moveup', dragDomUp)
+      document.addEventListener('mouseup', dragDomUp)
     }
+
     function dragDomMove(e) {
       let left = e.clientX - disX;
       let top = e.clientY - disY;
@@ -37,8 +38,9 @@ export default {
     }
 
     function dragDomUp() {
+      console.log('released')
       document.removeEventListener('mousemove', dragDomMove)
-      document.removeEventListener('moveup', dragDomUp)
+      document.removeEventListener('mouseup', dragDomUp)
     }
     
   },

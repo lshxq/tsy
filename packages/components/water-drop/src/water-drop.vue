@@ -1,7 +1,10 @@
 <template>
-  <div class="tsy-water-drop-main" :style="eleStyleCompouted">
+<div  class="tsy-water-drop-main">
+  <div class="tsy-water-drop" :style="eleStyleCompouted">
     
   </div>
+</div>
+  
 </template>
   
 <script>
@@ -62,7 +65,7 @@ export default {
 </script>
 
 <style>
-.tsy-water-drop-main {
+.tsy-water-drop {
   position: relative;
   width: 100px;
   height: 100px;
@@ -74,7 +77,7 @@ export default {
   transition: all 3s;
 }
 
-.tsy-water-drop-main::after {
+.tsy-water-drop::after {
   content: '';
   width: 8px;
   height: 8px;
@@ -85,7 +88,7 @@ export default {
   border-radius: 50% 49% 69% 30% / 29% 21% 77% 71%;;
 }
 
-.tsy-water-drop-main::before {
+.tsy-water-drop::before {
   content: '';
   width: 7px;
   height: 7px;
