@@ -4,7 +4,7 @@
     <div>
       <h2>v-drag</h2>
       <div>
-        在一个绝对定位的dom节点上加上 v-drag 指令，使其可以自由拖动
+        在一个绝对定位的dom节点上加上 v-drag 指令，使其可以自由拖动, data-drag-range-h 和 data-drag-range-v 可以限定拖动范围， 接受的值 如 0,200
 
         <div class="v-drag-container">
           <div class="v-drag-item" v-drag>拽我</div>

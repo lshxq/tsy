@@ -6,10 +6,10 @@
     <div class="box">
       <div class="border-radius-ele" :style="eleStyleCompouted"></div>
     </div>
-    <div class="handle1 handle" :style="handle1StyleComputed"></div>
-    <div class="handle2 handle" :style="handle2StyleComputed"></div>
-    <div class="handle3 handle" :style="handle3StyleComputed"></div>
-    <div class="handle4 handle" :style="handle4StyleComputed"></div>
+    <div class="handle1 handle" :style="handle1StyleComputed" v-drag data-drag-range-h="0,300" data-drag-range-v="0,0" @dragged="handle1Dragged">1</div>
+    <div class="handle2 handle" :style="handle2StyleComputed" v-drag data-drag-range-h="3000,300" data-drag-range-v="0,300" @dragged="handle2Dragged">2</div>
+    <div class="handle3 handle" :style="handle3StyleComputed" v-drag data-drag-range-h="0,300" data-drag-range-v="300,300"  @dragged="handle3Dragged">3</div>
+    <div class="handle4 handle" :style="handle4StyleComputed" v-drag data-drag-range-h="0,0" data-drag-range-v="0,300"  @dragged="handle4Dragged">4</div>
   </div>
   <div class="value-panel">
     <div class="label">border-radius</div>
@@ -40,7 +40,19 @@ export default {
   methods: {
     resized(bb) {
       console.log(bb)
-    }
+    },
+    handle1Dragged(data) {
+      this.v1 = data.target.offsetLeft
+    },
+    handle2Dragged(data) {
+      this.v2 = data.target.offsetTop
+    },
+    handle3Dragged(data) {
+      this.v3 = data.target.offsetLeft
+    },
+    handle4Dragged(data) {
+      this.v4 = data.target.offsetTop
+    },
   },
   computed: {
     borderRadiusComputed() {
@@ -89,7 +101,7 @@ export default {
         top: `${v4}px`
       }
     }
-  }
+  },
 }
 </script>
 
@@ -121,25 +133,28 @@ export default {
   background: lightgray;
   
   cursor: pointer;
-  transition: all .2s;
 }
 
 .content> .handle1 {
   top: 0;
+  left: 100px;
   transform: translate(0, -50%)
 
 }
 .content> .handle2 {
   left: 300px;
+  top: 0;
   transform: translate(0, 0)
 }
 
 .content> .handle3 {
   top: 300px;
+  left: 100px;
 }
 
 .content> .handle4 {
   left: 0;
+  top: 100px;
   transform: translate(-50%, 0)
 }
 

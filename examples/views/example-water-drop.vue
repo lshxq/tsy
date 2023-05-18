@@ -1,6 +1,6 @@
 <template>
   <div class="water-drop-main">
-    <sy-water-drop :zoom="3" v-drag/>
+    <sy-water-drop :zoom="3"/>
     <div class="mt30">&lt;sy-water-drop :zoom="3"/&gt;</div>
   </div>
 </template>

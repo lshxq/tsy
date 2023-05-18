@@ -1,3 +1,13 @@
+const getRange = str => {
+  if (str && str.length > 0 && str.indexOf(',') > 0) {
+    const splited = str.split(',')
+    return {
+      min: splited[0].trim(),
+      max: splited[1].trim()
+    }
+  }
+}
+
 export default {
   name: 'drag',
 
@@ -33,15 +43,45 @@ export default {
         top = document.documentElement.clientHeight - odiv.offsetHeight
       }
 
+      const hRange = getRange(odiv.dataset.dragRangeH)
+      if (hRange) {
+        const {
+          min,
+          max
+        } = hRange
+        if (left < min) {
+          left = min
+        }
+        if (left > max) {
+          left = max
+        }
+      }
       odiv.style.left = left + 'px';
+
+      const vRange = getRange(odiv.dataset.dragRangeV)
+      if (vRange) {
+        const  {
+          min,
+          max
+        } = vRange
+        if (top < min) {
+          top = min
+        }
+
+        if (top > max) {
+          top = max
+        }
+      }
       odiv.style.top = top + 'px';
     }
 
     function dragDomUp() {
-      console.log('released')
       document.removeEventListener('mousemove', dragDomMove)
       document.removeEventListener('mouseup', dragDomUp)
-    }
+      const evt = document.createEvent('Event');
+      evt.initEvent('dragged', true, true);
+      odiv.dispatchEvent(evt)
+    } 
     
   },
 }
