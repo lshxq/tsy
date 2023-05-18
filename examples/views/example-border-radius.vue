@@ -6,10 +6,15 @@
     <div class="box">
       <div class="border-radius-ele" :style="eleStyleCompouted"></div>
     </div>
-    <div class="handle1 handle" :style="handle1StyleComputed" v-drag data-drag-range-h="0,300" data-drag-range-v="0,0" @dragged="handle1Dragged">1</div>
-    <div class="handle2 handle" :style="handle2StyleComputed" v-drag data-drag-range-h="3000,300" data-drag-range-v="0,300" @dragged="handle2Dragged">2</div>
-    <div class="handle3 handle" :style="handle3StyleComputed" v-drag data-drag-range-h="0,300" data-drag-range-v="300,300"  @dragged="handle3Dragged">3</div>
-    <div class="handle4 handle" :style="handle4StyleComputed" v-drag data-drag-range-h="0,0" data-drag-range-v="0,300"  @dragged="handle4Dragged">4</div>
+    <div class="handle1 handle" v-drag data-drag-range-h="0,300" data-drag-range-v="0,0" @dragged="handle1Dragged">1</div>
+    <div class="handle2 handle" v-drag data-drag-range-h="3000,300" data-drag-range-v="0,300" @dragged="handle2Dragged">2</div>
+    <div class="handle3 handle" v-drag data-drag-range-h="0,300" data-drag-range-v="300,300"  @dragged="handle3Dragged">3</div>
+    <div class="handle4 handle" v-drag data-drag-range-h="0,0" data-drag-range-v="0,300"  @dragged="handle4Dragged">4</div>
+
+    <div class="corner-label corner1">角1</div>
+    <div class="corner-label corner2">角2</div>
+    <div class="corner-label corner3">角3</div>
+    <div class="corner-label corner4">角4</div>
   </div>
   <div class="value-panel">
     <div class="label">border-radius</div>
@@ -107,6 +112,35 @@ export default {
 
 <style lang="css" scoped>
 .example-tsy-border-radius-main {
+  --fs: 25px;
+  --box-width: 300px;
+}
+
+.corner-label {
+  position: absolute;
+  width: calc(var(--fs) * 2);
+  font-size: var(--fs);
+}
+.corner-label.corner1 {
+  top: calc(0px - var(--fs));
+  left: calc(0px - var(--fs) * 2)
+  
+}
+
+.corner-label.corner2 {
+  top: calc(0px - var(--fs));
+  left: 320px
+}
+.corner-label.corner3 {
+  top: 300px;
+  left: 320px
+}
+.corner-label.corner4 {
+  top: 300px;
+  left: calc(0px - var(--fs) * 2)
+}
+
+.example-tsy-border-radius-main {
   user-select: none;
   height: 100%;
 }
@@ -120,8 +154,8 @@ export default {
 
 .content {
   margin: auto;
-  width: 300px;
-  height: 300px;
+  width: var(--box-width);
+  height: var(--box-width);
   position: relative;
 }
 
@@ -142,13 +176,13 @@ export default {
 
 }
 .content> .handle2 {
-  left: 300px;
-  top: 0;
+  left: var(--box-width);
+  top: 100px;
   transform: translate(0, 0)
 }
 
 .content> .handle3 {
-  top: 300px;
+  top: var(--box-width);
   left: 100px;
 }
 
