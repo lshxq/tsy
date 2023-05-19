@@ -37,10 +37,10 @@
     <div>通常来讲，系统的表单 分 为 创建数据 和 修改数据 两类， 创建数据和修改数据 的内容 绝大部分应该是一致， 仅仅部分字段 创建后不允许更改，另外各个表单之间，其行为也高度雷同，就是搜集form数据，然后 post或者patch到后端接口。 如果 新建 和 编辑都要 独立开发，那么开发工作量是很大的，没必要这样不理智的投入 重复工作量。</div>
     <div>解决这里的思路是 提炼一个form-mixin，封装了 从数据拉取、数据验证 以及 数据提交的过程，这样，绝大部分表单 开发 仅仅是 构建layout即可。 数据交互均交给这个mixin完成。</div>
     <div>因为 新建 和 编辑 卷大部分行为和layout是一致的，我们应该 为其 建立 一个 标准的form组件，该组件 定义了表单的layout， 然后在这个组件的基础上定义 新建 和 编辑 表单。基础form应用了form-mixin 获得 新建和编辑的基础行为。</div>
-    <div>以用户信息表单为例
-      <div>user-form.vue</div>
-      <div>user-form-new.vue</div>
-      <div>user-form-update.vue</div>
+    <div>以用户信息表单为例，只需要3个vue文件即可
+      <div><h4>user-form.vue</h4></div>
+      <div><h4>user-form-new.vue</h4></div>
+      <div><h4>user-form-update.vue</h4></div>
       <div>user-form.vue 的layout的代码，这里只要专注搭建表单的布局即可，这里完全是基于element-ui做的表单搭建。model的名字必须是modified。
         <div><img src="../assets/user-form-layout.png"/></div>
       </div>
@@ -55,12 +55,12 @@
         <div>submitted 是在数据成功提交后 的钩子函数，用于页面跳转。</div>
         <div>cancel 是在用户点击 取消按钮是 调用</div>
       </div>
-      <div>新建用户表单代码例
+      <div><h3>新建用户表单代码</h3>
         <div>新建表单仅仅是引入和user-form，并传入了数据 源的url。即开发完成了。提交表单时会以post的方式 进行提交。</div>
         <div><img src="../assets/user-form-new.png"/></div>
       </div>
-      <div>编辑用户表单代码例
-        <div>编辑表单在新建的基础上，多穿了一个id，这个id就决定了表单行为是编辑，会首先通过get方式拉取model回来，并一个patch方式 增量更新 字段。</div>
+      <div><h3>编辑用户表单代码</h3>
+        <div>编辑表单在新建的基础上，多穿了一个id，这个id就决定了表单行为是编辑，会首先通过get方式拉取model回来，并以patch方式 增量更新 字段。</div>
         <div><img src="../assets/user-form-update.png"/></div>
       </div>
     </div>
