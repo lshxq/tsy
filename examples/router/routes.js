@@ -239,6 +239,15 @@ const naviRoutes = [
     component: () => import("../views/example-arrow.vue"),
   },
   {
+    path: "/blocks",
+    name: "blocks",
+    meta: {
+      navi: "blocks",
+      label: "俄罗斯方块",
+    },
+    component: () => import("../views/example-blocks.vue"),
+  },
+  {
     path: "/colors",
     name: "colors",
     meta: {

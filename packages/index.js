@@ -22,7 +22,9 @@ import Image from './components/image';
 import LeftRight from './components/left-right';
 import Calendar from './components/calendar';
 import WaterDrop from './components/water-drop';
+import Blocks from './components/blocks'
 import FormMixin from "./mixins/form-mixin";
+
 
 
 const components = [
@@ -50,6 +52,7 @@ const components = [
   LeftRight, // 左右布局
   Calendar, // 日历
   WaterDrop, // 水滴
+  Blocks, // 俄罗斯方块
 ];
 
 
@@ -100,6 +103,7 @@ export default {
   Image,
   Calendar,
   WaterDrop,
+  Blocks,
   // mixins
   FormMixin,
 };
