@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="state">
-        <next :type="next"/>
+        {{next}}
       </div>
     </div>
 
@@ -28,13 +28,15 @@
 import Controller from './controller.vue'
 import dragonLogon from './dragon-logon.vue'
 
+const columnCount = 10;
+const rowCount = 20;
 
 
 const createMatrix = () => {
   const matrix = [];
-  for (let rowIdx=0; rowIdx<20; rowIdx++) {
+  for (let rowIdx=0; rowIdx<rowCount; rowIdx++) {
     const row = []
-    for(let colIdx=0; colIdx<10; colIdx++) {
+    for(let colIdx=0; colIdx<columnCount; colIdx++) {
       row[colIdx] = false
     }
     matrix.push(row)
@@ -75,8 +77,94 @@ const shape1 = [
   ]
 ]
 
+const shape2 = [
+  [
+    [true, true],
+    [true, true]
+  ]
+]
+
+const shape3 = [
+  [
+    [false, false, true],
+    [true,  true,  true]
+  ],
+  [
+    [true, false],
+    [true, false],
+    [true, true]
+  ],
+  [
+    [true, true, true],
+    [true, false, false]
+  ],
+  [
+    [true,  true],
+    [false, true],
+    [false, true]
+  ]
+]
+const shape4 =[
+  [
+    [true, false, false],
+    [true,  true,  true]
+  ],
+  [
+    [true, true],
+    [true, false],
+    [true, false]
+  ],
+  [
+    [true, true, true],
+    [false, false, true]
+  ],
+  [
+    [false,  true],
+    [false,  true],
+    [true,   true]
+  ]
+]
+
+const shape5 = [
+  [
+    [true, false],
+    [true, true],
+    [false, true]
+  ],
+  [
+    [false, true, true],
+    [true, true, false]
+  ]
+]
+
+const shape6 = [
+  [
+    [false, true],
+    [true,  true],
+    [true,  false]
+  ]
+]
+
+const shape7 = [
+  [
+    [true, true, true, true]
+  ],
+  [
+    [true],
+    [true],
+    [true],
+    [true]
+  ]
+]
+
 const blockShapes = [
   shape1,
+  shape2,
+  shape3,
+  shape4,
+  shape5,
+  shape6,
+  shape7
 ]
 
 
@@ -106,6 +194,15 @@ export default {
     }
   },
   computed: {
+    currentShapeComp() {
+      const {
+        current
+      } = this
+      if (current) {
+        return  blockShapes[current.type][current.dire]
+      }
+      return []
+    },
     dataDrawComp() {
       const {
         matrix,
@@ -160,7 +257,7 @@ export default {
     clearInterval(this.runningIntervalId)
   },
   methods: {
-
+    
     blockClass(occupied) {
       return {
         'block': true,
@@ -169,20 +266,31 @@ export default {
     },
     controllerPressed(key) {
       const that = this
+      const {currentShapeComp, current} = that
       if ('q' === key) {
-        this.$emit('request-hide')
+        that.$emit('request-hide')
       } else {
         const {
           running
         } = that
         if (running) {
           if ('a' === key) {
+
             this.current.pos.x -= 1
+            if (current.pos.x < 0) {
+              current.pos.x = 0
+            }
+
           } else if ('d' === key) {
-            this.current.pos.x += 1
+
+            if (currentShapeComp[0].length + current.pos.x < columnCount) {
+              current.pos.x += 1
+            }
+            
+
           } else if ('w' === key) {
-            this.current.dire += 1
-            this.current.dire = this.current.dire % blockShapes[this.current.type].length
+            current.dire += 1
+            current.dire = current.dire % blockShapes[current.type].length
           }
         }
       }
@@ -204,27 +312,29 @@ export default {
         const {
           timestamp,
           speedComp,
-          matrix
+          matrix,
+          currentShapeComp,
+          current,
+          next
         } = that
 
-        if (!this.current && !this.next) {
+        if (!current && !next) {
           this.newGame()
         }
 
         if (Date.now() - timestamp > speedComp) {
           const canDrop = () => {
-            const shape = blockShapes[this.current.type][this.current.dire];
-            if (shape.length + this.current.pos.y >= matrix.length) {
+            if (currentShapeComp.length + current.pos.y >= matrix.length) {
               return false
             }
 
             let hit = false; // 是否有阻挡
               
-            OUTTER: for (let shapeRowIdx=shape.length; shapeRowIdx>0; shapeRowIdx--) {
-              const shapeRow = shape[shapeRowIdx - 1]
+            OUTTER: for (let shapeRowIdx=currentShapeComp.length; shapeRowIdx>0; shapeRowIdx--) {
+              const shapeRow = currentShapeComp[shapeRowIdx - 1]
               for (let shapeColIdx=0; shapeColIdx<shapeRow.length; shapeColIdx++) {
 
-                const cell = matrix[this.current.pos.y + shapeColIdx][this.current.pos.x + shapeColIdx]
+                const cell = matrix[current.pos.y + shapeColIdx + 1][current.pos.x + shapeColIdx]
 
                 if (shapeRow[shapeColIdx] && cell) {
                   hit = true
@@ -239,7 +349,18 @@ export default {
           if (canDrop()) { // 能走
             this.current.pos.y += 1
           } else { // 走不动了
-            console.log('dao tou le')
+            
+            for (let rowIdx=0; rowIdx<currentShapeComp.length; rowIdx++) {
+              const row = currentShapeComp[rowIdx]
+              for(let colIdx=0; colIdx<row.length; colIdx++) {
+                if (row[colIdx]) {
+                  matrix[current.pos.y + rowIdx][current.pos.x + colIdx] = true
+                }
+                
+              }
+            }
+            this.current = next
+            this.next = randomBlock()
           }
           
 
