@@ -1,12 +1,14 @@
 <template>
   <div class="controller-main">
-    <controller-button key-name="q" label="暂停" class="key-q" @key-clicked="keyClicked"/>
+    <controller-button key-name="q" label="隐藏" class="key-q" @key-pressed="keyPressed"/>
 
-    <controller-button key-name="a" label="左移" class="key-a" @key-clicked="keyClicked"/>
+    <controller-button key-name="a" label="左移" class="key-a" @key-pressed="keyPressed"/>
 
-    <controller-button key-name="w" label="翻转" class="key-w" @key-clicked="keyClicked"/>
+    <controller-button key-name="w" label="翻转" class="key-w" @key-pressed="keyPressed"/>
 
-    <controller-button key-name="d" label="右移" class="key-d" @key-clicked="keyClicked"/>
+    <controller-button key-name="s" label="快降" class="key-s" @key-pressed="keyPressed" @key-down="keydown" @key-up="keyup"/>
+
+    <controller-button key-name="d" label="右移" class="key-d" @key-pressed="keyPressed"/>
   </div>
 </template>
 
@@ -19,9 +21,15 @@ export default {
   },
 
   methods: {
-    keyClicked(key) {
+    keyPressed(key) {
       this.$emit('keypressed', key)
     },
+    keydown(key) {
+      this.$emit('keydown', key)
+    },
+    keyup(key) {
+      this.$emit('keyup', key)
+    }
   }
 }
 </script>
@@ -54,6 +62,10 @@ export default {
   top: 120px;
 }
 
+.key-s {
+  left: 80px;
+  top: 120px;
+}
 
 
 </style>

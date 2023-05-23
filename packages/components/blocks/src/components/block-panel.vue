@@ -8,12 +8,16 @@
         </div>
       </div>
       <div class="state">
-        {{next}}
+        <div class="next-shape">
+          <div v-for="(row,  rowIdx) of nextShapeComp" class="row" :key="`block-row-${rowIdx}`">
+            <div v-for="(col, colIdx) of row" :class="blockClass(col)" :key="`block-${rowIdx}-${colIdx}`"></div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div  class="controller-panel">
-      <controller @keypressed="controllerPressed"/>
+      <controller @keypressed="controllerPressed" @keydown="controllerKeydown" @keyup="controllerKeyup"/>
     </div>
 
     <div class="pause-layer" v-if="!running">
@@ -48,6 +52,7 @@ const randomBlock = () => {
   const type = Math.floor(Math.random() * blockShapes.length)
   return {
     pos: {
+      offsetX: 0,
       x: 5,
       y: 0
     },
@@ -142,6 +147,10 @@ const shape6 = [
     [false, true],
     [true,  true],
     [true,  false]
+  ],
+  [
+    [true,   true, false],
+    [false,  true, true],
   ]
 ]
 
@@ -190,42 +199,54 @@ export default {
       current: false,
       next: false,
       timestamp: Date.now(),
-      level: 1
+      level: 1,
+      speedyFall: false,
+      pause: false,
     }
   },
   computed: {
     currentShapeComp() {
       const {
-        current
+        current,
       } = this
       if (current) {
         return  blockShapes[current.type][current.dire]
       }
       return []
     },
+    nextShapeComp() {
+      const {
+        next,
+      } = this
+      if (next) {
+        return  blockShapes[next.type][next.dire]
+      }
+      return []
+    },
     dataDrawComp() {
       const {
         matrix,
-        current
+        current,
+        currentShapeComp        
       } = this
 
       const mm = JSON.parse(JSON.stringify(matrix))
 
       if (current) {
-        const shape = blockShapes[current.type][current.dire];
-
         let colStart = current.pos.x;
-        const offset = colStart + shape[0].length - matrix[0].length;
+        const offset = colStart + currentShapeComp[0].length - matrix[0].length;
         if (offset > 0) {
           colStart -= offset
         }        
 
-        for (let rowIdx=0; rowIdx<shape.length; rowIdx++) {
+        for (let rowIdx=0; rowIdx<currentShapeComp.length; rowIdx++) {
           const y = rowIdx + current.pos.y
           if (y < mm.length) {
-            for (let colIdx=0; colIdx<shape[0].length; colIdx++) {
+            for (let colIdx=0; colIdx<currentShapeComp[0].length; colIdx++) {
               const x = colIdx + current.pos.x
-              mm[y][x] = shape[rowIdx][colIdx]
+              if (currentShapeComp[rowIdx][colIdx]) {
+                mm[y][x - current.pos.offsetX] = true
+              }
             }
           }
         }
@@ -264,6 +285,16 @@ export default {
         'dark': occupied
       }
     },
+    controllerKeydown(key) {
+      if (key === 's') {
+        this.speedyFall = true
+      }
+    },
+    controllerKeyup(key) {
+      if (key === 's') {
+        this.speedyFall = false
+      }
+    },
     controllerPressed(key) {
       const that = this
       const {currentShapeComp, current} = that
@@ -275,7 +306,6 @@ export default {
         } = that
         if (running) {
           if ('a' === key) {
-
             this.current.pos.x -= 1
             if (current.pos.x < 0) {
               current.pos.x = 0
@@ -291,6 +321,10 @@ export default {
           } else if ('w' === key) {
             current.dire += 1
             current.dire = current.dire % blockShapes[current.type].length
+            current.pos.offsetX = current.pos.x + this.currentShapeComp[0].length - columnCount
+            if (current.pos.offsetX < 0) {
+              current.pos.offsetX = 0
+            }
           }
         }
       }
@@ -308,7 +342,7 @@ export default {
 
     engine() {
       const that = this
-      if (that.running) {
+      if (that.running && !this.pause) {
         const {
           timestamp,
           speedComp,
@@ -322,7 +356,8 @@ export default {
           this.newGame()
         }
 
-        if (Date.now() - timestamp > speedComp) {
+        const duration = Date.now() - timestamp
+        if (duration > speedComp || this.speedyFall) {
           const canDrop = () => {
             if (currentShapeComp.length + current.pos.y >= matrix.length) {
               return false
@@ -334,7 +369,7 @@ export default {
               const shapeRow = currentShapeComp[shapeRowIdx - 1]
               for (let shapeColIdx=0; shapeColIdx<shapeRow.length; shapeColIdx++) {
 
-                const cell = matrix[current.pos.y + shapeColIdx + 1][current.pos.x + shapeColIdx]
+                const cell = matrix[current.pos.y + shapeRowIdx][current.pos.x + shapeColIdx - current.pos.offsetX] 
 
                 if (shapeRow[shapeColIdx] && cell) {
                   hit = true
@@ -350,20 +385,60 @@ export default {
             this.current.pos.y += 1
           } else { // 走不动了
             
-            for (let rowIdx=0; rowIdx<currentShapeComp.length; rowIdx++) {
+            this.speedyFall = false
+            
+
+            for (let rowIdx=0; rowIdx<currentShapeComp.length; rowIdx++) { // 把当前砖块 merge进 matrix
               const row = currentShapeComp[rowIdx]
               for(let colIdx=0; colIdx<row.length; colIdx++) {
                 if (row[colIdx]) {
-                  matrix[current.pos.y + rowIdx][current.pos.x + colIdx] = true
+                  matrix[current.pos.y + rowIdx][current.pos.x + colIdx - current.pos.offsetX] = true
                 }
-                
               }
             }
-            this.current = next
-            this.next = randomBlock()
+            this.current = false // 取消当前砖块的显示
+            
+            const removeLines = []
+            for (let rowIdx=0; rowIdx<matrix.length; rowIdx++) {
+              let removeIt = true
+              const row = matrix[rowIdx];
+              for (let colIdx=0; colIdx<row.length; colIdx++) {
+                if (!row[colIdx]) {
+                  removeIt = false
+                }
+              }
+              if (removeIt) {
+                removeLines.push(rowIdx)
+              }
+            }
+            if (removeLines.length > 0) {
+              this.pause = true  //  暂停后， 用来销毁砖块
+              const flash = cnt => {
+                if (cnt > 0) {
+                  const mm = JSON.parse(JSON.stringify(this.matrix))
+                  for (const lineN of removeLines) {
+                    for(let idx=0; idx<columnCount; idx++) {
+                      mm[lineN][idx] = !this.matrix[lineN][idx]
+                    }
+                  }
+                  this.matrix = mm
+                  setTimeout(() => {
+                    flash(cnt - 1)
+                  }, 500)
+                } else { // 继续游戏
+                  this.current = this.next
+                  this.next = randomBlock()
+                  that.pause = false
+                }
+              }
+              flash(6)
+              
+              
+            } else {
+              this.current = next
+              this.next = randomBlock()
+            }
           }
-          
-
           this.timestamp = Date.now();
         }
       }
@@ -405,15 +480,21 @@ export default {
 
 .screen {
   background: white;
+  display: flex;
 }
+
+.screen>.state {
+  padding-left: 10px;
+}
+
 .screen>.panel {
   border: 1px solid black;
   width: calc(var(--block-margin) * 20 + var(--block-size) * 10 + var(--block-border-width) * 20);
 }
-.screen>.panel>.row {
+.screen>.panel>.row, .next-shape>.row {
   display: flex;
 }
-.screen>.panel>.row>.block {
+.screen>.panel>.row>.block, .next-shape>.row>.block {
   --bg-color: #bcbcbc;
   margin: var(--block-margin);
   border: var(--block-border-width) solid var(--bg-color);
@@ -423,11 +504,11 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.screen>.panel>.row>.block.dark {
+.screen>.panel>.row>.block.dark,  .next-shape>.row>.block.dark {
   --bg-color: #333;
 }
 
-.screen>.panel>.row>.block:before {
+.screen>.panel>.row>.block:before, .next-shape>.row>.block:before {
   content: '';
   width: 60%;
   height: 60%;

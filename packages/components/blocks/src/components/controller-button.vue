@@ -82,8 +82,9 @@ export default {
      
       if (evt.key === keyName) {
         this.keydown = true
+        this.$emit('key-down', keyName)
       }
-
+      
     },
     keyupHandler(evt) {
       const {
@@ -92,7 +93,8 @@ export default {
      
       if (evt.key === keyName) {
         this.keydown = false
-        this.$emit('key-clicked', keyName)
+        this.$emit('key-pressed', keyName)
+        this.$emit('key-up', keyName)
       }
     }
   }
