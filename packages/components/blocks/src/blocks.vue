@@ -1,6 +1,7 @@
 <template>
 <div class="tsy-blocks-main" v-resize="__blocksMainResized" :style="mainPanelStyleComp">
-  <block-panel v-bind="$attrs" 
+  <block-panel v-bind="$attrs"
+               :short="short"
                :panel-scale="panelScaleComp"
                :running.sync="running" 
                @request-hide="requestHide" 
@@ -19,6 +20,12 @@ export default {
         return true;
       }
     },
+    short: {
+      type: Boolean,
+      default() {
+        return false;
+      }
+    }
   },
   components: {
     BlockPanel,

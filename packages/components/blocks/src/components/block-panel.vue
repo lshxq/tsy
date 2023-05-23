@@ -7,16 +7,17 @@
           <div v-for="colIdx of columnCountComp" :class="blockClassMatrix(rowIdx - 1, colIdx -1)" :key="`block-${rowIdx}-${colIdx}`"></div>
         </div>
       </div>
-      <div class="state">
+      <div class="state" :style="hideUselessStyle">
         <div class="state-block">
           <div class="label">Level: {{levelComp}}</div>
         </div>
         <div class="state-block">
           <div class="label">Score: {{score}}</div>
         </div>
+
         <div class="state-block">
           <div class="label">Next: </div>
-          <div class="next-shape">
+          <div class="next-shape mt10">
             <div v-for="(row,  rowIdx) of nextShapeComp" class="row" :key="`block-row-${rowIdx}`">
               <div v-for="(col, colIdx) of row" :class="blockClass(col)" :key="`block-${rowIdx}-${colIdx}`"></div>
             </div>
@@ -26,8 +27,10 @@
       </div>
     </div>
 
-    <div  class="controller-panel">
-      <controller @keypressed="controllerPressed" @keydown="controllerKeydown" @keyup="controllerKeyup"/>
+    <div class="controller-panel"  :style="hideUselessStyle">
+      <div class="flex-center">
+        <controller @keypressed="controllerPressed" @keydown="controllerKeydown" @keyup="controllerKeyup"/>
+      </div>
     </div>
 
     <div class="pause-layer" v-if="!running">
@@ -39,8 +42,8 @@
       <div class="block">
         game over
       </div>
-      <div class="block">
-        游戏结束
+      <div class="score">
+        {{score}}
       </div>
       <div class="start-game-button" @click="restart">重新开始</div>
     </div>
@@ -202,6 +205,12 @@ const levels = [3, 10, 20, 30, 40, 50, 60, 70, 80, 90]
 
 export default {
   props: {
+    short: {
+      type: Boolean,
+      default() {
+        return false
+      }
+    },
     running: Boolean,
     panelScale: {
       type: Number,
@@ -228,6 +237,14 @@ export default {
     }
   },
   computed: {
+    hideUselessStyle() {
+      const {
+        short
+      } = this
+      return {
+        display: short ? 'none' : ''
+      }
+    },
     levelComp() {
       const {
         score
@@ -318,18 +335,44 @@ export default {
     clearInterval(this.runningIntervalId)
   },
   methods: {
-    
+    cellValue(rowIdx, colIdx) {
+      const {
+        matrix
+      } = this
+      if (rowIdx < matrix.length && rowIdx >= 0) {
+        const row = matrix[rowIdx]
+        if (row && row.length > colIdx && colIdx >= 0) {
+          return row[colIdx]
+        }
+      }
+      return false;
+    },
     blockClassMatrix(rowIdx, colIdx) {
       const {
-        dataDrawComp
+        dataDrawComp,
+        currentShapeComp,
+        current,
       } = this
+
+      let cellValue = false;
       if (dataDrawComp.length > rowIdx) {
         const row = dataDrawComp[rowIdx]
         if (row.length > colIdx) {
-          return this.blockClass(row[colIdx])
+          cellValue = row[colIdx]
         }
       }
-      return this.blockClass(false)
+      const rv = this.blockClass(cellValue)
+      if (current && currentShapeComp) {
+        const x = colIdx - current.pos.x + current.pos.offsetX;
+        const y = rowIdx - current.pos.y;
+        if (y >= 0 && y < currentShapeComp.length) {
+          if (x >= 0 && x < currentShapeComp[y].length) {
+            rv.curr = currentShapeComp[y][x]
+          }
+        }
+      }
+      
+      return rv;
     },
     blockClass(occupied) {
       return {
@@ -357,17 +400,53 @@ export default {
           running
         } = that
         if (running) { // 方块操作按键只能在游戏运行时 控制
-          if ('a' === key) { 
-            this.current.pos.x -= 1
-            if (current.pos.x < 0) {
-              current.pos.x = 0
+          if ('a' === key) {
+            
+            let hit = false
+            
+            OUTTER: for (let shapeRowIdx=0; shapeRowIdx<currentShapeComp.length; shapeRowIdx++) {
+              const row = currentShapeComp[shapeRowIdx];
+              for (let shapeColIdx=0; shapeColIdx<row.length; shapeColIdx++) {
+                const y = current.pos.y + shapeRowIdx;
+                const x = current.pos.x - 1 - current.pos.offsetX + shapeColIdx
+                const cellValue = this.cellValue(y, x);
+                if (row[shapeColIdx] && cellValue) {
+                  hit = true;
+                  break OUTTER;
+                }
+              }
             }
+
+            if (!hit) {
+              current.pos.x -= 1
+              if (current.pos.x < 0) {
+                current.pos.x = 0
+              }
+            }
+            
 
           } else if ('d' === key) {
+            let hit = false;
 
-            if (currentShapeComp[0].length + current.pos.x < columnCount) {
-              current.pos.x += 1
+            OUTTER: for (let shapeRowIdx=0; shapeRowIdx<currentShapeComp.length; shapeRowIdx++) {
+              const row = currentShapeComp[shapeRowIdx];
+              for (let shapeColIdx=0; shapeColIdx<row.length; shapeColIdx++) {
+                const y = current.pos.y + shapeRowIdx;
+                const x = current.pos.x + 1 - current.pos.offsetX + shapeColIdx
+                const cellValue = this.cellValue(y, x);
+                if (row[shapeColIdx] && cellValue) {
+                  hit = true;
+                  break OUTTER;
+                }
+              }
             }
+
+            if (!hit) {
+              if (currentShapeComp[0].length + current.pos.x < columnCount) {
+                current.pos.x += 1
+              }
+            }
+            
             
 
           } else if ('w' === key) {
@@ -429,19 +508,17 @@ export default {
         const duration = Date.now() - timestamp
         if (duration > speedComp || this.speedyFall) {
           const canDrop = () => {
-            if (currentShapeComp.length + current.pos.y >= this.matrix.length) {
+            if (currentShapeComp.length + current.pos.y >= matrix.length) { // 当前图形 触底
               return false
             }
 
-            let hit = false; // 是否有阻挡
-              
+            let hit = false; // 是否有阻挡 
             OUTTER: for (let shapeRowIdx=currentShapeComp.length; shapeRowIdx>0; shapeRowIdx--) {
               const shapeRow = currentShapeComp[shapeRowIdx - 1]
               for (let shapeColIdx=0; shapeColIdx<shapeRow.length; shapeColIdx++) {
-                const lineN = current.pos.y + shapeRowIdx;
-                const cell = lineN >= 0 ? matrix[lineN][current.pos.x + shapeColIdx - current.pos.offsetX] : false
-
-                if (shapeRow[shapeColIdx] && cell) {
+                const rowIdx = current.pos.y + shapeRowIdx;
+                const colIdx = current.pos.x + shapeColIdx - current.pos.offsetX;
+                if (shapeRow[shapeColIdx] && this.cellValue(rowIdx, colIdx)) {
                   hit = true
                   break OUTTER
                 }
@@ -454,7 +531,7 @@ export default {
           if (canDrop()) { // 能走
             this.current.pos.y += 1
           } else { // 走不动了
-            if(this.current.pos.y < 0) { // 砖块掉不下来了，游戏结束
+            if(current.pos.y < 0) { // 砖块掉不下来了，游戏结束
               this.gameover = true
             }
 
@@ -532,7 +609,11 @@ export default {
 </script>
 
 <style scoped>
-
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .block-panel-main {
   --screen-width: 380px;
@@ -592,6 +673,9 @@ export default {
   justify-content: center;
   align-items: center;
 }
+.screen>.panel>.row>.block.dark.curr {
+  --bg-color: rgb(148, 49, 49);
+} 
 .screen>.panel>.row>.block.dark,  .next-shape>.row>.block.dark {
   --bg-color: #333;
 }
@@ -619,7 +703,7 @@ export default {
 .controller-panel {
   width: 100%;
   background: white;
-  display: flex;
+  display: block;
   justify-content: center;
 }
 
@@ -629,7 +713,7 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: linear-gradient(rgba(50, 50, 50, 0.8), rgba(0, 0, 0, 0.95), rgba(50, 50, 50, 0.8));
   display: flex;
   justify-content: center;
   align-items: center;
@@ -640,7 +724,15 @@ export default {
   font-size: 70px;
   color: white;
   width: 100%;
-  border-top: 2px solid rgb(100, 86, 255);
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.game-over-panel>.score {
+  font-size: 90px;
+  color: rgb(60, 253, 60);
+  width: 100%;
   padding: 20px 0;
   display: flex;
   justify-content: center;
