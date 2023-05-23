@@ -105,7 +105,7 @@ export default {
 
 
 .controller-button-main {
-  --key-width:40px;
+  --key-width:50px;
   --key-shadow-color: lightgray;
   --key-shadow-width: 5px;
   --key-shadow-width-hover: 7px;

@@ -6,6 +6,8 @@
 
     <controller-button key-name="w" label="翻转" class="key-w" @key-pressed="keyPressed"/>
 
+    <controller-button key-name="r" label="暂停" class="key-r" @key-pressed="keyPressed"/>
+
     <controller-button key-name="s" label="快降" class="key-s" @key-pressed="keyPressed" @key-down="keydown" @key-up="keyup"/>
 
     <controller-button key-name="d" label="右移" class="key-d" @key-pressed="keyPressed"/>
@@ -38,22 +40,27 @@ export default {
 .controller-main {
   position: relative;
   background: white;
-  width: 200px;
-  height: 200px;
+  height: 220px;
+  width: 250px;
 }
 
 .key-q {
-  left: 20px;
+  left: 0px;
   top: 30px;
 }
 
 .key-a {
-  left: 30px;
+  left: 10px;
   top: 120px;
 }
 
 .key-w {
-  left: 80px;
+  left: 60px;
+  top: 30px;
+}
+
+.key-r {
+  left: 180px;
   top: 30px;
 }
 
@@ -63,7 +70,7 @@ export default {
 }
 
 .key-s {
-  left: 80px;
+  left: 70px;
   top: 120px;
 }
 

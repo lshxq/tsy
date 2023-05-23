@@ -3,16 +3,26 @@
     
     <div class="screen">
       <div class="panel">
-        <div v-for="(row,  rowIdx) of dataDrawComp" class="row" :key="`block-row-${rowIdx}`">
-          <div v-for="(col, colIdx) of row" :class="blockClass(col)" :key="`block-${rowIdx}-${colIdx}`"></div>
+        <div v-for="rowIdx of rowCountComp" class="row" :key="`block-row-${rowIdx}`">
+          <div v-for="colIdx of columnCountComp" :class="blockClassMatrix(rowIdx - 1, colIdx -1)" :key="`block-${rowIdx}-${colIdx}`"></div>
         </div>
       </div>
       <div class="state">
-        <div class="next-shape">
-          <div v-for="(row,  rowIdx) of nextShapeComp" class="row" :key="`block-row-${rowIdx}`">
-            <div v-for="(col, colIdx) of row" :class="blockClass(col)" :key="`block-${rowIdx}-${colIdx}`"></div>
+        <div class="state-block">
+          <div class="label">Level: {{levelComp}}</div>
+        </div>
+        <div class="state-block">
+          <div class="label">Score: {{score}}</div>
+        </div>
+        <div class="state-block">
+          <div class="label">Next: </div>
+          <div class="next-shape">
+            <div v-for="(row,  rowIdx) of nextShapeComp" class="row" :key="`block-row-${rowIdx}`">
+              <div v-for="(col, colIdx) of row" :class="blockClass(col)" :key="`block-${rowIdx}-${colIdx}`"></div>
+            </div>
           </div>
         </div>
+        
       </div>
     </div>
 
@@ -22,7 +32,17 @@
 
     <div class="pause-layer" v-if="!running">
       <dragon-logon/>
-      <div class="start-game-button" @click="start">开始游戏</div>
+      <div class="start-game-button" @click="start" v-if="!running">开始游戏</div>
+    </div>
+
+    <div class="game-over-panel" v-if="gameover">
+      <div class="block">
+        game over
+      </div>
+      <div class="block">
+        游戏结束
+      </div>
+      <div class="start-game-button" @click="restart">重新开始</div>
     </div>
   </div>
 </template>
@@ -50,14 +70,16 @@ const createMatrix = () => {
 
 const randomBlock = () => {
   const type = Math.floor(Math.random() * blockShapes.length)
+  const dire = Math.floor(Math.random() * blockShapes[type].length)
+  const shape = blockShapes[type][dire]
   return {
     pos: {
       offsetX: 0,
       x: 5,
-      y: 0
+      y: 0 - shape.length
     },
     type,
-    dire: Math.floor(Math.random() * blockShapes[type].length)
+    dire
   }
 }
 
@@ -176,7 +198,7 @@ const blockShapes = [
   shape7
 ]
 
-
+const levels = [3, 10, 20, 30, 40, 50, 60, 70, 80, 90]
 
 export default {
   props: {
@@ -199,12 +221,30 @@ export default {
       current: false,
       next: false,
       timestamp: Date.now(),
-      level: 1,
+      score: 0,
       speedyFall: false,
       pause: false,
+      gameover: false,
     }
   },
   computed: {
+    levelComp() {
+      const {
+        score
+      } = this
+      for (let idx=0; idx<levels.length; idx++) {
+        if (score > levels[idx]) {
+          return idx+2;
+        }
+      }
+      return 1
+    },
+    columnCountComp() {
+      return columnCount;
+    },
+    rowCountComp() {
+      return rowCount;
+    },
     currentShapeComp() {
       const {
         current,
@@ -241,7 +281,7 @@ export default {
 
         for (let rowIdx=0; rowIdx<currentShapeComp.length; rowIdx++) {
           const y = rowIdx + current.pos.y
-          if (y < mm.length) {
+          if (y < mm.length && y >= 0) {
             for (let colIdx=0; colIdx<currentShapeComp[0].length; colIdx++) {
               const x = colIdx + current.pos.x
               if (currentShapeComp[rowIdx][colIdx]) {
@@ -257,9 +297,9 @@ export default {
     },
     speedComp() {
       const {
-        level
+        levelComp
       } = this
-      return 1000 / level
+      return 1000 / levelComp
     },
     panelStyleComp() {
       const {
@@ -279,6 +319,18 @@ export default {
   },
   methods: {
     
+    blockClassMatrix(rowIdx, colIdx) {
+      const {
+        dataDrawComp
+      } = this
+      if (dataDrawComp.length > rowIdx) {
+        const row = dataDrawComp[rowIdx]
+        if (row.length > colIdx) {
+          return this.blockClass(row[colIdx])
+        }
+      }
+      return this.blockClass(false)
+    },
     blockClass(occupied) {
       return {
         'block': true,
@@ -304,8 +356,8 @@ export default {
         const {
           running
         } = that
-        if (running) {
-          if ('a' === key) {
+        if (running) { // 方块操作按键只能在游戏运行时 控制
+          if ('a' === key) { 
             this.current.pos.x -= 1
             if (current.pos.x < 0) {
               current.pos.x = 0
@@ -325,7 +377,11 @@ export default {
             if (current.pos.offsetX < 0) {
               current.pos.offsetX = 0
             }
-          }
+          } 
+        }
+
+        if ('r' === key) {
+          this.$emit('update:running', !running)
         }
       }
     },
@@ -338,11 +394,25 @@ export default {
     newGame() {
       this.current = randomBlock()
       this.next = randomBlock()
+      const mm = []
+      for (let rowIdx=0; rowIdx<rowCount; rowIdx++) {
+        const row = [];
+        for (let colIdx=0; colIdx<columnCount; colIdx++) {
+          row.push(false);
+        }
+        mm.push(row)
+      }
+      this.matrix = mm;
+      this.score = 0;
+    },
+    restart() {
+      this.gameover = false;
+      this.newGame();
     },
 
     engine() {
       const that = this
-      if (that.running && !this.pause) {
+      if (that.running && !this.pause && !this.gameover) {
         const {
           timestamp,
           speedComp,
@@ -359,7 +429,7 @@ export default {
         const duration = Date.now() - timestamp
         if (duration > speedComp || this.speedyFall) {
           const canDrop = () => {
-            if (currentShapeComp.length + current.pos.y >= matrix.length) {
+            if (currentShapeComp.length + current.pos.y >= this.matrix.length) {
               return false
             }
 
@@ -368,8 +438,8 @@ export default {
             OUTTER: for (let shapeRowIdx=currentShapeComp.length; shapeRowIdx>0; shapeRowIdx--) {
               const shapeRow = currentShapeComp[shapeRowIdx - 1]
               for (let shapeColIdx=0; shapeColIdx<shapeRow.length; shapeColIdx++) {
-
-                const cell = matrix[current.pos.y + shapeRowIdx][current.pos.x + shapeColIdx - current.pos.offsetX] 
+                const lineN = current.pos.y + shapeRowIdx;
+                const cell = lineN >= 0 ? matrix[lineN][current.pos.x + shapeColIdx - current.pos.offsetX] : false
 
                 if (shapeRow[shapeColIdx] && cell) {
                   hit = true
@@ -384,7 +454,10 @@ export default {
           if (canDrop()) { // 能走
             this.current.pos.y += 1
           } else { // 走不动了
-            
+            if(this.current.pos.y < 0) { // 砖块掉不下来了，游戏结束
+              this.gameover = true
+            }
+
             this.speedyFall = false
             
 
@@ -392,17 +465,20 @@ export default {
               const row = currentShapeComp[rowIdx]
               for(let colIdx=0; colIdx<row.length; colIdx++) {
                 if (row[colIdx]) {
-                  matrix[current.pos.y + rowIdx][current.pos.x + colIdx - current.pos.offsetX] = true
+                  const lineN = current.pos.y + rowIdx;
+                  if (lineN > 0) {
+                    matrix[lineN][current.pos.x + colIdx - current.pos.offsetX] = true
+                  }
                 }
               }
             }
             this.current = false // 取消当前砖块的显示
             
             const removeLines = []
-            for (let rowIdx=0; rowIdx<matrix.length; rowIdx++) {
+            for (let rowIdx=0; rowIdx<rowCount; rowIdx++) {
               let removeIt = true
-              const row = matrix[rowIdx];
-              for (let colIdx=0; colIdx<row.length; colIdx++) {
+              const row = matrix[rowIdx] || [];
+              for (let colIdx=0; colIdx<columnCount; colIdx++) {
                 if (!row[colIdx]) {
                   removeIt = false
                 }
@@ -424,14 +500,22 @@ export default {
                   this.matrix = mm
                   setTimeout(() => {
                     flash(cnt - 1)
-                  }, 500)
+                  }, 200)
                 } else { // 继续游戏
+                  const mm = JSON.parse(JSON.stringify(this.matrix))
+                  for (const lineN  of removeLines) {
+                    mm.splice(lineN, 1)
+                    mm.splice(0, 0, [])
+                  }
+
+                  this.matrix = mm;
+                  this.score += removeLines.length;
                   this.current = this.next
                   this.next = randomBlock()
                   that.pause = false
                 }
               }
-              flash(6)
+              flash(10)
               
               
             } else {
@@ -453,16 +537,15 @@ export default {
 .block-panel-main {
   --screen-width: 380px;
   --screen-border-width: 5px;
-  --block-size: 20px;
+  --block-size: 40px;
   --controller-height: 200px;
   --block-border-width: 1px;
   --block-margin: 1px;
 
   background: linear-gradient(#aaa, #eee, #aaa);
-  height: calc(var(--block-size) * 20 + var(--screen-border-width) * 2 + var(--controller-height) + 40 * var(--block-border-width) + 40 * var(--block-margin));
-  width: calc(var(--screen-width) + var(--screen-border-width) * 2);
   position: relative;
   transform-origin: left top;
+  display: inline-block;
 }
 
 .pause-layer {
@@ -485,6 +568,11 @@ export default {
 
 .screen>.state {
   padding-left: 10px;
+  width: 180px;
+}
+
+.screen>.state>.state-block {
+  margin-top: 30px;
 }
 
 .screen>.panel {
@@ -529,12 +617,33 @@ export default {
 
 
 .controller-panel {
-  position: absolute;
-  bottom: 0;
   width: 100%;
-  height: var(--controller-height);
   background: white;
   display: flex;
   justify-content: center;
+}
+
+.game-over-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column;
+  
+}
+.game-over-panel>.block {
+  font-size: 70px;
+  color: white;
+  width: 100%;
+  border-top: 2px solid rgb(100, 86, 255);
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
