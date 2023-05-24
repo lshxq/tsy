@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="example-tsy-arrow">
   &lt;sy-arrow :count='cnt'/&gt;
   <div v-for="cnt of counts" :key="cnt" class="mt10">
     <div>cnt: {{cnt }}</div>

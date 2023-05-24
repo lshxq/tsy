@@ -3,6 +3,7 @@
     <div class="switch-panel">
       <sy-switch v-model="short" label-on="极简" label-off="完整UI"/>
     </div>
+    
     <div class="block-wrapper">
         <sy-blocks :default-visibility="true" :short="short"/>
     </div>
@@ -21,7 +22,7 @@ export default {
 
 <style scoped>
 .block-wrapper {
-  width: 500px;
+  width: 300px;
   margin: 30px;
 }
 

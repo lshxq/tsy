@@ -54,6 +54,15 @@ const naviRoutes = [
     component: () => import("../views/example-checkbox.vue"),
   },
   {
+    path: "/sy-switch",
+    name: "sy-switch",
+    meta: {
+      navi: "sy-switch",
+      label: "开关 sy-switch",
+    },
+    component: () => import("../views/example-switch.vue"),
+  },
+  {
     path: "/sy-paginator",
     name: "sy-paginator",
     meta: {
