@@ -1,32 +1,31 @@
 <template>
   <div class="block-panel-main" v-resize="__blocksPanelResized" ref="blockPanelMainRef">
-    
+    <div class="state-panel">
+      <div class="state-block">
+        <div class="label">等级: {{levelComp}}</div>
+      </div>
+      <div class="state-block">
+        <div class="label">得分: {{score}}</div>
+      </div>
+
+      <div class="state-block">
+        <div class="label">Next: </div>
+        <div class="next-shape mt10">
+          <div v-for="(row,  rowIdx) of nextShapeComp" class="row" :key="`block-row-${rowIdx}`">
+            <div v-for="(col, colIdx) of row" :class="blockClass(col)" :key="`block-${rowIdx}-${colIdx}`"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="screen">
       <div class="panel">
         <div v-for="rowIdx of rowCount" class="row" :key="`block-row-${rowIdx}`">
           <div v-for="colIdx of columnCount" :class="blockClassMatrix(rowIdx - 1, colIdx -1)" :key="`block-${rowIdx}-${colIdx}`"></div>
         </div>
       </div>
-      
     </div>
 
-    <div class="state-panel">
-        <div class="state-block">
-          <div class="label">等级: {{levelComp}}</div>
-        </div>
-        <div class="state-block">
-          <div class="label">得分: {{score}}</div>
-        </div>
-
-        <div class="state-block">
-          <div class="label">Next: </div>
-          <div class="next-shape mt10">
-            <div v-for="(row,  rowIdx) of nextShapeComp" class="row" :key="`block-row-${rowIdx}`">
-              <div v-for="(col, colIdx) of row" :class="blockClass(col)" :key="`block-${rowIdx}-${colIdx}`"></div>
-            </div>
-          </div>
-        </div>
-      </div>
 
     <div class="controller-panel"  :style="hideUselessStyle">
       <div class="flex-center">
@@ -35,7 +34,7 @@
     </div>
 
     <div class="pause-layer" v-if="!running">
-      <dragon-logon/>
+      <dragon-logon class="dragon"/>
       <div class="start-game-button" @click="start" v-if="!running">开始游戏</div>
     </div>
 
@@ -200,7 +199,7 @@ const blockShapes = [
   shape7
 ]
 
-const levels = [3, 10, 20, 30, 40, 50, 60, 70, 80, 90]
+const levels = [3, 7, 12, 18, 25, 33, 42, 52, 62, 72]
 
 export default {
   props: {
@@ -332,7 +331,7 @@ export default {
       const {
         blockPanelMainRef: blockPanelMainObj
       } = this.$refs
-      const blockSize = ((size.width / columnCount) - 5).toFixed(2);
+      const blockSize = ((size.width / columnCount) - 2).toFixed(2);
       blockPanelMainObj.style.setProperty('--block-size', `${blockSize}px`)
       
     },
@@ -555,7 +554,7 @@ export default {
           if (canDrop()) { // 能走
             this.current.pos.y += 1
           } else { // 走不动了
-            if(current.pos.y < 0) { // 砖块掉不下来了，游戏结束
+            if(current.pos.y <= 0) { // 砖块掉不下来了，游戏结束, 如果正好剩下两格，方块也是两个的高度，就下去不去，这时候y=0
               this.gameover = true
             }
 
@@ -663,19 +662,26 @@ export default {
   flex-flow: column;
 }
 
+.pause-layer>.dragon {
+  margin-bottom: 20px;
+}
+
 .screen {
   background: white;
 }
 
 .state-panel {
+  color: #332211;
   padding: 10px;
   display: flex;
   height: 130px;
+  background: linear-gradient(#aaa, #fff, #aaa);
 }
 
 .state-panel>.state-block {
   margin-right: 30px;
   flex: 1 1 auto;
+  
 }
 
 .screen>.panel {
@@ -687,8 +693,9 @@ export default {
 .screen>.panel>.row, .next-shape>.row {
   display: flex;
 }
-.screen>.panel>.row>.block, .next-shape>.row>.block {
+.screen>.panel>.row>.block {
   --bg-color: #e6e6e6;
+  box-sizing: border-box;
   margin: var(--block-margin);
   border: var(--block-border-width) solid var(--bg-color);
   width: var(--block-size);
@@ -700,15 +707,28 @@ export default {
 .screen>.panel>.row>.block.dark.curr {
   --bg-color: rgb(148, 49, 49);
 } 
-.screen>.panel>.row>.block.dark,  .next-shape>.row>.block.dark {
+.screen>.panel>.row>.block.dark, .next-shape>.row>.block.dark {
   --bg-color: #333;
 }
 
-.screen>.panel>.row>.block:before, .next-shape>.row>.block:before {
+.screen>.panel>.row>.block:before, .next-shape>.row>.block.dark:before {
   content: '';
   width: 60%;
   height: 60%;
   background: var(--bg-color);
+}
+.next-shape>.row>.block.dark {
+  border: var(--block-border-width) solid var(--bg-color);
+}
+.next-shape>.row>.block {
+  box-sizing: border-box;
+  --bg-color: #e6e6e6; 
+  margin: var(--block-margin);
+  width: var(--block-size);
+  height: var(--block-size);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .start-game-button {

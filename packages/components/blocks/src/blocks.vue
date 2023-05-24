@@ -10,6 +10,7 @@
 <script>
 import BlockPanel from './components/block-panel.vue'
 
+
 export default {
   name: 'SyBlocks',
   props: {
