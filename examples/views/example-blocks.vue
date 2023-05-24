@@ -1,6 +1,6 @@
 <template>
   <div class="example-blocks-main">
-    <sy-left-right>
+    <sy-left-right width="800">
       <div class="switch-panel" slot="left">
         <sy-switch v-model="short" label-on="极简" label-off="完整UI"/>
       </div>

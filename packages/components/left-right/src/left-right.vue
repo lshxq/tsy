@@ -1,6 +1,6 @@
 <template>
-<div class='sy-left-right-main'>
-  <div class='left'>
+<div class='sy-left-right-main' :style="styleComp">
+  <div class='left' >
     <slot name='left'/>
   </div>
   <div class='right'>
@@ -11,7 +11,29 @@
 
 <script>
 export default {
-  name: 'SyLeftRight'
+  name: 'SyLeftRight',
+  props: {
+    width: {
+      type: String,
+      default() {
+        return '50%'
+      }
+    }
+  },
+  computed: {
+    styleComp() {
+      const {
+        width: ww
+      } = this;
+      let width = ww
+      if (width.match(/^\d+$/g)) {
+        width = `${width}px`
+      }
+      return {
+        width
+      }
+    }
+  }
 }
 </script>
 

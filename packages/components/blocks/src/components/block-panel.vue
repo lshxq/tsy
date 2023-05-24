@@ -688,7 +688,7 @@ export default {
   display: flex;
 }
 .screen>.panel>.row>.block, .next-shape>.row>.block {
-  --bg-color: #bcbcbc;
+  --bg-color: #e6e6e6;
   margin: var(--block-margin);
   border: var(--block-border-width) solid var(--bg-color);
   width: var(--block-size);
