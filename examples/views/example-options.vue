@@ -23,11 +23,11 @@
     <div>当前值： {{valueRadio}}</div>
   </div>
   <div class="section mt100"> <b>多选模式  multiple=true</b>
-    <div class="mt30"> 
+    <!-- div class="mt30"> 
       <div class="highlight">Type 1</div>
       <div class="mb10">下拉列表</div>
       <sy-options label="颜色" v-model="valueCheckbox" :first-option="{label: &quot;All&quot;, value: &quot;&quot;}" url="/example/options" :mock="mockData" multiple="multiple"></sy-options>
-    </div>
+    </div-->
     <div class="mt30"> 
       <div class="highlight">Type 2</div>
       <div class="mb10">复选按钮 Checkbox</div>

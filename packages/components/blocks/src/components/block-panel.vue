@@ -7,12 +7,15 @@
           <div v-for="colIdx of columnCountComp" :class="blockClassMatrix(rowIdx - 1, colIdx -1)" :key="`block-${rowIdx}-${colIdx}`"></div>
         </div>
       </div>
-      <div class="state" :style="hideUselessStyle">
+      
+    </div>
+
+    <div class="state-panel">
         <div class="state-block">
-          <div class="label">Level: {{levelComp}}</div>
+          <div class="label">等级: {{levelComp}}</div>
         </div>
         <div class="state-block">
-          <div class="label">Score: {{score}}</div>
+          <div class="label">得分: {{score}}</div>
         </div>
 
         <div class="state-block">
@@ -23,9 +26,7 @@
             </div>
           </div>
         </div>
-        
       </div>
-    </div>
 
     <div class="controller-panel"  :style="hideUselessStyle">
       <div class="flex-center">
@@ -450,11 +451,35 @@ export default {
             
 
           } else if ('w' === key) {
+            const direOri = current.dire
+            const offXOri = current.pos.offsetX
+
             current.dire += 1
             current.dire = current.dire % blockShapes[current.type].length
             current.pos.offsetX = current.pos.x + this.currentShapeComp[0].length - columnCount
             if (current.pos.offsetX < 0) {
               current.pos.offsetX = 0
+            }
+
+            const shape = this.currentShapeComp // 必须从this引用更新后的图形ddwd
+
+            let hit = false
+            OUTTER: for (let shapeRowIdx=0; shapeRowIdx<shape.length; shapeRowIdx++) {
+              const row = shape[shapeRowIdx];
+              for (let shapeColIdx=0; shapeColIdx<row.length; shapeColIdx++) {
+                const y = current.pos.y + shapeRowIdx;
+                const x = current.pos.x - current.pos.offsetX + shapeColIdx
+                const cellValue = this.cellValue(y, x);
+                if (row[shapeColIdx] && cellValue) {
+                  hit = true;
+                  break OUTTER;
+                }
+              }
+            }
+            console.log(shape)
+            if (hit) {
+              current.dire = direOri
+              current.pos.offsetX = offXOri
             }
           } 
         }
@@ -644,16 +669,15 @@ export default {
 
 .screen {
   background: white;
+}
+
+.state-panel {
+  padding: 10px;
   display: flex;
 }
 
-.screen>.state {
-  padding-left: 10px;
-  width: 180px;
-}
-
-.screen>.state>.state-block {
-  margin-top: 30px;
+.state-panel>.state-block {
+  margin-right: 30px;
 }
 
 .screen>.panel {

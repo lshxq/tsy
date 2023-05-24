@@ -5,10 +5,6 @@
       <div slot="right"><sy-select :options="options" v-model="singleValue" placeholder="请选择"/></div>
     </sy-left-right>
 
-    <sy-left-right class="mt30">
-      <div slot="left">多选 当前值: {{multiValue}}</div>
-      <div slot="right"><sy-select :options="options" v-model="multiValue" :multiple="true"></sy-select></div>
-    </sy-left-right>
   </div>
 
 </template>

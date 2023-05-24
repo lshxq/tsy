@@ -8,33 +8,7 @@ const naviRoutes = [
     },
     component: () => import("../views/home.vue"),
   },
-  {
-    path: "/sy-rolling-image",
-    name: "sy-rolling-image",
-    meta: {
-      navi: "sy-rolling-image",
-      label: "旋转照片 sy-rolling-image",
-    },
-    component: () => import("../views/example-rolling-image.vue"),
-  },
-  {
-    path: "/sy-ray-border",
-    name: "sy-ray-border",
-    meta: {
-      navi: "sy-ray-border",
-      label: "旋转照片 sy-ray-border",
-    },
-    component: () => import("../views/example-ray-border.vue"),
-  },
-  {
-    path: "/sy-table",
-    name: "sy-table",
-    meta: {
-      navi: "sy-table",
-      label: "基础Table sy-table",
-    },
-    component: () => import("../views/example-table.vue"),
-  },
+  
   {
     path: "/sy-radio-group",
     name: "sy-radio-group",
@@ -115,6 +89,33 @@ const naviRoutes = [
       label: "检索输入框 sy-search-input",
     },
     component: () => import("../views/example-search-input.vue"),
+  },
+  {
+    path: "/sy-rolling-image",
+    name: "sy-rolling-image",
+    meta: {
+      navi: "sy-rolling-image",
+      label: "旋转照片 sy-rolling-image",
+    },
+    component: () => import("../views/example-rolling-image.vue"),
+  },
+  {
+    path: "/sy-ray-border",
+    name: "sy-ray-border",
+    meta: {
+      navi: "sy-ray-border",
+      label: "旋转照片 sy-ray-border",
+    },
+    component: () => import("../views/example-ray-border.vue"),
+  },
+  {
+    path: "/sy-table",
+    name: "sy-table",
+    meta: {
+      navi: "sy-table",
+      label: "基础Table sy-table",
+    },
+    component: () => import("../views/example-table.vue"),
   },
   {
     path: "/sy-split-screen-vertical",
