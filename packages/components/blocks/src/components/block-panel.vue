@@ -1,10 +1,10 @@
 <template>
-  <div class="block-panel-main" :style="panelStyleComp">
+  <div class="block-panel-main" v-resize="__blocksPanelResized" ref="blockPanelMainRef">
     
     <div class="screen">
       <div class="panel">
-        <div v-for="rowIdx of rowCountComp" class="row" :key="`block-row-${rowIdx}`">
-          <div v-for="colIdx of columnCountComp" :class="blockClassMatrix(rowIdx - 1, colIdx -1)" :key="`block-${rowIdx}-${colIdx}`"></div>
+        <div v-for="rowIdx of rowCount" class="row" :key="`block-row-${rowIdx}`">
+          <div v-for="colIdx of columnCount" :class="blockClassMatrix(rowIdx - 1, colIdx -1)" :key="`block-${rowIdx}-${colIdx}`"></div>
         </div>
       </div>
       
@@ -56,11 +56,9 @@
 import Controller from './controller.vue'
 import dragonLogon from './dragon-logon.vue'
 
-const columnCount = 10;
-const rowCount = 20;
 
 
-const createMatrix = () => {
+const createMatrix = (rowCount, columnCount) => {
   const matrix = [];
   for (let rowIdx=0; rowIdx<rowCount; rowIdx++) {
     const row = []
@@ -206,6 +204,18 @@ const levels = [3, 10, 20, 30, 40, 50, 60, 70, 80, 90]
 
 export default {
   props: {
+    rowCount: {
+      type: Number,
+      default() {
+        return 20;
+      }
+    },
+    columnCount: {
+      type: Number,
+      default() {
+        return 10;
+      }
+    },
     short: {
       type: Boolean,
       default() {
@@ -213,12 +223,6 @@ export default {
       }
     },
     running: Boolean,
-    panelScale: {
-      type: Number,
-      default() {
-        return 1;
-      }
-    }
   },
   components: {
     Controller,
@@ -227,7 +231,7 @@ export default {
   data() {
     
     return {
-      matrix: createMatrix(),
+      matrix: createMatrix(this.rowCount, this.columnCount),
       current: false,
       next: false,
       timestamp: Date.now(),
@@ -256,12 +260,6 @@ export default {
         }
       }
       return 1
-    },
-    columnCountComp() {
-      return columnCount;
-    },
-    rowCountComp() {
-      return rowCount;
     },
     currentShapeComp() {
       const {
@@ -319,15 +317,6 @@ export default {
       } = this
       return 1000 / levelComp
     },
-    panelStyleComp() {
-      const {
-        panelScale
-      } = this
-
-      return {
-        transform: `scale(${panelScale})`
-      }
-    }
   },
   mounted() {
     this.runningIntervalId = setInterval(this.engine, 10)
@@ -336,6 +325,17 @@ export default {
     clearInterval(this.runningIntervalId)
   },
   methods: {
+    __blocksPanelResized(size) {
+      const {
+        columnCount
+      } = this;
+      const {
+        blockPanelMainRef: blockPanelMainObj
+      } = this.$refs
+      const blockSize = ((size.width / columnCount) - 5).toFixed(2);
+      blockPanelMainObj.style.setProperty('--block-size', `${blockSize}px`)
+      
+    },
     cellValue(rowIdx, colIdx) {
       const {
         matrix
@@ -393,7 +393,7 @@ export default {
     },
     controllerPressed(key) {
       const that = this
-      const {currentShapeComp, current} = that
+      const {currentShapeComp, current, columnCount} = that
       if ('q' === key) {
         that.$emit('request-hide')
       } else {
@@ -485,7 +485,12 @@ export default {
         }
 
         if ('r' === key) {
-          this.$emit('update:running', !running)
+          if (this.gameover) {
+            this.gameover = false
+            this.newGame()
+          } else {
+            this.$emit('update:running', !running)
+          }
         }
       }
     },
@@ -498,15 +503,7 @@ export default {
     newGame() {
       this.current = randomBlock()
       this.next = randomBlock()
-      const mm = []
-      for (let rowIdx=0; rowIdx<rowCount; rowIdx++) {
-        const row = [];
-        for (let colIdx=0; colIdx<columnCount; colIdx++) {
-          row.push(false);
-        }
-        mm.push(row)
-      }
-      this.matrix = mm;
+      this.matrix = createMatrix(this.rowCount, this.columnCount);
       this.score = 0;
     },
     restart() {
@@ -523,7 +520,9 @@ export default {
           matrix,
           currentShapeComp,
           current,
-          next
+          next,
+          rowCount,
+          columnCount
         } = that
 
         if (!current && !next) {
@@ -641,17 +640,14 @@ export default {
 }
 
 .block-panel-main {
-  --screen-width: 380px;
-  --screen-border-width: 5px;
-  --block-size: 40px;
-  --controller-height: 200px;
+  --block-size: 10px;
   --block-border-width: 1px;
   --block-margin: 1px;
+  --pause-layer-bg: linear-gradient(rgba(50, 50, 50, 0.8), rgba(0, 0, 0, 0.95), rgba(50, 50, 50, 0.8));
 
   background: linear-gradient(#aaa, #eee, #aaa);
   position: relative;
-  transform-origin: left top;
-  display: inline-block;
+  display: block;
 }
 
 .pause-layer {
@@ -660,7 +656,7 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, .7);
+  background: var(--pause-layer-bg);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -674,15 +670,19 @@ export default {
 .state-panel {
   padding: 10px;
   display: flex;
+  height: 130px;
 }
 
 .state-panel>.state-block {
   margin-right: 30px;
+  flex: 1 1 auto;
 }
 
 .screen>.panel {
   border: 1px solid black;
-  width: calc(var(--block-margin) * 20 + var(--block-size) * 10 + var(--block-border-width) * 20);
+  display: flex;
+  flex-flow: column;
+  align-items: center;
 }
 .screen>.panel>.row, .next-shape>.row {
   display: flex;
@@ -737,7 +737,7 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(rgba(50, 50, 50, 0.8), rgba(0, 0, 0, 0.95), rgba(50, 50, 50, 0.8));
+  background: var(--pause-layer-bg);
   display: flex;
   justify-content: center;
   align-items: center;

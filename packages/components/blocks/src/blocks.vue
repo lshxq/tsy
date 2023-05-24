@@ -1,11 +1,10 @@
 <template>
-<div class="tsy-blocks-main" v-resize="__blocksMainResized" :style="mainPanelStyleComp">
-  <block-panel v-bind="$attrs"
-               :short="short"
-               :panel-scale="panelScaleComp"
+<div class="tsy-blocks-main">
+  <block-panel :short="short"
+               :row-count="rowCount"
+               :column-count="columnCount"
                :running.sync="running" 
-               @request-hide="requestHide" 
-               v-resize="__blocksPanelResized"/>
+               @request-hide="requestHide"/>
 </div>
 </template>
 <script>
@@ -25,6 +24,18 @@ export default {
       default() {
         return false;
       }
+    },
+    rowCount: {
+      type: Number,
+      default() {
+        return 21;
+      }
+    },
+    columnCount: {
+      type: Number,
+      default() {
+        return 11;
+      }
     }
   },
   components: {
@@ -43,34 +54,7 @@ export default {
       running: false
     }
   },
-  computed: {
-    panelScaleComp() {
-      const {
-        mainSize,
-        panelSize
-      } = this.panel
-      if (mainSize && panelSize) {
-        return mainSize.width / panelSize.width
-      }
-      return 1;
-    },
-    mainPanelStyleComp() {
-      const that = this
-      const {
-        visibility,
-        panel,
-        panelScaleComp
-      } = that
-      
-      const style = {
-        opacity: visibility ? 1 : 0
-      }
-      if (panel.panelSize) {
-        style.height = `${panel.panelSize.height * panelScaleComp}px`;
-      }
-      return style;
-    }
-  },
+  computed: {},
   methods: {
     show() {
       this.visibility = true
@@ -89,17 +73,12 @@ export default {
         this.visibility = true
       }
     },
-    __blocksMainResized(size) {
-      this.panel.mainSize = size;
-    },
-    __blocksPanelResized(size) {
-      this.panel.panelSize = size;
-    }
   }
 }
 </script>
 <style scoped>
 .tsy-blocks-main {
   user-select: none;
+  width: 100%;
 }
 </style>

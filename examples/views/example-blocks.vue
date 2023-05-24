@@ -5,7 +5,7 @@
         <sy-switch v-model="short" label-on="极简" label-off="完整UI"/>
       </div>
       <div class="block-wrapper" slot="right">
-        <sy-blocks :default-visibility="true" :short="short"/>
+        <sy-blocks :default-visibility="true" :short="short" :row-count="21" :column-count="15"/>
       </div>
     </sy-left-right>
     
