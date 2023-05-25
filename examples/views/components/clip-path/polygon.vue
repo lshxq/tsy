@@ -13,18 +13,23 @@
              @dragged="event => handleDragged(event, idx)">{{idx+1}}</div>
         
       </div>
-      <div class="clip-path-polygon">clip-path: {{imageStyleComp['clip-path']}}</div>
+      <select-input :value="imageStyleComp['clip-path']"/>
     </div>
   </div>
 </template>
 
 
 <script>
+import SelectInput from './select-on-click-input.vue'
+
 const percentage = (numerator, denominator) => {
   return `${Math.floor(numerator / denominator * 100)}%`
 }
 
 export default {
+  components: {
+    SelectInput
+  },
   props: {
     imageHeight: {
       type: Number,
@@ -110,7 +115,6 @@ export default {
   --image-width: 100px;
   --image-height: 100px;
   display: inline-block;
-  margin: 20px;
 }
 
 .clip-path-polygon-main>.block {
@@ -149,5 +153,6 @@ export default {
   border-radius: 50%;
   border: 1px solid gray;
 }
+
 
 </style>

@@ -6,6 +6,11 @@
     </div>
 
     <div class="clip-path-block">
+      <h1>Ellipse</h1>
+      <clip-ellipse :image-width="imageWidth" :image-height="imageHeight"/>
+    </div>
+
+    <div class="clip-path-block">
       <h1>Polygon</h1>
       <clip-polygon :image-width="imageWidth" :image-height="imageHeight" :points="polygon.ps3"/>
       <clip-polygon :image-width="imageWidth" :image-height="imageHeight" :points="polygon.ps4"/>
@@ -13,7 +18,9 @@
       <clip-polygon :image-width="imageWidth" :image-height="imageHeight" :points="polygon.ps6"/>
       <clip-polygon :image-width="imageWidth" :image-height="imageHeight" :points="polygon.ps7"/>
       <clip-polygon :image-width="imageWidth" :image-height="imageHeight" :points="polygon.ps8"/>
+      <clip-polygon :image-width="imageWidth" :image-height="imageHeight" :points="polygon.ps12"/>
       <clip-polygon :image-width="imageWidth" :image-height="imageHeight" :points="polygon.psStar"/>
+
     </div>
   </div>
 </template>
@@ -22,12 +29,13 @@
 <script>
 import ClipPolygon from './components/clip-path/polygon.vue'
 import ClipCircle from './components/clip-path/circle.vue'
-
+import ClipEllipse from './components/clip-path/ellipse.vue'
 
 export default {
   components: {
     ClipPolygon,
-    ClipCircle
+    ClipCircle,
+    ClipEllipse
   },
   data() {
     const imageWidth = 400;
@@ -149,7 +157,6 @@ export default {
         }, {
           x: 0,
           y: imageHeight / 3 * 2
-          
         }, {
           x: imageWidth / 3,
           y: imageHeight
@@ -161,6 +168,44 @@ export default {
           y: imageHeight / 3 * 2
         }, {
           x: imageWidth,
+          y: imageHeight / 3
+        }, {
+          x: imageWidth / 3 * 2,
+          y: 0
+        }],
+
+        ps12: [{
+          x: imageWidth / 3,
+          y: 0
+        }, {
+          x: imageWidth / 3,
+          y: imageHeight / 3
+        }, {
+          x: 0,
+          y: imageHeight / 3
+        }, {
+          x: 0,
+          y: imageHeight / 3 * 2
+        }, {
+          x: imageWidth / 3,
+          y: imageHeight / 3 * 2
+        }, {
+          x: imageWidth / 3,
+          y: imageHeight
+        }, {
+          x: imageWidth / 3 * 2,
+          y: imageHeight
+        }, {
+          x: imageWidth / 3 * 2,
+          y: imageHeight / 3 * 2
+        }, {
+          x: imageWidth,
+          y: imageHeight / 3 * 2
+        }, {
+          x: imageWidth,
+          y: imageHeight / 3
+        }, {
+          x: imageWidth / 3 * 2,
           y: imageHeight / 3
         }, {
           x: imageWidth / 3 * 2,

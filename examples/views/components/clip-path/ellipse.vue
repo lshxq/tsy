@@ -6,7 +6,8 @@
 
         <div class="handle center-handle" ref="centerHandle" v-drag :data-drag-range-h="dragRangeHComp" :data-drag-range-v="dragRangeVComp" @dragged="centerHandleDragged">c</div>
         <div class="radius-handle-c" :style="radiusHandleContainerStyleComp">
-          <div class="handle radius-handle" ref="radiusHandle"  v-drag :data-drag-range-h="dragRangeHComp" data-drag-range-v="0,0" @dragged="radiusHandleDragged">r</div>
+          <div class="handle radius-handle" ref="radiusHHandle"  v-drag :data-drag-range-h="dragRangeHComp" data-drag-range-v="0,0" @dragged="radiusHHandleDragged">r1</div>
+          <div class="handle radius-handle" ref="radiusVHandle"  v-drag :data-drag-range-v="dragRangeVComp" data-drag-range-h="0,0" @dragged="radiusVHandleDragged">r2</div>
         </div>
       </div>
       
@@ -47,7 +48,8 @@ export default {
         x: this.imageWidth / 3,
         y: this.imageHeight / 3
       },
-      radius: 150 // percentage
+      radiusH: 150, // percentage
+      radiusV: 100
     }
   },
   computed: {
@@ -70,35 +72,42 @@ export default {
         imageHeight
       } = this
 
-
       return {
-        'clip-path': `circle(${percentage(this.radius, imageWidth)} at ${percentage(center.x, imageWidth)} ${percentage(center.y, imageHeight)})`
+        'clip-path': `ellipse(${percentage(this.radiusH, imageWidth)} ${percentage(this.radiusV, imageWidth)} at ${percentage(center.x, imageWidth)} ${percentage(center.y, imageHeight)})`
       }
     }
   },
   mounted() {
     const {
         center,
-        radius
+        radiusH,
+        radiusV
       } = this
     const {
       centerHandle: centerTarget,
-      radiusHandle: radiusTarget
+      radiusHHandle: radiusHTarget,
+      radiusVHandle: radiusVTarget,
     } = this.$refs;
 
     centerTarget.style.left = `${center.x}px`;
     centerTarget.style.top = `${center.y}px`;
 
-    radiusTarget.style.left = `${radius}px`
-    radiusTarget.style.top = '0'
+    radiusHTarget.style.left = `${radiusH}px`
+    radiusHTarget.style.top = '0'
+
+    radiusVTarget.style.left = '0'
+    radiusVTarget.style.top = `${radiusV}px`
   },
   methods: {
     centerHandleDragged(obj) {
       this.center.x = obj.target.offsetLeft
       this.center.y = obj.target.offsetTop
     },
-    radiusHandleDragged(obj) {
-      this.radius = obj.target.offsetLeft
+    radiusHHandleDragged(obj) {
+      this.radiusH = obj.target.offsetLeft
+    },
+    radiusVHandleDragged(obj) {
+      this.radiusV = obj.target.offsetTop
     }
   }
 }
