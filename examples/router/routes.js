@@ -276,6 +276,15 @@ const naviRoutes = [
     component: () => import("../views/example-border-radius.vue"),
   },
   {
+    path: "/clip-path",
+    name: "clip-path",
+    meta: {
+      navi: "clip-path",
+      label: "clip-path",
+    },
+    component: () => import("../views/example-clip-path.vue"),
+  },
+  {
     path: "/directives",
     name: "directives",
     meta: {
