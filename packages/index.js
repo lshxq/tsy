@@ -24,6 +24,7 @@ import Calendar from './components/calendar';
 import WaterDrop from './components/water-drop';
 import Switch from './components/switch';
 import Blocks from './components/blocks';
+import Miao from './components/miao';
 import FormMixin from "./mixins/form-mixin";
 
 
@@ -55,6 +56,7 @@ const components = [
   WaterDrop, // 水滴
   Switch, // 开关
   Blocks, // 俄罗斯方块
+  Miao, // 喵了个咪
 ];
 
 
@@ -107,6 +109,7 @@ export default {
   WaterDrop,
   Switch,
   Blocks,
+  Miao,
   // mixins
   FormMixin,
 };

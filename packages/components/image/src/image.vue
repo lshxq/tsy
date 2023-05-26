@@ -1,8 +1,9 @@
 <template>
 <div class="tsy-image-main">
   <sy-preview ref="previewRef" :images="imagesComp"></sy-preview>
-  <div class="tsy-image-item" v-for="(img, idx) of imagesComp" :key="idx" @click="$refs.previewRef.show(idx)"><img :src="img" draggable="false" :width="widthComp" :height="heightComp"/>
-    <div class="mask">
+  <div :class="imageDivClassComp" v-for="(img, idx) of imagesComp" :key="idx" @click="imageClicke(idx)">
+    <img :src="img" draggable="false" :width="widthComp" :height="heightComp"/>
+    <div class="mask" v-if="preview">
       <div class="text">点击预览</div>
     </div>
   </div>
@@ -13,7 +14,13 @@
 export default {
   name: "SyImg",
   props: {
-    src: null,
+    preview: {
+      type: Boolean,
+      default() {
+        return true
+      }
+    },
+    src: String,
     width: String,
     height: String,
     
@@ -23,7 +30,12 @@ export default {
     }
   },
   computed: {
-
+    imageDivClassComp() {
+      return {
+        'tsy-image-item': true,
+        '.preview-enabled': this.preview
+      }
+    },
     imagesComp() {
       const {
         src
@@ -45,7 +57,7 @@ export default {
         width
       } = this
       if (!width) {
-        width = '100px'
+        width = '220px'
       }
       return width
     },
@@ -57,7 +69,11 @@ export default {
     }
   },
   methods: {
-    
+    imageClicked(idx) {
+      if (this.preview) {
+        this.$refs.previewRef.show(idx)
+      }
+    }
   },
 };
 </script>
@@ -73,28 +89,32 @@ export default {
   flex-flow: row wrap;
 }
 
-.tsy-image-main .tsy-image-item:hover {
+.tsy-image-main .tsy-image-item.preview-enabled:hover {
   box-shadow: 5px 5px 5px gray;
 }
 
-.tsy-image-main .tsy-image-item:hover .mask {
+.tsy-image-main .tsy-image-item.preview-enabled:hover .mask {
   background: rgba(255, 255, 255, 0.6);
 }
 
-.tsy-image-main .tsy-image-item:hover .mask .text {
+.tsy-image-main .tsy-image-item.preview-enabled:hover .mask .text {
   display: block;
 }
 
 .tsy-image-main .tsy-image-item {
   position: relative;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  height: 100%;
   background-color: white;
-  padding: 5px;
-  margin-right: 10px;
-  margin-bottom: 10px;
+}
+
+.tsy-image-main .tsy-image-item img {
+  width: 100%;
+  height: 100%;
+}
+
+.tsy-image-main .tsy-image-item.preview-enabled {
+  cursor: pointer;
 }
 
 .tsy-image-main .tsy-image-item .mask {

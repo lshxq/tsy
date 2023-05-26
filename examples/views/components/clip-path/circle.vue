@@ -2,7 +2,7 @@
   <div class="clip-path-circle-main">
     <div class="block">
       <div class="image-div">
-        <img :src="`https://picsum.photos/${imageWidth}/${imageHeight}?r=1`" :style="imageStyleComp" draggable="false"/>
+        <sy-img :src="`https://picsum.photos/${imageWidth}/${imageHeight}?r=1`" :style="imageStyleComp" :preview="false"/>
 
         <div class="handle center-handle" ref="centerHandle" v-drag :data-drag-range-h="dragRangeHComp" :data-drag-range-v="dragRangeVComp" @dragged="centerHandleDragged">c</div>
         <div class="radius-handle-c" :style="radiusHandleContainerStyleComp">
@@ -10,7 +10,7 @@
         </div>
       </div>
       
-      <select-input :value="imageStyleComp['clip-path']"/>
+      <select-input :value="clipPathComp"/>
     </div>
   </div>
 </template>
@@ -51,6 +51,14 @@ export default {
     }
   },
   computed: {
+    clipPathComp() {
+      const {
+        center,
+        imageWidth,
+        imageHeight
+      } = this
+      return `circle(${percentage(this.radius, imageWidth)} at ${percentage(center.x, imageWidth)} ${percentage(center.y, imageHeight)})`
+    },
     radiusHandleContainerStyleComp() {
       return {
         left: `${this.center.x}px`,
@@ -65,14 +73,11 @@ export default {
     },
     imageStyleComp() {
       const {
-        center,
-        imageWidth,
-        imageHeight
+        clipPathComp
       } = this
 
-
       return {
-        'clip-path': `circle(${percentage(this.radius, imageWidth)} at ${percentage(center.x, imageWidth)} ${percentage(center.y, imageHeight)})`
+        'clip-path': clipPathComp
       }
     }
   },

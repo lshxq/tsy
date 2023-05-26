@@ -161,7 +161,9 @@ export default {
 
 .content>.handle {
   position: absolute;
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 15px;
   height: 15px;
   background: lightgray;

@@ -258,6 +258,15 @@ const naviRoutes = [
     component: () => import("../views/example-blocks.vue"),
   },
   {
+    path: "/miao",
+    name: "miao",
+    meta: {
+      navi: "miao",
+      label: "喵了个咪",
+    },
+    component: () => import("../views/example-miao.vue"),
+  },
+  {
     path: "/colors",
     name: "colors",
     meta: {
