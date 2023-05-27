@@ -1,5 +1,7 @@
 <template>
   <div class="miao-ui-main" ref="mainRef">
+    <audio :src='audio.sua' ref="audioSuaRef"/>
+    <audio :src="audio.failed" ref="audioFailedRef"/>
     <template v-if="cards">
       <template  v-for='(layer, layerIdx) of cardsComp'>
         <template v-for="(row, rowIdx) of layer" >
@@ -21,12 +23,14 @@
 
     <div class="game-over-mask" v-if="gameover">
       <div class="text">game over</div>
-      
     </div>
   </div>
 </template>
 
 <script>
+import sua from '../assets/2352701sua.mp3'
+import failed from '../assets/5c89106c1b91b30143.mp3'
+
 import Card from './card.vue' 
 import img0 from '../assets/0.png'
 import img1 from '../assets/1.png'
@@ -98,6 +102,10 @@ export default {
     Card,
   },
   data() {
+    this.audio = {
+      sua,
+      failed
+    }
     return {
       cards: false,
       bar: [],
@@ -135,7 +143,7 @@ export default {
       return this.height * 0.8
     }
   }, mounted() {
-    this.cards = createCardsData(10, 6, this.columnCountComp, this.images.length);
+    this.cards = createCardsData(11, 6, this.columnCountComp, this.images.length);
 
     this.$refs.mainRef.style.setProperty('--card-height', `${this.cardHeightComp}px`)
     this.$refs.mainRef.style.setProperty('--card-width', `${this.cardWidthComp}px`)
@@ -265,6 +273,42 @@ export default {
       } 
 
       if (card.layerIdx % 2 === 0) { // 偶数层数据多
+        const needCheckCards = [{ // 上一层相邻的4张牌
+          layerIdx: card.layerIdx - 1,
+          rowIdx: card.rowIdx - 1,
+          colIdx: card.colIdx - 1
+        }, {
+          layerIdx: card.layerIdx - 1,
+          rowIdx: card.rowIdx - 1,
+          colIdx: card.colIdx
+        }, {
+          layerIdx: card.layerIdx - 1,
+          rowIdx: card.rowIdx,
+          colIdx: card.colIdx - 1
+        }, {
+          layerIdx: card.layerIdx - 1,
+          rowIdx: card.rowIdx,
+          colIdx: card.colIdx
+        }].map(pos => {
+          const currCard = that.cardInMatrix(pos.layerIdx, pos.rowIdx, pos.colIdx)
+          return currCard
+        })
+
+        const check = currCard => {
+          const c1Removed = removed(currCard.layerIdx + 1, currCard.rowIdx,     currCard.colIdx);
+          const c2Removed = removed(currCard.layerIdx + 1, currCard.rowIdx,     currCard.colIdx + 1);
+          const c3Removed = removed(currCard.layerIdx + 1, currCard.rowIdx + 1, currCard.colIdx)
+          const c4Removed = removed(currCard.layerIdx + 1, currCard.rowIdx + 1, currCard.colIdx + 1)
+          if (c1Removed && c2Removed && c3Removed && c4Removed) {
+            currCard.dark = false
+            that.cardInMatrix(currCard.layerIdx, currCard.rowIdx, currCard.colIdx, currCard)
+          }
+        }
+
+        needCheckCards.forEach(cardNeedCheck => {
+          cardNeedCheck && check(cardNeedCheck)
+        }) 
+
 
       } else { // 奇数层
         const needCheckCards = [{ // 上一层相邻的4张牌
@@ -305,7 +349,15 @@ export default {
       }
     },
     cardClicked(card) {
+      if (card.dark) { // 黑牌不能点击
+        return false
+      }
+
       const that = this
+
+      
+
+      that.$refs.audioSuaRef.play();
 
       that.bar.push(card)
       that.bar.sort((a, b) => {
@@ -348,7 +400,8 @@ export default {
         }
       })
       if (barItemCnt > 8) {
-        this.gameover = true
+        that.$refs.audioFailedRef.play()
+        that.gameover = true
       }
     }
   }
