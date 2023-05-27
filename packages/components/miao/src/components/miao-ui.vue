@@ -267,7 +267,7 @@ export default {
       if (card.layerIdx % 2 === 0) { // 偶数层数据多
 
       } else { // 奇数层
-        const needCheck = [{ // 上一层相邻的4张牌
+        const needCheckCards = [{ // 上一层相邻的4张牌
           layerIdx: card.layerIdx - 1,
           rowIdx: card.rowIdx,
           colIdx: card.colIdx
@@ -283,7 +283,10 @@ export default {
           layerIdx: card.layerIdx - 1,
           rowIdx: card.rowIdx + 1,
           colIdx: card.colIdx + 1
-        }]
+        }].map(pos => {
+          const currCard = that.cardInMatrix(pos.layerIdx, pos.rowIdx, pos.colIdx)
+          return currCard
+        })
 
         const check = currCard => {
           const c1Removed = removed(currCard.layerIdx + 1, currCard.rowIdx - 1, currCard.colIdx -1);
@@ -292,14 +295,12 @@ export default {
           const c4Removed = removed(currCard.layerIdx + 1, currCard.rowIdx,     currCard.colIdx)
           if (c1Removed && c2Removed && c3Removed && c4Removed) {
             currCard.dark = false
-            that.cardInMatrix(currCard.layerIdx, card.rowIdx, card.colIdx, currCard)
+            that.cardInMatrix(currCard.layerIdx, currCard.rowIdx, currCard.colIdx, currCard)
           }
         }
 
-        needCheck.forEach(pos => {
-          const currCard = that.cardInMatrix(pos.layerIdx, pos.rowIdx, pos.colIdx)
-
-          currCard && check(currCard)
+        needCheckCards.forEach(cardNeedCheck => {
+          cardNeedCheck && check(cardNeedCheck)
         }) 
       }
     },
