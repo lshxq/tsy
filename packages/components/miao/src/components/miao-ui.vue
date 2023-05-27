@@ -4,7 +4,7 @@
       <template  v-for='(layer, layerIdx) of cardsComp'>
         <template v-for="(row, rowIdx) of layer" >
           <template v-for="(card, colIdx) of row">
-            <div v-if="card"
+            <div v-if="card && !card.destory"
                @click="cardClicked(card)"
                class="card-wrapper"
                :style="cardWrapperStyle(layerIdx, rowIdx, colIdx, card)"
@@ -17,6 +17,10 @@
       </template>
     </template>
 
+    <div class="game-over-mask" v-if="gameover">
+      <div class="text">game over</div>
+      
+    </div>
   </div>
 </template>
 
@@ -36,7 +40,6 @@ import img10 from '../assets/10.png'
 
 
 const MARGIN_TOP = 10
-const MARGIN_LEFT = 100
 
 const createCardsData = (layerCnt, rowCnt, columnCnt, typeCnt) => {
   let id = 1;
@@ -55,7 +58,6 @@ const createCardsData = (layerCnt, rowCnt, columnCnt, typeCnt) => {
           rowIdx,
           colIdx,
           dark: layerIdx !== layerCnt - 1,
-          opacity: 1
         })
         id++;
       }
@@ -97,6 +99,7 @@ export default {
     return {
       cards: false,
       bar: [],
+      gameover: false
     }
   },
   computed: {
@@ -115,6 +118,9 @@ export default {
         cardWidthComp
       } = this
       return Math.floor((width - width * .2 )/ cardWidthComp - 1)
+    },
+    barTopComp() {
+      return this.height * 0.8
     }
   }, mounted() {
     this.cards = createCardsData(10, 6, this.columnCountComp, this.images.length);
@@ -124,9 +130,7 @@ export default {
   },
   methods: {
     cardInMatrix(layerIdx, rowIdx, colIdx, newValue) {
-      const {
-        cards
-      } = this;
+      const cards = JSON.parse(JSON.stringify(this.cards));
       const layer = cards[layerIdx];
       if (layer) {
         const row = layer[rowIdx];
@@ -135,11 +139,31 @@ export default {
           if (newValue !== undefined) {
             row[colIdx] = newValue
             this.cards = cards
+            console.log(`set matrix L[${layerIdx}] R[${rowIdx}] C[${colIdx}] to new value`, newValue)
           }
           return card;
         }
       }
       return false;
+    },
+    getCardPositionInBar(cardId) {
+      const {
+        bar,
+        barTopComp,
+        cardWidthComp
+      } = this
+
+      let left = 0;
+      for (let idx=0; idx<bar.length; idx++) {
+        if (bar[idx].id === cardId) {
+          left = idx * cardWidthComp
+          break;
+        }
+      }
+      return {
+        top: barTopComp,
+        left
+      }
     },
     getCardPositionInMatrix(layerIdx, rowIdx, colIdx) {
       const {
@@ -147,42 +171,34 @@ export default {
         cardHeightComp
       } = this
 
-      let offsetX = 0;
-      let offsetY = 0;
+      let offsetX = 0; // 奇偶不同图层的偏移值
+      let offsetY = 0; // 奇偶不同图层的偏移值
 
       if (layerIdx % 2 === 1) {
         offsetX = cardWidthComp / 2
         offsetY = cardHeightComp / 2
       }
 
+      const marginLeft = this.width / 10; // 左面留出10%的margin,尝试内容剧中
+
       const top = rowIdx * cardHeightComp + MARGIN_TOP + offsetY
-      const left = colIdx * cardWidthComp + MARGIN_LEFT + offsetX
+      const left = colIdx * cardWidthComp + marginLeft + offsetX
       return {
         top,
         left
       }
     },
     cardWrapperStyle(layerIdx, rowIdx, colIdx,  card) {
-      let cc = false;
-      const {
-        bar
-      } = this
-      let idx=0
-      for (; idx<bar.length; idx++) {
-        if (bar[idx].id === card.id) {
-          cc = bar[idx];
-          break;
-        }
-      }
 
-
-      if (cc) {  // 已经加入bar，用bar中的位置
-
+      const cardInBar = this.bar.find(cardInBar => {
+        return cardInBar && cardInBar.id === card.id
+      })
+      if (cardInBar) {  // 已经加入bar，用bar中的位置
+        const pos = this.getCardPositionInBar(card.id)
         const style = {
-          top: `${7 * this.cardHeightComp}px`,
-          left: `${idx * this.cardWidthComp}px`,
+          top: `${pos.top}px`,
+          left: `${pos.left}px`,
           'z-index': 9999 + layerIdx,
-          opacity: card.opacity
         }
 
 
@@ -200,11 +216,19 @@ export default {
         'z-index': 999 + layerIdx,
       }
 
-      if (card.taken) {
-        style.a = ''
+      return style;
+    },
+    deleteCardInBar(cardId) {
+      const newBar = []
+
+      for (let idx=0; idx<this.bar.length; idx++) {
+        const cardInBar = this.bar[idx];
+        if (cardInBar && cardInBar.id !== cardId) {
+          newBar.push(cardInBar)
+        }
       }
 
-      return style;
+      this.bar = newBar
     },
     cardClicked(card) {
       const that = this
@@ -213,31 +237,42 @@ export default {
         return a.type - b.type
       })
 
-      const destory = []
+      const destoryQueue = []
       const grouped = []
-      for (let idx=0; idx<that.bar.length; idx++) {
-        const card = that.bar[idx]
-        if (!grouped[card.type]) {
-          grouped[card.type] = []
+      for (const cardInBar of that.bar) {
+        if (!grouped[cardInBar.type]) {
+          grouped[cardInBar.type] = []
         }
-        grouped[card.type].push(card)
+        grouped[cardInBar.type].push(cardInBar)
       }
       for (const key in grouped) {
-        const gg = grouped[key]
-        if (gg.length >= 3) {
-          for (const c1 of gg) {
-            destory.push(c1) 
-          }
+        const cardGroup = grouped[key]
+        if (cardGroup.length >= 3) {
+          cardGroup.forEach(cardInGroup => {
+            destoryQueue.push(cardInGroup)
+          })
+          setTimeout(() => {
+            destoryQueue.forEach(cardInGroup => {
+              cardInGroup.destory = true
+              that.cardInMatrix(cardInGroup.layerIdx, cardInGroup.rowIdx, cardInGroup.colIdx, cardInGroup)
+              that.deleteCardInBar(cardInGroup.id)
+            })
+          }, 1000) 
         }
       }
 
-      setTimeout(() => {
-        for (let idx=0; idx<destory.length; idx++) {
-          const card = destory[idx]
-          card.opacity = 0
-          that.cardInMatrix(card.layerIdx, card.rowIdx, card.colIdx, card)
+      let barItemCnt = 0
+      that.bar.forEach(cardInBar => {
+        const needDestory = destoryQueue.find(cardInDestory => {
+          return cardInBar.id === cardInDestory.id
+        })
+        if (!needDestory) {
+          barItemCnt++
         }
-      }, 1500) 
+      })
+      if (barItemCnt > 8) {
+        this.gameover = true
+      }
     }
   }
 }
@@ -250,10 +285,11 @@ export default {
   --card-width: 10px;
 
   user-select: none;
-  background: lightblue;
   height: 100%;
   width: 100%;
   position: relative;
+  background: linear-gradient(190deg, hsl(250, 100%, 65%), hsl(200, 100%, 65%), hsl(100, 100%, 64%))
+
 }
 
 .card-wrapper {
@@ -268,4 +304,26 @@ export default {
   transition: all 1s;
 }
 
+.game-over-mask {
+  --light-transparent: rgba(100, 100, 100, .6);
+  --dark-transparent: rgba(10, 10, 10, .9);
+  position: absolute;
+  top: 0; 
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(var(--light-transparent) 5%, var(--dark-transparent) 50%, var(--light-transparent) 100%);
+  z-index: 99999999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-over-mask>.text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 8vw;
+  color: white;
+}
 </style>
