@@ -1,5 +1,5 @@
 <template>
-  <div class="miao-main" v-resize="size => {windowSize = size}">
+  <div class="miao-main" v-resize="mainSize">
     <miao-ui v-if="windowSize" :width="windowSize.width" :height="windowSize.height" :images="images"/>
   </div>
 </template>
@@ -22,6 +22,14 @@ export default {
     }
   },
   methods: {
+    mainSize(size) {
+      const rate = 1.5
+
+      this.windowSize = size.height / size.width > rate ? {
+        width: size.width,
+        height: size.width * rate
+      } : size
+    }
   }
 }
 </script>

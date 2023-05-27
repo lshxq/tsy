@@ -1,7 +1,8 @@
 <template>
   <div :class="mainPanelClassComp" ref="mainRef">
-    <audio :src='audio.sua' ref="audioSuaRef"/>
-    <audio :src="audio.failed" ref="audioFailedRef"/>
+    <audio preload="auto" :src='audio.audioSua' ref="audioSuaRef"/>
+    <audio preload="auto" :src="audio.audioFailed" ref="audioFailedRef"/>
+    <audio preload="auto" :src='audio.audioDu' ref="audioDuRef"/>
     <template v-if="cards">
       <template  v-for='(layer, layerIdx) of cardsComp'>
         <template v-for="(row, rowIdx) of layer" >
@@ -25,12 +26,10 @@
     <div class="score">{{score}}</div>
 
     <div class="welcome" ref="welcomeRef">
-      <div class="text">
-        <div class="miao">喵</div>
-        <div class="le">了</div>
-        <div class="ge">个</div>
-        <div class="mi">咪</div>
-      </div>
+      <div class="text miao">喵</div>
+      <div class="text le">了</div>
+      <div class="text ge">个</div>
+      <div class="text mi">咪</div>
       
       
       <div class="start-button" @click="startGame">开始游戏</div>
@@ -44,8 +43,9 @@
 </template>
 
 <script>
-import sua from '../assets/audio/sua.mp3'
-import failed from '../assets/audio/failed.mp3'
+import audioSua from '../assets/audio/sua.mp3'
+import audioFailed from '../assets/audio/failed.mp3'
+import audioDu from '../assets/audio/du.mp3'
 
 import Card from './card.vue' 
 import img0 from '../assets/0.png'
@@ -114,13 +114,31 @@ export default {
       }
     }
   },
+  watch: {
+    width(width) {
+      this.$refs.mainRef.style.setProperty('--main-width', `${width}px`)
+    },
+    height(height) {
+      this.$refs.mainRef.style.setProperty('--main-height', `${height}px`)
+    },
+    timeRemainComp(remain) {
+      if (this.running) {
+        if (remain === 5 || remain === 4 || remain === 3 || remain === 2 || remain === 1) {
+          this.$refs.audioDuRef.play();
+        } if (remain === 0) {
+          this.gameover()
+        }
+      }
+    }
+  },
   components: {
     Card,
   },
   data() {
     this.audio = {
-      sua,
-      failed
+      audioSua,
+      audioFailed,
+      audioDu
     }
     return {
       cards: false,
@@ -153,18 +171,10 @@ export default {
         gameStartTime,
         currentTime,
         gameTime,
-        running
       } = this
 
       
       const rv = gameTime - Math.floor((currentTime - gameStartTime) / 1000)
-
-      if (running) {
-        if (rv <= 0) {
-          this.gameover()
-        }
-      }
-
       return rv
     },
     cardMarginLeftComp() {
@@ -181,10 +191,10 @@ export default {
       return this.cards
     },
     cardHeightComp() {
-      return Math.floor(this.height * 0.12)
+      return Math.floor(this.height * 0.11) // 这里的计算规则 需要和 css中保持同步
     },
     cardWidthComp() {
-      return Math.floor(this.cardHeightComp * 0.618)
+      return Math.floor(this.cardHeightComp * 0.618) // 这里的计算规则 需要和 css中保持同步
     },
     columnCountComp() {
       const {
@@ -199,10 +209,8 @@ export default {
   }, 
   mounted() {
     const that = this
-    
-
-    that.$refs.mainRef.style.setProperty('--card-height', `${this.cardHeightComp}px`)
-    that.$refs.mainRef.style.setProperty('--card-width', `${this.cardWidthComp}px`)
+    that.$refs.mainRef.style.setProperty('--main-width', `${this.width}px`)
+    that.$refs.mainRef.style.setProperty('--main-height', `${this.height}px`)
 
     that.timerId = setInterval(() => {
       if(that.running) {
@@ -431,7 +439,9 @@ export default {
         return false
       }
 
-      
+      if (that.bar.length === 9) {
+        return false
+      }
 
       that.$refs.audioSuaRef.play();
 
@@ -457,11 +467,13 @@ export default {
             destoryQueue.push(cardInGroup)
           })
           setTimeout(() => {
+            that.score += 1
+            that.gameTime += 5
             destoryQueue.forEach(cardInGroup => {
-              that.score += 1
               cardInGroup.destory = true
               that.cardInMatrix(cardInGroup.layerIdx, cardInGroup.rowIdx, cardInGroup.colIdx, cardInGroup)
               that.deleteCardInBar(cardInGroup.id)
+              
             })
           }, 1000) 
         }
@@ -496,7 +508,7 @@ export default {
     newGame() {
       this.cards = createCardsData(11, 6, this.columnCountComp, this.images.length);
       this.gameStartTime = Date.now()
-      this.gameTime = 100;
+      this.gameTime = 50;
       this.running = true
       this.gameOverFlag = false
       this.bar = []
@@ -508,13 +520,16 @@ export default {
 
 <style scoped>
 .miao-ui-main {
+  --main-width: 100%;
+  --main-height: 100%;
   --bottom-panel-height: 15%;
-  --card-height: 10px;
-  --card-width: 10px;
+  --card-height: calc(var(--main-height) * 0.11);
+  --card-width: calc(var(--card-height) * 0.618);
+
   overflow: hidden;
   user-select: none;
-  height: 100%;
-  width: 100%;
+  height: var(--main-height);
+  width: var(--main-width);
   position: relative;
   background: linear-gradient(190deg, hsl(250, 100%, 65%), hsl(200, 100%, 65%), hsl(100, 100%, 64%))
 
@@ -628,41 +643,41 @@ export default {
 }
 
 .welcome .text {
-  position: relative;
-  width: 100%;
-  height: 100%s;
   color: white;
-  font-size: calc(var(--card-height) * 1.5);
+  --font-size: calc(var(--main-height) / 5.5);
+  font-size: var(--font-size);
   text-shadow: calc(var(--card-height) * .07) calc(var(--card-height) * .07) gray;
+  transform-origin: 50% 50% 0;
+  font-weight: bolder;
 }
 
-.welcome .text .miao {
+.welcome .text.miao {
   position: absolute;
-  left: 10%;
-  top: calc(0px - var(--card-height) * 1.5);
+  left: calc(var(--main-width) * .2 - var(--font-size) / 2);
+  top: calc(var(--main-height) * .2);
   transform: rotate(-30deg);
 }
 
 
-.welcome .text .le {
+.welcome .text.le {
   position: absolute;
-  left: 30%;
+  left: calc(var(--main-width) * .4 - var(--font-size) / 2);
   transform: rotate(-10deg);
-  top: calc(0px - var(--card-height) * 2);
+  top: calc(var(--main-height) * .15);
 }
 
-.welcome .text .ge {
+.welcome .text.ge {
   position: absolute;
-  left: 53%;
+  left: calc(var(--main-width) * .6 - var(--font-size) / 2);
   transform: rotate(10deg);
-  top: calc(0px - var(--card-height) * 2);
+  top: calc(var(--main-height) * .15);
 }
 
-.welcome .text .mi {
+.welcome .text.mi {
   position: absolute;
-  left: 75%;
+  left: calc(var(--main-width) * .8 - var(--font-size) / 2);
   transform: rotate(30deg);
-  top: calc(0px - var(--card-height) * 1.5);
+  top: calc(var(--main-height) * .2);
 }
 
 .show-welcome .welcome {
