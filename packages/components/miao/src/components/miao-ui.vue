@@ -1,5 +1,5 @@
 <template>
-  <div class="miao-ui-main" ref="mainRef">
+  <div :class="mainPanelClassComp" ref="mainRef">
     <audio :src='audio.sua' ref="audioSuaRef"/>
     <audio :src="audio.failed" ref="audioFailedRef"/>
     <template v-if="cards">
@@ -11,7 +11,7 @@
                class="card-wrapper"
                :style="cardWrapperStyle(layerIdx, rowIdx, colIdx, card)"
                :key="`card-${layerIdx}-${rowIdx}-${colIdx}`">
-              <card :card="card" :images="images"/>
+              <card :card="card" :images="images" :bar="bar"/>
             </div>
           </template>
           
@@ -21,15 +21,31 @@
 
     <div class="bar"></div>
 
-    <div class="game-over-mask" v-if="gameover">
+    <div class="time-remaid">{{timeRemainComp}}</div>
+    <div class="score">{{score}}</div>
+
+    <div class="welcome" ref="welcomeRef">
+      <div class="text">
+        <div class="miao">喵</div>
+        <div class="le">了</div>
+        <div class="ge">个</div>
+        <div class="mi">咪</div>
+      </div>
+      
+      
+      <div class="start-button" @click="startGame">开始游戏</div>
+    </div>
+
+    <div class="game-over-mask">
       <div class="text">game over</div>
+      <div class="start-button" @click="restartGame">重新开始</div>
     </div>
   </div>
 </template>
 
 <script>
-import sua from '../assets/2352701sua.mp3'
-import failed from '../assets/5c89106c1b91b30143.mp3'
+import sua from '../assets/audio/sua.mp3'
+import failed from '../assets/audio/failed.mp3'
 
 import Card from './card.vue' 
 import img0 from '../assets/0.png'
@@ -109,10 +125,48 @@ export default {
     return {
       cards: false,
       bar: [],
-      gameover: false
+      
+      gameStartTime: 0,
+      score: 0,
+      gameTime: 10000,
+      running: false,
+      currentTime: Date.now(),
+      showWelcome: true,
+      gameOverFlag: false,
+
     }
   },
   computed: {
+    mainPanelClassComp() {
+      const {
+        showWelcome,
+        gameOverFlag
+      } = this
+      return {
+        'miao-ui-main': true,
+        'show-welcome': showWelcome,
+        'show-game-over': gameOverFlag
+      }
+    },
+    timeRemainComp() {
+      const {
+        gameStartTime,
+        currentTime,
+        gameTime,
+        running
+      } = this
+
+      
+      const rv = gameTime - Math.floor((currentTime - gameStartTime) / 1000)
+
+      if (running) {
+        if (rv <= 0) {
+          this.gameover()
+        }
+      }
+
+      return rv
+    },
     cardMarginLeftComp() {
       const {
         width, cardWidthComp, columnCountComp
@@ -142,13 +196,25 @@ export default {
     barTopComp() {
       return this.height * 0.8
     }
-  }, mounted() {
-    this.cards = createCardsData(11, 6, this.columnCountComp, this.images.length);
+  }, 
+  mounted() {
+    const that = this
+    
 
-    this.$refs.mainRef.style.setProperty('--card-height', `${this.cardHeightComp}px`)
-    this.$refs.mainRef.style.setProperty('--card-width', `${this.cardWidthComp}px`)
+    that.$refs.mainRef.style.setProperty('--card-height', `${this.cardHeightComp}px`)
+    that.$refs.mainRef.style.setProperty('--card-width', `${this.cardWidthComp}px`)
+
+    that.timerId = setInterval(() => {
+      if(that.running) {
+        that.currentTime = Date.now()
+      }
+    }, 10)
+  },
+  destroyed() {
+    clearInterval(this.timerId)
   },
   methods: {
+    
     cardInMatrix(layerIdx, rowIdx, colIdx, newValue) {
       const cards = JSON.parse(JSON.stringify(this.cards));
       const layer = cards[layerIdx];
@@ -353,7 +419,17 @@ export default {
         return false
       }
 
+      
+
       const that = this
+
+      const cardInBarBeforePush = that.bar.find(cib => {
+        return cib.id === card.id
+      })
+
+      if (cardInBarBeforePush) { // 已经在bar中的不能点击
+        return false
+      }
 
       
 
@@ -382,6 +458,7 @@ export default {
           })
           setTimeout(() => {
             destoryQueue.forEach(cardInGroup => {
+              that.score += 1
               cardInGroup.destory = true
               that.cardInMatrix(cardInGroup.layerIdx, cardInGroup.rowIdx, cardInGroup.colIdx, cardInGroup)
               that.deleteCardInBar(cardInGroup.id)
@@ -400,9 +477,30 @@ export default {
         }
       })
       if (barItemCnt > 8) {
-        that.$refs.audioFailedRef.play()
-        that.gameover = true
+        that.gameover() 
       }
+    },
+    gameover() {
+      const that = this
+      that.running = false
+      that.$refs.audioFailedRef.play()
+      that.gameOverFlag = true
+    },
+    startGame() {
+      this.showWelcome = false
+      this.newGame()
+    },
+    restartGame() {
+      this.newGame()
+    },
+    newGame() {
+      this.cards = createCardsData(11, 6, this.columnCountComp, this.images.length);
+      this.gameStartTime = Date.now()
+      this.gameTime = 100;
+      this.running = true
+      this.gameOverFlag = false
+      this.bar = []
+      this.score = 0
     }
   }
 }
@@ -413,7 +511,7 @@ export default {
   --bottom-panel-height: 15%;
   --card-height: 10px;
   --card-width: 10px;
-
+  overflow: hidden;
   user-select: none;
   height: 100%;
   width: 100%;
@@ -434,27 +532,30 @@ export default {
   transition: all 1s;
 }
 
-.game-over-mask {
-  --light-transparent: rgba(100, 100, 100, .6);
-  --dark-transparent: rgba(10, 10, 10, .9);
-  position: absolute;
-  top: 0; 
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: linear-gradient(var(--light-transparent) 5%, var(--dark-transparent) 50%, var(--light-transparent) 100%);
-  z-index: 99999999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
-.game-over-mask>.text {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 8vw;
-  color: white;
+
+.start-button {
+  margin-top: 10%;
+  color: rgb(114, 140, 255);
+  background: linear-gradient(gray, black, gray);
+  padding: 1% 2%; 
+  border-radius: calc(var(--card-width) / 10);
+  cursor: pointer;
+  position: relative;
+  font-size: calc(var(--card-width) / 3);
+}
+.start-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(200, 200, 200, .6);
+  filter: blur(20px)
+}
+.start-button:hover {
+  transform: scale(1.05);
 }
 
 .bar {
@@ -477,5 +578,121 @@ export default {
   bottom: 0;
   background: white;
   filter: blur(20px);
+}
+
+.game-over-mask {
+  --light-transparent: rgba(200, 200, 200, .6);
+  --dark-transparent: rgba(100, 100, 100, .8);
+  top: 0;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  
+  z-index: 999999;
+  background: linear-gradient(var(--light-transparent) 5%, var(--dark-transparent) 50%, var(--light-transparent) 100%);
+  
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 1s;
+}
+
+.show-game-over .game-over-mask {
+  top: -100%;
+}
+
+.game-over-mask>.text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--card-width);
+  color: white;
+}
+
+.welcome {
+  top: -100%;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  
+  z-index: 999999;
+  background: url(../../../../assets/images/miao-bg.webp) no-repeat;
+  background-size: 100% 100%;
+
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 1s;
+}
+
+.welcome .text {
+  position: relative;
+  width: 100%;
+  height: 100%s;
+  color: white;
+  font-size: calc(var(--card-height) * 1.5);
+  text-shadow: calc(var(--card-height) * .07) calc(var(--card-height) * .07) gray;
+}
+
+.welcome .text .miao {
+  position: absolute;
+  left: 10%;
+  top: calc(0px - var(--card-height) * 1.5);
+  transform: rotate(-30deg);
+}
+
+
+.welcome .text .le {
+  position: absolute;
+  left: 30%;
+  transform: rotate(-10deg);
+  top: calc(0px - var(--card-height) * 2);
+}
+
+.welcome .text .ge {
+  position: absolute;
+  left: 53%;
+  transform: rotate(10deg);
+  top: calc(0px - var(--card-height) * 2);
+}
+
+.welcome .text .mi {
+  position: absolute;
+  left: 75%;
+  transform: rotate(30deg);
+  top: calc(0px - var(--card-height) * 1.5);
+}
+
+.show-welcome .welcome {
+  top: 0;
+}
+
+
+.time-remaid {
+  position: absolute;
+  top: 3%;
+  left: 1%;
+  color: white;
+  font-size: var(--card-width);
+}
+.time-remaid:before {
+  content: 'Time remain:';
+  font-size: calc(var(--card-width) / 5);
+  display: block;
+}
+
+.score {
+  position: absolute;
+  top: 3%;
+  right: 6%;
+  color: white;
+  font-size: var(--card-width);
+}
+.score:before {
+  content: 'Score:';
+  font-size: calc(var(--card-width) / 5);
+  display: block;
 }
 </style>

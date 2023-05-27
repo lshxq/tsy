@@ -1,7 +1,7 @@
 <template>
   <div :class="cardClassComp">
     <div class="content">
-      <img :src="images[card.type]" alt="">
+      <img :src="images[card.type]" alt=""  draggable="false">
     </div>
     <div class="mask"></div>
   </div>
@@ -11,16 +11,27 @@
 export default {
   props: {
     card: Object,
-    images: Array
+    images: Array,
+    bar: Array
   },
   computed: {
     cardClassComp() {
+      
+      const {
+        bar,
+        card
+      } = this
       const {
         dark
-      } = this.card
+      } = card
+
+      const inbar = bar.find(cib => {
+        return cib.id === card.id
+      })
       return {
         card: true,
-        dark
+        dark,
+        inbar
       }
     }
   }
@@ -34,8 +45,11 @@ export default {
   background: lightgray;
   position: absolute;
 }
+.card.inbar {
+  transform: scale(1.05);
+}
 
-.card:not(.dark) {
+.card:not(.dark):not(.inbar) {
   cursor: pointer;
 }
 
@@ -50,7 +64,7 @@ export default {
   right: 0;
 }
 
-.card:not(.dark):hover {
+.card:not(.dark):not(.inbar):hover {
   transform: scale(1.1);
 }
 
