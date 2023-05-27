@@ -17,6 +17,8 @@
       </template>
     </template>
 
+    <div class="bar"></div>
+
     <div class="game-over-mask" v-if="gameover">
       <div class="text">game over</div>
       
@@ -103,6 +105,16 @@ export default {
     }
   },
   computed: {
+    cardMarginLeftComp() {
+      const {
+        width, cardWidthComp, columnCountComp
+      } = this
+
+      return (width - cardWidthComp * columnCountComp) / 2
+    },
+    barMarginLeftComp() {
+      return Math.floor((this.width - this.cardWidthComp * 9 ) / 2)
+    }, 
     cardsComp() {
       return this.cards
     },
@@ -141,7 +153,9 @@ export default {
             this.cards = cards
             console.log(`set matrix L[${layerIdx}] R[${rowIdx}] C[${colIdx}] to new value`, newValue)
           }
-          return card;
+          if (card) {
+            return card
+          }
         }
       }
       return false;
@@ -156,10 +170,11 @@ export default {
       let left = 0;
       for (let idx=0; idx<bar.length; idx++) {
         if (bar[idx].id === cardId) {
-          left = idx * cardWidthComp
+          left = idx * cardWidthComp + this.barMarginLeftComp
           break;
         }
       }
+
       return {
         top: barTopComp,
         left
@@ -168,7 +183,8 @@ export default {
     getCardPositionInMatrix(layerIdx, rowIdx, colIdx) {
       const {
         cardWidthComp, 
-        cardHeightComp
+        cardHeightComp,
+        cardMarginLeftComp
       } = this
 
       let offsetX = 0; // 奇偶不同图层的偏移值
@@ -179,10 +195,8 @@ export default {
         offsetY = cardHeightComp / 2
       }
 
-      const marginLeft = this.width / 10; // 左面留出10%的margin,尝试内容剧中
-
       const top = rowIdx * cardHeightComp + MARGIN_TOP + offsetY
-      const left = colIdx * cardWidthComp + marginLeft + offsetX
+      const left = colIdx * cardWidthComp + cardMarginLeftComp + offsetX
       return {
         top,
         left
@@ -230,12 +244,74 @@ export default {
 
       this.bar = newBar
     },
+    uncover(card) { // 翻开底部, 奇偶错位，分别处理
+      const that = this
+
+      const removed = (layerIdx, rowIdx, colIdx) => { // 被destory  或者 在 bar中 都是从 matrix中移除 了
+        const card = this.cardInMatrix(layerIdx, rowIdx, colIdx)
+        if (card === false) {
+          return true
+        }
+
+        if (card.destory) {
+          return card
+        }
+
+        const cardInBar = that.bar.find(cardInBar => {
+          return cardInBar.id === card.id
+        })
+
+        return cardInBar
+      } 
+
+      if (card.layerIdx % 2 === 0) { // 偶数层数据多
+
+      } else { // 奇数层
+        const needCheck = [{ // 上一层相邻的4张牌
+          layerIdx: card.layerIdx - 1,
+          rowIdx: card.rowIdx,
+          colIdx: card.colIdx
+        }, {
+          layerIdx: card.layerIdx - 1,
+          rowIdx: card.rowIdx + 1,
+          colIdx: card.colIdx
+        }, {
+          layerIdx: card.layerIdx - 1,
+          rowIdx: card.rowIdx,
+          colIdx: card.colIdx + 1
+        }, {
+          layerIdx: card.layerIdx - 1,
+          rowIdx: card.rowIdx + 1,
+          colIdx: card.colIdx + 1
+        }]
+
+        const check = currCard => {
+          const c1Removed = removed(currCard.layerIdx + 1, currCard.rowIdx - 1, currCard.colIdx -1);
+          const c2Removed = removed(currCard.layerIdx + 1, currCard.rowIdx - 1, currCard.colIdx);
+          const c3Removed = removed(currCard.layerIdx + 1, currCard.rowIdx,     currCard.colIdx -1)
+          const c4Removed = removed(currCard.layerIdx + 1, currCard.rowIdx,     currCard.colIdx)
+          if (c1Removed && c2Removed && c3Removed && c4Removed) {
+            currCard.dark = false
+            that.cardInMatrix(currCard.layerIdx, card.rowIdx, card.colIdx, currCard)
+          }
+        }
+
+        needCheck.forEach(pos => {
+          const currCard = that.cardInMatrix(pos.layerIdx, pos.rowIdx, pos.colIdx)
+
+          currCard && check(currCard)
+        }) 
+      }
+    },
     cardClicked(card) {
       const that = this
+
       that.bar.push(card)
       that.bar.sort((a, b) => {
         return a.type - b.type
       })
+
+      this.uncover(card)
 
       const destoryQueue = []
       const grouped = []
@@ -325,5 +401,27 @@ export default {
   align-items: center;
   font-size: 8vw;
   color: white;
+}
+
+.bar {
+  --bar-left: calc((100% - 9 * var(--card-width)) / 2);
+
+  height: var(--card-height);
+  width: calc(var(--card-width) * 9);
+  background: lightgray;
+  position: absolute;
+  top: 80%;
+  left: var(--bar-left);
+  border-radius: 10px;
+}
+.bar:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  filter: blur(20px);
 }
 </style>
