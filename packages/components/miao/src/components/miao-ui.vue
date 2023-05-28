@@ -72,6 +72,7 @@ import img10 from '../assets/10.png'
 
 
 const MARGIN_TOP = 10
+const BAR_LENGTH = 8
 
 const createCardsData = (layerCnt, rowCnt, columnCnt, typeCnt) => {
   let id = 1;
@@ -222,7 +223,7 @@ export default {
       return (width - cardWidthComp * columnCountComp) / 2
     },
     barMarginLeftComp() {
-      return Math.floor((this.width - this.cardWidthComp * 9 ) / 2)
+      return Math.floor((this.width - this.cardWidthComp * BAR_LENGTH ) / 2)
     }, 
     cardsComp() {
       return this.cards
@@ -250,6 +251,7 @@ export default {
     that.sound && that.$refs.audioBgmRef.play();
     that.$refs.mainRef.style.setProperty('--main-width', `${this.width}px`)
     that.$refs.mainRef.style.setProperty('--main-height', `${this.height}px`)
+    that.$refs.mainRef.style.setProperty('--bar-length', BAR_LENGTH)
 
     that.timerId = setInterval(() => {
       if(that.running) {
@@ -478,7 +480,7 @@ export default {
         return false
       }
 
-      if (that.bar.length === 9) {
+      if (that.bar.length === BAR_LENGTH) {
         return false
       }
 
@@ -528,7 +530,7 @@ export default {
           barItemCnt++
         }
       })
-      if (barItemCnt > 8) {
+      if (barItemCnt > BAR_LENGTH - 1) {
         that.gameover() 
       }
     },
@@ -567,7 +569,7 @@ export default {
 .miao-ui-main {
   --main-width: 100%;
   --main-height: 100%;
-  
+  --bar-length: 8;
   --card-height: calc(var(--main-height) * 0.11);
   --card-width: calc(var(--card-height) * 0.618);
   --game-over-z: 900000;
@@ -623,11 +625,11 @@ export default {
 }
 
 .bar {
-  --bar-left: calc((100% - 9 * var(--card-width)) / 2);
+  --bar-left: calc((100% - var(--bar-length) * var(--card-width)) / 2);
   --bar-top: calc(var(--main-height) * .88);
 
   height: var(--card-height);
-  width: calc(var(--card-width) * 9);
+  width: calc(var(--card-width) * var(--bar-length));
   background: lightgray;
   position: absolute;
   top: var(--bar-top);

@@ -29,4 +29,8 @@ export default {
 .speaker-main {
   cursor: pointer;
 }
+.speaker-main img {
+  width: 100%;
+  height: 100%;
+}
 </style>

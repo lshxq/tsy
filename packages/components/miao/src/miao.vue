@@ -23,7 +23,7 @@ export default {
   },
   methods: {
     mainSize(size) {
-      const rate = 1.5
+      const rate = 1.8
 
       this.windowSize = size.height / size.width > rate ? {
         width: size.width,
