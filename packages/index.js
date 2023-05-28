@@ -61,21 +61,38 @@ const components = [
 
 
 
-import resize from './directives/resize.js';
-import drag from './directives/drag.js'
+import resize2 from './directives/v2/resize.js';
+import drag2 from './directives/v2/drag.js'
 
-const directives =  [
-  resize,
-  drag
+const directives2 =  [
+  resize2,
+  drag2
+]
+
+import resize3 from './directives/v3/resize.js';
+import drag3 from './directives/v3/drag.js'
+
+const directives3 =  [
+  resize3,
+  drag3
 ]
 
 const install = (Vue) => {
   if (install.installed) return;
   components.map((com) => com.install(Vue));
-
-  directives.map(dir => {
-    Vue.directive(dir.name, dir)
-  })
+  const {
+    version
+  } = Vue
+  if (version.startsWith('2.')) {
+    directives2.map(dir => {
+      Vue.directive(dir.name, dir)
+    })
+  } else if (version.startsWith('3.')) {
+    directives3.map(dir => {
+      Vue.directive(dir.name, dir)
+    })
+  }
+  
 };
 
 if (typeof window !== "undefined" && window.Vue) {
