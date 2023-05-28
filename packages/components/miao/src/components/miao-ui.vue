@@ -37,6 +37,10 @@
       <div class="start-button" @click="startGame">开始游戏</div>
     </div>
 
+    <div class="water-mark link">
+      http://tsy.zone/site/home
+    </div>
+
     <div class="game-over-mask">
       <div class="text">game over</div>
       <div class="start-button" @click="restartGame">重新开始</div>
@@ -170,13 +174,13 @@ export default {
       audioDu,
       audioBgm
     }
-    localStorage.sound
   },
   data() {
+    const sound = getLocal('audio.on')
     return {
       cards: false,
       bar: [],
-      sound: getLocal('audio.on'),
+      sound,
       gameStartTime: 0,
       score: 0,
       gameTime: 10000, // 可用的游戏时间
@@ -566,9 +570,10 @@ export default {
   
   --card-height: calc(var(--main-height) * 0.11);
   --card-width: calc(var(--card-height) * 0.618);
-  --game-over-z: 1000000;
-  --welcome-z: 999998;
-  --speaker-z: 999999;
+  --game-over-z: 900000;
+  --welcome-z: 899998;
+  --speaker-z: 899999;
+  --water-mark-z: 899999;
 
   overflow: hidden;
   user-select: none;
@@ -763,5 +768,14 @@ export default {
   width: calc(var(--card-width) / 3);
   height: calc(var(--card-width) / 3);
   z-index: var(--speaker-z);
+}
+
+.water-mark {
+  user-select:all;
+  position: absolute;
+  right: calc(var(--main-width) * .01);
+  bottom: calc(var(--main-height) * .01);
+  z-index: var(--water-mark-z);
+  color: gray;
 }
 </style>

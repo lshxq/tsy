@@ -11,7 +11,11 @@ const daytimeInMili = 24 * 60 * 60 * 1000;
 
 export default {
   setLocal(blockName, obj) {
-    const origin = localStorage[blockName] || {}
+    const originStr = localStorage[blockName]
+    let origin = {}
+    if (originStr) {
+      origin = JSON.parse(originStr)
+    }
     const newValue = Object.assign({}, origin, obj);
     localStorage[blockName] = JSON.stringify(newValue)
 
@@ -19,7 +23,7 @@ export default {
   getLocal(blockName, path) {
     let curr = localStorage[blockName]
     curr = curr ? JSON.parse(curr) : {}
-    const pathSplit = path.split('.')
+    const pathSplit = path.split(/[.]/)
     for (const key of pathSplit) {
       if (curr) {
         curr = curr[key] 
