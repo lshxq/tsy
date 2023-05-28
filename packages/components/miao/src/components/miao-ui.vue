@@ -3,6 +3,8 @@
     <audio preload="auto" :src='audio.audioSua' ref="audioSuaRef"/>
     <audio preload="auto" :src="audio.audioFailed" ref="audioFailedRef"/>
     <audio preload="auto" :src='audio.audioDu' ref="audioDuRef"/>
+    <audio preload="auto" :src='audio.audioBgm' ref="audioBgmRef" loop autoplay/>
+    <speaker class="speaker-control" v-model="sound"/>
     <template v-if="cards">
       <template  v-for='(layer, layerIdx) of cardsComp'>
         <template v-for="(row, rowIdx) of layer" >
@@ -46,6 +48,8 @@
 import audioSua from '../assets/audio/sua.mp3'
 import audioFailed from '../assets/audio/failed.mp3'
 import audioDu from '../assets/audio/du.mp3'
+import audioBgm from '../assets/audio/bgm.mp3'
+import Speaker from './speaker.vue'
 
 import Card from './card.vue' 
 import img0 from '../assets/0.png'
@@ -115,6 +119,13 @@ export default {
     }
   },
   watch: {
+    sound(value) {
+      if (value) {
+        this.$refs.audioBgmRef.play()
+      } else {
+        this.$refs.audioBgmRef.pause()
+      }
+    },
     width(width) {
       this.$refs.mainRef.style.setProperty('--main-width', `${width}px`)
     },
@@ -123,8 +134,11 @@ export default {
     },
     timeRemainComp(remain) {
       if (this.running) {
+        if (remain < 6) {
+          this.$refs.audioBgmRef.pause()
+        }
         if (remain === 5 || remain === 4 || remain === 3 || remain === 2 || remain === 1) {
-          this.$refs.audioDuRef.play();
+          this.sound && this.$refs.audioDuRef.play();
         } if (remain === 0) {
           this.gameover()
         }
@@ -133,20 +147,22 @@ export default {
   },
   components: {
     Card,
+    Speaker,
   },
   data() {
     this.audio = {
       audioSua,
       audioFailed,
-      audioDu
+      audioDu,
+      audioBgm
     }
     return {
       cards: false,
       bar: [],
-      
+      sound: true,
       gameStartTime: 0,
       score: 0,
-      gameTime: 10000,
+      gameTime: 10000, // 可用的游戏时间
       running: false,
       currentTime: Date.now(),
       showWelcome: true,
@@ -209,6 +225,8 @@ export default {
   }, 
   mounted() {
     const that = this
+    that.$refs.audioBgmRef.volume = .5
+    that.sound && that.$refs.audioBgmRef.play();
     that.$refs.mainRef.style.setProperty('--main-width', `${this.width}px`)
     that.$refs.mainRef.style.setProperty('--main-height', `${this.height}px`)
 
@@ -443,7 +461,7 @@ export default {
         return false
       }
 
-      that.$refs.audioSuaRef.play();
+      that.sound && that.$refs.audioSuaRef.play();
 
       that.bar.push(card)
       that.bar.sort((a, b) => {
@@ -469,6 +487,7 @@ export default {
           setTimeout(() => {
             that.score += 1
             that.gameTime += 5
+            that.sound && that.$refs.audioBgmRef.play()
             destoryQueue.forEach(cardInGroup => {
               cardInGroup.destory = true
               that.cardInMatrix(cardInGroup.layerIdx, cardInGroup.rowIdx, cardInGroup.colIdx, cardInGroup)
@@ -495,24 +514,29 @@ export default {
     gameover() {
       const that = this
       that.running = false
-      that.$refs.audioFailedRef.play()
+      that.sound && that.$refs.audioBgmRef.pause()
+      that.sound && that.$refs.audioFailedRef.play()
       that.gameOverFlag = true
+      
     },
     startGame() {
       this.showWelcome = false
       this.newGame()
+      // this.$refs.audioDuRef.play();
     },
     restartGame() {
       this.newGame()
     },
     newGame() {
-      this.cards = createCardsData(11, 6, this.columnCountComp, this.images.length);
-      this.gameStartTime = Date.now()
-      this.gameTime = 50;
-      this.running = true
-      this.gameOverFlag = false
-      this.bar = []
-      this.score = 0
+      const that = this
+      that.cards = createCardsData(11, 6, this.columnCountComp, this.images.length);
+      that.gameStartTime = Date.now()
+      that.gameTime = 50;
+      that.running = true
+      that.gameOverFlag = false
+      that.bar = []
+      that.score = 0
+      that.sound && that.$refs.audioBgmRef.play()
     }
   }
 }
@@ -525,6 +549,9 @@ export default {
   --bottom-panel-height: 15%;
   --card-height: calc(var(--main-height) * 0.11);
   --card-width: calc(var(--card-height) * 0.618);
+  --game-over-z: 1000000;
+  --welcome-z: 999998;
+  --speaker-z: 999999;
 
   overflow: hidden;
   user-select: none;
@@ -603,7 +630,7 @@ export default {
   height: 100%;
   width: 100%;
   
-  z-index: 999999;
+  z-index: var(--game-over-z);
   background: linear-gradient(var(--light-transparent) 5%, var(--dark-transparent) 50%, var(--light-transparent) 100%);
   
   display: flex;
@@ -631,7 +658,7 @@ export default {
   height: 100%;
   width: 100%;
   
-  z-index: 999999;
+  z-index: var(--welcome-z);
   background: url(../../../../assets/images/miao-bg.webp) no-repeat;
   background-size: 100% 100%;
 
@@ -709,5 +736,14 @@ export default {
   content: 'Score:';
   font-size: calc(var(--card-width) / 5);
   display: block;
+}
+
+.speaker-control {
+  position: absolute;
+  right: 3%;
+  top: 13%;
+  width: calc(var(--card-width) / 3);
+  height: calc(var(--card-width) / 3);
+  z-index: var(--speaker-z);
 }
 </style>
