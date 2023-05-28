@@ -3,7 +3,7 @@
     <audio preload="auto" :src='audio.audioSua' ref="audioSuaRef"/>
     <audio preload="auto" :src="audio.audioFailed" ref="audioFailedRef"/>
     <audio preload="auto" :src='audio.audioDu' ref="audioDuRef"/>
-    <audio preload="auto" :src='audio.audioBgm' ref="audioBgmRef" loop autoplay/>
+    <audio preload="auto" :src='audio.audioBgm' ref="audioBgmRef" loop/>
     <speaker class="speaker-control" v-model="sound"/>
     <template v-if="cards">
       <template  v-for='(layer, layerIdx) of cardsComp'>
@@ -45,6 +45,8 @@
 </template>
 
 <script>
+import Utils from '../../../../utils.js'
+
 import audioSua from '../assets/audio/sua.mp3'
 import audioFailed from '../assets/audio/failed.mp3'
 import audioDu from '../assets/audio/du.mp3'
@@ -94,6 +96,13 @@ const createCardsData = (layerCnt, rowCnt, columnCnt, typeCnt) => {
   return data;
 }
 
+const getLocal = (path) =>{
+  return Utils.getLocal('miao', path)
+}
+
+const setLocal = (obj) => {
+  Utils.setLocal('miao', obj)
+}
 
 export default {
   props:{
@@ -120,6 +129,11 @@ export default {
   },
   watch: {
     sound(value) {
+      setLocal({
+          audio: {
+            on: value
+          }
+        })
       if (value) {
         this.$refs.audioBgmRef.play()
       } else {
@@ -149,17 +163,20 @@ export default {
     Card,
     Speaker,
   },
-  data() {
+  created() {
     this.audio = {
       audioSua,
       audioFailed,
       audioDu,
       audioBgm
     }
+    localStorage.sound
+  },
+  data() {
     return {
       cards: false,
       bar: [],
-      sound: true,
+      sound: getLocal('audio.on'),
       gameStartTime: 0,
       score: 0,
       gameTime: 10000, // 可用的游戏时间
@@ -220,7 +237,7 @@ export default {
       return Math.floor((width - width * .2 )/ cardWidthComp - 1)
     },
     barTopComp() {
-      return this.height * 0.8
+      return this.height * 0.88
     }
   }, 
   mounted() {
@@ -514,7 +531,7 @@ export default {
     gameover() {
       const that = this
       that.running = false
-      that.sound && that.$refs.audioBgmRef.pause()
+      that.$refs.audioBgmRef.pause()
       that.sound && that.$refs.audioFailedRef.play()
       that.gameOverFlag = true
       
@@ -546,7 +563,7 @@ export default {
 .miao-ui-main {
   --main-width: 100%;
   --main-height: 100%;
-  --bottom-panel-height: 15%;
+  
   --card-height: calc(var(--main-height) * 0.11);
   --card-width: calc(var(--card-height) * 0.618);
   --game-over-z: 1000000;
@@ -602,12 +619,13 @@ export default {
 
 .bar {
   --bar-left: calc((100% - 9 * var(--card-width)) / 2);
+  --bar-top: calc(var(--main-height) * .88);
 
   height: var(--card-height);
   width: calc(var(--card-width) * 9);
   background: lightgray;
   position: absolute;
-  top: 80%;
+  top: var(--bar-top);
   left: var(--bar-left);
   border-radius: 10px;
 }
